@@ -21,13 +21,4 @@ public class utils {
         System.out.println("7. Gestión de informes");
     }
 
-    /**
-     * Método para limpiar la consola.
-     */
-    public static void limpiarPantalla() {
-        for (int i = 0; i < 10; i++) {
-            System.out.println();
-        }
-    }
-
 }

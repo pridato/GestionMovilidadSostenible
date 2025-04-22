@@ -3,6 +3,7 @@ package es.uned.model;
 import es.uned.model.personas.Mecanico;
 import es.uned.model.vehiculos.Vehiculo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -76,13 +77,15 @@ public class Factura {
 
     @Override
     public String toString() {
-        return "Factura{" +
-                "id='" + id + '\'' +
-                ", vehiculo=" + vehiculo +
-                ", mecanico=" + mecanico +
-                ", importe=" + importe +
-                ", descripcion='" + descripcion + '\'' +
-                ", fecha=" + fecha +
-                '}';
+        final String INDENT = "    ";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return "Factura {\n" +
+                INDENT + "ID: " + id + "\n" +
+                INDENT + "Vehículo: " + (vehiculo != null ? vehiculo.toString() : "No asignado") + "\n" +
+                INDENT + "Mecánico: " + (mecanico != null ? mecanico.toString() : "No asignado") + "\n" +
+                INDENT + "Importe: €" + importe + "\n" +
+                INDENT + "Descripción: " + descripcion + "\n" +
+                INDENT + "Fecha: " + (fecha != null ? dateFormat.format(fecha) : "No disponible") + "\n" +
+                "}";
     }
 }

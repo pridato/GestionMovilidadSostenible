@@ -6,10 +6,10 @@ import java.util.List;
 /**
  * Clase que representa un administrador, que hereda de la clase Trabajador.
  */
-public class Administrador extends Trabajador{
+public class Administrador extends Trabajador {
     private List<String> permisos;
 
-    public Administrador(String nombre, String apellidos, String DNI, String email, int telefono, Date fechaContratacion, List<String> permisos) {
+    public Administrador(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion, List<String> permisos) {
         super(nombre, apellidos, DNI, email, telefono, fechaContratacion);
         this.permisos = permisos;
     }
@@ -24,14 +24,22 @@ public class Administrador extends Trabajador{
 
     @Override
     public String toString() {
-        return "Administrador{" +
-                "nombre='" + getNombre() + '\'' +
-                ", apellidos='" + getApellidos() + '\'' +
-                ", DNI='" + getDNI() + '\'' +
-                ", email='" + getEmail() + '\'' +
-                ", telefono=" + getTelefono() +
-                ", fechaContratacion=" + getFechaContratacion() +
-                ", permisos=" + permisos +
-                '}';
+        final String INDENT = "    ";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Administrador {\n");
+        sb.append(super.toString());
+        sb.append(INDENT).append("Permisos asignados:\n");
+
+        if (permisos != null && !permisos.isEmpty()) {
+            for (String permiso : permisos) {
+                sb.append(INDENT).append(INDENT).append("- ").append(permiso).append("\n");
+            }
+        } else {
+            sb.append(INDENT).append(INDENT).append("(Sin permisos asignados)\n");
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
+
 }

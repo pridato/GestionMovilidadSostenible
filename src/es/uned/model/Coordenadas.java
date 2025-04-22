@@ -30,9 +30,11 @@ public class Coordenadas {
 
     @Override
     public String toString() {
-        return "Coordenadas{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        final String INDENT = "    ";
+        return "Coordenadas {\n" +
+                INDENT + "X: " + x + "\n" +
+                INDENT + "Y: " + y + "\n" +
+                "}";
     }
+
 }

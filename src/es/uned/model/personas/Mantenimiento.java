@@ -13,7 +13,7 @@ public class Mantenimiento extends Trabajador{
     private List<Base> basesAsignadas;
 
 
-    public Mantenimiento(String nombre, String apellidos, String DNI, String email, int telefono, Date fechaContratacion, List<Base> basesAsignadas) {
+    public Mantenimiento(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion, List<Base> basesAsignadas) {
         super(nombre, apellidos, DNI, email, telefono, fechaContratacion);
         this.basesAsignadas = basesAsignadas;
     }
@@ -28,14 +28,22 @@ public class Mantenimiento extends Trabajador{
 
     @Override
     public String toString() {
-        return "Mantenimiento{" +
-                "nombre='" + getNombre() + '\'' +
-                ", apellidos='" + getApellidos() + '\'' +
-                ", DNI='" + getDNI() + '\'' +
-                ", email='" + getEmail() + '\'' +
-                ", telefono=" + getTelefono() +
-                ", fechaContratacion=" + getFechaContratacion() +
-                ", basesAsignadas=" + basesAsignadas +
-                '}';
+        final String INDENT = "    ";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Mantenimiento {\n");
+        sb.append(super.toString());  // Llama al toString() de la clase padre Trabajador
+        sb.append(INDENT).append("Bases asignadas:\n");
+
+        if (basesAsignadas != null && !basesAsignadas.isEmpty()) {
+            for (Base base : basesAsignadas) {
+                sb.append(INDENT).append(INDENT).append("- ").append(base).append("\n");
+            }
+        } else {
+            sb.append(INDENT).append(INDENT).append("(Sin bases asignadas)\n");
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
+
 }

@@ -64,10 +64,18 @@ public class utilsUsuarios {
      */
     public void listarPersonas(List <Persona> personas) {
         if (personas != null && !personas.isEmpty()) {
+            System.out.println("----------------------------");
             System.out.println("Lista de personas:");
+            System.out.println("----------------------------");
+            System.out.println();
             for (Persona persona : personas) {
                 System.out.println(persona);
+                System.out.println("----------------------------");
             }
+
+            System.out.println("----------------------------");
+            System.out.println("Total de personas: " + personas.size());
+            System.out.println("----------------------------");
         } else {
             System.out.println("No hay personas para mostrar.");
         }

@@ -38,15 +38,33 @@ public class Mecanico extends Trabajador{
 
     @Override
     public String toString() {
-        return "Mecanico{" +
-                "nombre='" + getNombre() + '\'' +
-                ", apellidos='" + getApellidos() + '\'' +
-                ", DNI='" + getDNI() + '\'' +
-                ", email='" + getEmail() + '\'' +
-                ", telefono=" + getTelefono() +
-                ", fechaContratacion=" + getFechaContratacion() +
-                ", vehiculosAsignados=" + vehiculosAsignados +
-                ", facturasEmitidas=" + facturasEmitidas +
-                '}';
+        final String INDENT = "    ";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Mecanico {\n");
+        sb.append(super.toString());  // Llama al toString() de la clase base Trabajador
+        sb.append(INDENT).append("Fecha de contratación: ").append(getFechaContratacion()).append("\n");
+        sb.append(INDENT).append("Vehículos asignados:\n");
+
+        if (vehiculosAsignados != null && !vehiculosAsignados.isEmpty()) {
+            for (Vehiculo vehiculo : vehiculosAsignados) {
+                sb.append(INDENT).append(INDENT).append("- ").append(vehiculo).append("\n");
+            }
+        } else {
+            sb.append(INDENT).append(INDENT).append("(Sin vehículos asignados)\n");
+        }
+
+        sb.append(INDENT).append("Facturas emitidas:\n");
+
+        if (facturasEmitidas != null && !facturasEmitidas.isEmpty()) {
+            for (Factura factura : facturasEmitidas) {
+                sb.append(INDENT).append(INDENT).append("- ").append(factura).append("\n");
+            }
+        } else {
+            sb.append(INDENT).append(INDENT).append("(Sin facturas emitidas)\n");
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
+
 }

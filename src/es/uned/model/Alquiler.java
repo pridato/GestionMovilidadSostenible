@@ -1,7 +1,6 @@
 package es.uned.model;
 
 import es.uned.enums.EstadoAlquiler;
-import es.uned.model.personas.Usuario;
 import es.uned.model.vehiculos.Vehiculo;
 
 import java.util.Date;
@@ -12,7 +11,6 @@ import java.util.Date;
 public class Alquiler {
 
     private String id;
-    private Usuario usuario;
     private Vehiculo vehiculo;
     private Date fechaInicio;
     private Date fechaFin;
@@ -22,9 +20,8 @@ public class Alquiler {
     private double importeFinal;
     private int tiempoDuracion;
 
-    public Alquiler(String id, Usuario usuario, Vehiculo vehiculo, Date fechaInicio, Date fechaFin, EstadoAlquiler estado, Base baseInicio, Base baseFin, double importeFinal, int tiempoDuracion) {
+    public Alquiler(String id, Vehiculo vehiculo, Date fechaInicio, Date fechaFin, EstadoAlquiler estado, Base baseInicio, Base baseFin, double importeFinal, int tiempoDuracion) {
         this.id = id;
-        this.usuario = usuario;
         this.vehiculo = vehiculo;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -43,13 +40,6 @@ public class Alquiler {
         this.id = id;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
 
     public Vehiculo getVehiculo() {
         return vehiculo;
@@ -117,17 +107,18 @@ public class Alquiler {
 
     @Override
     public String toString() {
-        return "Alquiler{" +
-                "id='" + id + '\'' +
-                ", usuario=" + usuario +
-                ", vehiculo=" + vehiculo +
-                ", fechaInicio=" + fechaInicio +
-                ", fechaFin=" + fechaFin +
-                ", estado=" + estado +
-                ", baseInicio=" + baseInicio +
-                ", baseFin=" + baseFin +
-                ", importeFinal=" + importeFinal +
-                ", tiempoDuracion=" + tiempoDuracion +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("Alquiler {\n");
+        sb.append("    ID: ").append(id).append("\n");
+        sb.append("    Vehículo: ").append(vehiculo != null ? vehiculo.toString() : "No disponible").append("\n");
+        sb.append("    Fecha de Inicio: ").append(fechaInicio != null ? fechaInicio.toString() : "No disponible").append("\n");
+        sb.append("    Fecha de Fin: ").append(fechaFin != null ? fechaFin.toString() : "No disponible").append("\n");
+        sb.append("    Estado: ").append(estado != null ? estado.toString() : "No disponible").append("\n");
+        sb.append("    Base de Inicio: ").append(baseInicio != null ? baseInicio.toString() : "No disponible").append("\n");
+        sb.append("    Base de Fin: ").append(baseFin != null ? baseFin.toString() : "No disponible").append("\n");
+        sb.append("    Importe Final: ").append(importeFinal).append("\n");
+        sb.append("    Duración (en horas): ").append(tiempoDuracion).append("\n");
+        sb.append("}");
+        return sb.toString();
     }
 }

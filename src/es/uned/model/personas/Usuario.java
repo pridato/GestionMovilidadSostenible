@@ -27,6 +27,15 @@ public class Usuario extends Persona {
         this.coordenadas = coordenadas;
     }
 
+    public Usuario(String dni, String nombre, String apellidos, String email, int telefono,Date fechaCreacion, Coordenadas coordenadas, double sueldo, Boolean esPremium, List<Alquiler> historialViajes) {
+        super(nombre, apellidos, dni, email, telefono);
+        this.sueldo = sueldo;
+        this.esPremium = esPremium;
+        this.fechaCreacion = fechaCreacion;
+        this.coordenadas = coordenadas;
+        this.historialViajes = historialViajes;
+    }
+
     public double getDescuento() {
         return descuento;
     }
@@ -77,13 +86,29 @@ public class Usuario extends Persona {
 
     @Override
     public String toString() {
-        return "Usuario{" +
-                "sueldo=" + sueldo +
-                ", esPremium=" + esPremium +
-                ", historialViajes=" + historialViajes +
-                ", fechaCreacion=" + fechaCreacion +
-                ", coordenadas=" + coordenadas +
-                ", descuento=" + descuento +
-                '}';
+        final String INDENT = "    ";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Usuario {\n");
+        sb.append(super.toString());
+        sb.append(INDENT).append("Fecha de creación: ").append(fechaCreacion).append("\n");
+        sb.append(INDENT).append("Sueldo: ").append(String.format("%.2f", sueldo)).append(" €\n");
+        sb.append(INDENT).append("¿Premium?: ").append(esPremium != null && esPremium ? "Sí" : "No").append("\n");
+        sb.append(INDENT).append("Descuento aplicado: ").append(String.format("%.2f", descuento)).append(" %\n");
+        sb.append(INDENT).append("Coordenadas: ").append(coordenadas != null ? coordenadas : "(No especificadas)").append("\n");
+        sb.append(INDENT).append("Historial de viajes:\n");
+
+        if (historialViajes != null && !historialViajes.isEmpty()) {
+            for (Alquiler alquiler : historialViajes) {
+                sb.append(INDENT).append(INDENT).append("- ").append(alquiler.getId()).append(" (")
+                        .append(alquiler.getFechaInicio()).append(" → ").append(alquiler.getFechaFin()).append(")\n");
+            }
+        } else {
+            sb.append(INDENT).append(INDENT).append("(Sin viajes registrados)\n");
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
+
 }

@@ -8,7 +8,7 @@ import java.util.Date;
 public class Trabajador extends Persona {
     private Date fechaContratacion;
 
-    public Trabajador(String nombre, String apellidos, String DNI, String email, int telefono, Date fechaContratacion) {
+    public Trabajador(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion) {
         super(nombre, apellidos, DNI, email, telefono);
         this.fechaContratacion = fechaContratacion;
     }
@@ -23,13 +23,13 @@ public class Trabajador extends Persona {
 
     @Override
     public String toString() {
-        return "Trabajador{" +
-                "nombre='" + getNombre() + '\'' +
-                ", apellidos='" + getApellidos() + '\'' +
-                ", DNI='" + getDNI() + '\'' +
-                ", email='" + getEmail() + '\'' +
-                ", telefono=" + getTelefono() +
-                ", fechaContratacion=" + fechaContratacion +
-                '}';
+        final String INDENT = "    ";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Trabajador {\n");
+        sb.append(super.toString());
+        sb.append(INDENT).append("Fecha de contratación: ").append(fechaContratacion).append("\n");
+        sb.append("}");
+        return sb.toString();
     }
+
 }

@@ -86,12 +86,14 @@ public class Persona {
 
     @Override
     public String toString() {
-        return "Persona{" +
-                "nombre='" + nombre + '\'' +
-                ", apellidos='" + apellidos + '\'' +
-                ", DNI='" + DNI + '\'' +
-                ", email='" + email + '\'' +
-                ", telefono=" + telefono +
-                '}';
+        final String INDENT = "    ";
+        StringBuilder sb = new StringBuilder();
+        sb.append(INDENT).append("Nombre completo: ").append(getNombre()).append(" ").append(getApellidos()).append("\n");
+        sb.append(INDENT).append("DNI: ").append(getDNI()).append("\n");
+        sb.append(INDENT).append("Email: ").append(getEmail()).append("\n");
+        sb.append(INDENT).append("Teléfono: ").append(getTelefono()).append("\n");
+
+        return sb.toString();
     }
+
 }

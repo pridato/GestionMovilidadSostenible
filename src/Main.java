@@ -1,6 +1,8 @@
 import es.uned.model.GestorMovilidad;
 import es.uned.model.personas.Persona;
 import es.uned.model.personas.Usuario;
+import es.uned.model.vehiculos.Vehiculo;
+import es.uned.utils.dto;
 import es.uned.utils.utils;
 import es.uned.utils.utilsUsuarios;
 
@@ -14,7 +16,6 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         GestorMovilidad gm = new GestorMovilidad();
         utilsUsuarios utilsUsuarios = new utilsUsuarios();
-
 
 
         int opcion = 0;

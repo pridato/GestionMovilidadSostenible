@@ -52,11 +52,11 @@ public class Base {
 
     @Override
     public String toString() {
-        return "Base{" +
-                "id='" + id + '\'' +
-                ", coordenadas=" + coordenadas +
-                ", capacidadMaxima=" + capacidadMaxima +
-                ", vehiculosAlquilados=" + vehiculosAlquilados +
-                '}';
+        return "Base {\n" +
+                "    ID: " + id + "\n" +
+                "    Coordenadas: " + (coordenadas != null ? coordenadas.toString() : "No disponibles") + "\n" +
+                "    Capacidad Máxima: " + capacidadMaxima + "\n" +
+                "    Vehículos Alquilados: " + (vehiculosAlquilados != null ? vehiculosAlquilados.toString() : "No disponibles") + "\n" +
+                "}";
     }
 }

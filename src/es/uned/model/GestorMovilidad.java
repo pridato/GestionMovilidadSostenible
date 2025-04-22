@@ -4,30 +4,33 @@ import es.uned.model.personas.Persona;
 import es.uned.model.personas.Trabajador;
 import es.uned.model.personas.Usuario;
 import es.uned.model.vehiculos.Vehiculo;
+import es.uned.utils.dto;
 
 import java.util.*;
+
+import static es.uned.utils.dto.*;
 
 public class GestorMovilidad {
 
     private List<Persona> personas;
-    private List<Trabajador> trabajadores;
     private List<Vehiculo> vehiculos;
     private List<Alquiler> alquileres;
     private List<Factura> facturas;
     private List<Incidencia> incidencias;
     private List<Base> bases;
+    private dto dto;
 
     private Map<Vehiculo, Double> tarifas;
 
     public GestorMovilidad() {
+
         // Inicializar las listas
-        this.personas = new ArrayList<>();
-        this.trabajadores = new ArrayList<>();
-        this.vehiculos = new ArrayList<>();
-        this.alquileres = new ArrayList<>();
-        this.facturas = new ArrayList<>();
-        this.incidencias = new ArrayList<>();
-        this.bases = new ArrayList<>();
+        this.personas = cargarPersonas();
+        this.vehiculos = cargarVehiculos();
+        this.alquileres = cargarAlquileres();
+        this.facturas = cargarFacturas();
+        this.incidencias = cargarIncidencias();
+        this.bases = cargarBases();
     }
 
     // ----------------------------
