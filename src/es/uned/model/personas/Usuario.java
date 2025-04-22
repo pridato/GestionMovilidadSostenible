@@ -3,6 +3,7 @@ package es.uned.model.personas;
 import es.uned.model.Alquiler;
 import es.uned.model.Coordenadas;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,18 +12,17 @@ import java.util.List;
  */
 public class Usuario extends Persona {
 
-    private int sueldo;
+    private double sueldo;
     private Boolean esPremium;
-    private List<Alquiler> historialViajes;
+    private List<Alquiler> historialViajes = new ArrayList<>();
     private Date fechaCreacion;
     private Coordenadas coordenadas;
     private double descuento;
 
-    public Usuario(String nombre, String apellidos, String dni, String email, int telefono, int sueldo, Boolean esPremium, List<Alquiler> historialViajes, Date fechaCreacion, Coordenadas coordenadas) {
+    public Usuario(String dni, String nombre, String apellidos, String email, int telefono, Date fechaCreacion, Coordenadas coordenadas) {
         super(nombre, apellidos, dni, email, telefono);
-        this.sueldo = sueldo;
-        this.esPremium = esPremium;
-        this.historialViajes = historialViajes;
+        this.sueldo = 0.0;
+        this.esPremium = false;
         this.fechaCreacion = fechaCreacion;
         this.coordenadas = coordenadas;
     }
@@ -67,7 +67,7 @@ public class Usuario extends Persona {
         this.esPremium = esPremium;
     }
 
-    public int getSueldo() {
+    public double getSueldo() {
         return sueldo;
     }
 
