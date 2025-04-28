@@ -26,6 +26,19 @@ public class Mantenimiento extends Trabajador{
         this.basesAsignadas = basesAsignadas;
     }
 
+    /**
+     * Método para asignar una base al trabajador de mantenimiento.
+     * @param base base a asignar
+     * @return true si se ha asignado correctamente, false en caso contrario
+     */
+    public boolean asignarBase(Base base) {
+        if (base != null) {
+            this.basesAsignadas.add(base);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         final String INDENT = "    ";

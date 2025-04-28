@@ -112,6 +112,26 @@ public class dto {
     }
 
     /**
+     * Método para crear una lista de trabajadores filtrada de cargarPersonas
+     *
+     * @return Lista de trabajadores.
+     */
+    public static List<Trabajador> cargarTrabajadores() {
+        return cargarPersonas().stream().filter(persona -> persona instanceof Trabajador)
+                .map(persona -> (Trabajador) persona)
+                .toList();
+    }
+
+    /**
+     * Método para crear una lista de usuarios filtrada de cargarPersonas
+     * @return Lista de usuarios.
+     */
+    public static List<Usuario> cargarUsuarios() {
+        return cargarPersonas().stream().filter(persona -> persona instanceof Usuario)
+                .map(persona -> (Usuario) persona)
+                .toList();
+    }
+    /**
      * Método para crear una lista de alquileres de ejemplo.
      *
      * @return Lista de alquileres.

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class Usuario extends Persona {
 
-    private double sueldo;
+    private double saldo;
     private Boolean esPremium;
     private List<Alquiler> historialViajes = new ArrayList<>();
     private Date fechaCreacion;
@@ -21,15 +21,15 @@ public class Usuario extends Persona {
 
     public Usuario(String dni, String nombre, String apellidos, String email, int telefono, Date fechaCreacion, Coordenadas coordenadas) {
         super(nombre, apellidos, dni, email, telefono);
-        this.sueldo = 0.0;
+        this.saldo = 0.0;
         this.esPremium = false;
         this.fechaCreacion = fechaCreacion;
         this.coordenadas = coordenadas;
     }
 
-    public Usuario(String dni, String nombre, String apellidos, String email, int telefono,Date fechaCreacion, Coordenadas coordenadas, double sueldo, Boolean esPremium, List<Alquiler> historialViajes) {
+    public Usuario(String dni, String nombre, String apellidos, String email, int telefono,Date fechaCreacion, Coordenadas coordenadas, double saldo, Boolean esPremium, List<Alquiler> historialViajes) {
         super(nombre, apellidos, dni, email, telefono);
-        this.sueldo = sueldo;
+        this.saldo = saldo;
         this.esPremium = esPremium;
         this.fechaCreacion = fechaCreacion;
         this.coordenadas = coordenadas;
@@ -76,12 +76,12 @@ public class Usuario extends Persona {
         this.esPremium = esPremium;
     }
 
-    public double getSueldo() {
-        return sueldo;
+    public double getsaldo() {
+        return saldo;
     }
 
-    public void setSueldo(int sueldo) {
-        this.sueldo = sueldo;
+    public void recargarSaldo(double saldo) {
+        this.saldo += saldo;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class Usuario extends Persona {
         sb.append("Usuario {\n");
         sb.append(super.toString());
         sb.append(INDENT).append("Fecha de creación: ").append(fechaCreacion).append("\n");
-        sb.append(INDENT).append("Sueldo: ").append(String.format("%.2f", sueldo)).append(" €\n");
+        sb.append(INDENT).append("saldo: ").append(String.format("%.2f", saldo)).append(" €\n");
         sb.append(INDENT).append("¿Premium?: ").append(esPremium != null && esPremium ? "Sí" : "No").append("\n");
         sb.append(INDENT).append("Descuento aplicado: ").append(String.format("%.2f", descuento)).append(" %\n");
         sb.append(INDENT).append("Coordenadas: ").append(coordenadas != null ? coordenadas : "(No especificadas)").append("\n");

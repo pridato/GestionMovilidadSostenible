@@ -7,6 +7,7 @@ import es.uned.model.vehiculos.Vehiculo;
 import es.uned.utils.dto;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static es.uned.utils.dto.*;
 
@@ -51,16 +52,27 @@ public class GestorMovilidad {
     }
 
     /**
+     * Método para buscar un usuario por su DNI.
+     * @param dni DNI del usuario a buscar.
+     * @return El usuario encontrado, o null si no se encuentra.
+     */
+    private Persona buscarPersonaPorDni(String dni) {
+        return personas.stream()
+                .filter(p -> p.getDNI().equals(dni))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
      * Método para actualizar un usuario en la lista de usuarios.
      * @param dni DNI del usuario a actualizar.
      * @return true si se ha actualizado correctamente, false en caso contrario.
      */
     public boolean eliminarUsuario(String dni) {
-        for (int i = 0; i < personas.size(); i++) {
-            if (personas.get(i).getDNI().equals(dni)) {
-                personas.remove(i);
-                return true;
-            }
+        Persona persona = buscarPersonaPorDni(dni);
+        if (persona != null) {
+            personas.remove(persona);
+            return true;
         }
         return false;
     }
@@ -157,11 +169,8 @@ public class GestorMovilidad {
      */
     public List<Persona> getUsuariosPremium() {
         return personas.stream()
-                .filter(p -> p instanceof Usuario)
-                .map(p -> (Usuario) p)
-                .filter(Usuario::getEsPremium)
-                .map(p -> (Persona) p)
-                .toList();
+                .filter(p -> p instanceof Usuario && ((Usuario) p).getEsPremium())
+                .collect(Collectors.toList());
     }
 
     /**
@@ -170,11 +179,8 @@ public class GestorMovilidad {
      */
     public List<Persona> getUsuariosNoPremium() {
         return personas.stream()
-                .filter(p -> p instanceof Usuario)
-                .map(p -> (Usuario) p)
-                .filter(usuario -> !usuario.getEsPremium())
-                .map(p -> (Persona) p)
-                .toList();
+                .filter(p -> p instanceof Usuario && !((Usuario) p).getEsPremium())
+                .collect(Collectors.toList());
     }
 
 
@@ -232,7 +238,11 @@ public class GestorMovilidad {
      * @param tarifa Tarifa del vehículo.
      */
     public void añadirTarifa(Vehiculo vehiculo, double tarifa) {
-        this.tarifas.put(vehiculo, tarifa);
+        if (vehiculo != null && tarifa >= 0) {
+            tarifas.put(vehiculo, tarifa);
+        } else {
+            System.out.println("Error: Vehículo o tarifa no válida.");
+        }
     }
 
     /**

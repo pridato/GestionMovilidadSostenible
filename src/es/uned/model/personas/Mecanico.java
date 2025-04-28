@@ -28,6 +28,19 @@ public class Mecanico extends Trabajador{
         this.vehiculosAsignados = vehiculosAsignados;
     }
 
+    /**
+     * Método para asignar un vehículo al mecánico.
+     * @param vehiculo vehículo a asignar
+     * @return true si se ha asignado correctamente, false en caso contrario
+     */
+    public boolean asignarVehiculo(Vehiculo vehiculo) {
+        if (vehiculo != null) {
+            this.vehiculosAsignados.add(vehiculo);
+            return true;
+        }
+        return false;
+    }
+
     public List<Factura> getFacturasEmitidas() {
         return facturasEmitidas;
     }
