@@ -28,6 +28,15 @@ public class Coordenadas {
         this.x = x;
     }
 
+    /**
+     * Calcula la distancia entre dos puntos en un plano cartesiano.
+     * @param c coordenadas del segundo punto
+     * @return distancia entre los dos puntos
+     */
+    public double Calculardistancia(Coordenadas c) {
+        return Math.sqrt(Math.pow(c.getX() - this.x, 2) + Math.pow(c.getY() - this.y, 2));
+    }
+
     @Override
     public String toString() {
         final String INDENT = "    ";

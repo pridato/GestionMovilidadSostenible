@@ -77,6 +77,10 @@ public abstract class Vehiculo {
 
     public abstract double calcularImporte(int minutos);
 
+    public void setAveriado() {
+        this.estado = EstadoVehiculo.AVERIADO;
+    }
+
 
     @Override
     public String toString() {
