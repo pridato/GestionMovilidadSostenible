@@ -110,4 +110,28 @@ public class GestorUsuarios {
         }
         return null;
     }
+
+    /**
+     * Método para obtener la lista de usuarios.
+     * @return lista de usuarios.
+     */
+    public void consultarUsuarios() {
+        this.usuarios.forEach(usuario -> System.out.println(usuario.toString()));
+    }
+
+    /**
+     * Método para obtener la lista de usuarios premium.
+     * @return lista de usuarios premium.
+     */
+    public void consultarUsuariosPremium() {
+        this.usuarios.stream().filter(Usuario::getEsPremium).forEach(usuario -> System.out.println(usuario.toString()));
+    }
+
+    /**
+     * Método para obtener la lista de usuarios no premium.
+     * @return lista de usuarios no premium.
+     */
+    public void consultarUsuariosNoPremium() {
+        this.usuarios.stream().filter(usuario -> !usuario.getEsPremium()).forEach(usuario -> System.out.println(usuario.toString()));
+    }
 }

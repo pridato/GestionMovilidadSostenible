@@ -27,8 +27,8 @@ public class MenuUsuarios {
 
         switch (opcion) {
             case 1 -> altaUsuario(scanner);
-            case 2 -> System.out.println("→ Baja de usuario (por implementar)");
-            case 3 -> System.out.println("→ Listado de usuarios (por implementar)");
+            case 2 -> bajaUsuario(scanner);
+            case 3 -> listarUsuarios(scanner);
             case 0 -> System.out.println("Volviendo...");
             default -> System.out.println("Opción no válida.");
         }
@@ -81,6 +81,45 @@ public class MenuUsuarios {
             System.out.println("No se pudo añadir el usuario.");
         }
     }
+
+    /**
+     * Muestra el menú de baja de usuario y gestiona la entrada del usuario.
+     * @param scanner Scanner para leer la entrada del usuario.
+     */
+    private static void bajaUsuario(Scanner scanner) {
+        System.out.println("→ Baja de usuario");
+        System.out.print("Introduce el DNI del usuario a eliminar: ");
+        String dni = scanner.nextLine();
+
+        boolean resultado = gu.eliminarUsuario(dni);
+
+        if (resultado) {
+            System.out.println("Usuario eliminado correctamente.");
+        } else {
+            System.out.println("No se pudo eliminar el usuario.");
+        }
+    }
+
+    private static void listarUsuarios(Scanner scanner) {
+        System.out.println("→ Listado de usuarios");
+        // elegir mostrar todos, solo premium, solo no premium
+        int opcion = 0;
+        System.out.println("1. Mostrar todos los usuarios");
+        System.out.println("2. Mostrar solo usuarios premium");
+        System.out.println("3. Mostrar solo usuarios no premium");
+        System.out.print("Elige una opción: ");
+        opcion = scanner.nextInt();
+
+        scanner.nextLine(); // limpiar buffer
+
+        switch (opcion) {
+            case 1 -> gu.consultarUsuarios();
+            case 2 -> gu.consultarUsuariosPremium();
+            case 3 -> gu.consultarUsuariosNoPremium();
+            default -> System.out.println("Opción no válida.");
+        }
+    }
+
 
     /**
      * Lee las coordenadas manualmente desde la entrada del usuario.
