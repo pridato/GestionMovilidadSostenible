@@ -1,10 +1,9 @@
 import java.util.Scanner;
 
-import static es.uned.menus.MenuCoordenadas.establecerLimites;
-import static es.uned.menus.MenuPrincipal.mostrarMenuRol;
-import static es.uned.menus.MenuReservas.mostrarMenuReservas;
-import static es.uned.menus.Personas.MenuAdministrador.gestionarOpcionesAdminstrador;
-import static es.uned.menus.MenuVehiculos.mostrarMenuVehiculos;
+import static es.uned.menus.MenuAdministrador.gestionarOpcionesAdminstrador;
+import static es.uned.menus.MenuMantenimiento.gestionarOpcionesMantenimiento;
+import static es.uned.menus.MenuMecanico.gestionarOpcionesMecanico;
+import static es.uned.menus.MenuUsuario.gestionarOpcionesUsuario;
 
 public class Main {
 
@@ -22,9 +21,9 @@ public class Main {
 
             switch (opcion) {
                 case 1 -> gestionarOpcionesAdminstrador(scanner);
-                case 2 -> mostrarMenuVehiculos(scanner);
-                case 3 -> mostrarMenuReservas(scanner);
-                case 4 -> establecerLimites(scanner);
+                case 2 -> gestionarOpcionesUsuario(scanner);
+                case 3 -> gestionarOpcionesMantenimiento(scanner);
+                case 4 -> gestionarOpcionesMecanico(scanner);
                 case 0 -> System.out.println("Saliendo del programa...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -34,6 +33,17 @@ public class Main {
 
 
         scanner.close();
+    }
+
+    /**
+     * Método para mostrar el menú de selección de rol.
+     */
+    private static void mostrarMenuRol() {
+        System.out.println("Seleccione su rol:");
+        System.out.println("1. Administrador");
+        System.out.println("2. Usuario");
+        System.out.println("3. Encargado de mantenimiento");
+        System.out.println("4. Mecánico");
     }
 
 }
