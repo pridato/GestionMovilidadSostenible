@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static es.uned.utils.GeolocalizacionPorIP.obtenerCoordenadasDesdeIP;
+
 /**
  * Clase Usuario que representa a un usuario del sistema.
  */
@@ -24,6 +26,14 @@ public class Usuario extends Persona {
         this.saldo = 0.0;
         this.esPremium = false;
         this.fechaCreacion = fechaCreacion;
+        this.coordenadas = coordenadas;
+    }
+
+    public Usuario(String dni, String nombre, String apellidos, String email, int telefono, Coordenadas coordenadas) {
+        super(nombre, apellidos, dni, email, telefono);
+        this.saldo = 0.0;
+        this.esPremium = false;
+        this.fechaCreacion = new Date();
         this.coordenadas = coordenadas;
     }
 

@@ -3,6 +3,7 @@ package es.uned.gestores;
 import es.uned.model.Alquiler;
 import es.uned.model.personas.Usuario;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static es.uned.utils.dto.cargarUsuarios;
@@ -30,7 +31,7 @@ public class GestorUsuarios {
 
     /* constructor */
     public GestorUsuarios() {
-        this.usuarios = cargarUsuarios();
+        this.usuarios = new ArrayList<>(cargarUsuarios()); // evitamos problema inmutabilidad
     }
 
     /**
