@@ -1,20 +1,29 @@
+package es.uned.menus.Personas;
+
 import java.util.Scanner;
 
 import static es.uned.menus.MenuCoordenadas.establecerLimites;
 import static es.uned.menus.MenuPrincipal.mostrarMenu;
 import static es.uned.menus.MenuReservas.mostrarMenuReservas;
-import static es.uned.menus.Personas.MenuAdministrador.mostrarMenuAdministrador;
-import static es.uned.menus.Personas.MenuUsuarios.mostrarMenuUsuarios;
 import static es.uned.menus.MenuVehiculos.mostrarMenuVehiculos;
+import static es.uned.menus.Personas.MenuUsuarios.mostrarMenuUsuarios;
 
-public class Main {
+public class MenuAdministrador {
 
+    /**
+     * Muestra el menú principal de la aplicación y gestiona la selección del usuario.
+     */
+    public static void mostrarMenu() {
+        System.out.println("\n==== MENÚ ADMINISTRADOR ====");
+        System.out.println("1. Gestión de usuarios");
+        System.out.println("2. Gestión de vehículos");
+        System.out.println("3. Gestión de reservas");
+        System.out.println("4. Establecer límites de coordenadas");
+        System.out.println("0. Salir");
+    }
 
-    public static void main(String[] args) {
-
-        Scanner scanner = new Scanner(System.in);
+    public static void mostrarMenuAdministrador(Scanner scanner) {
         int opcion;
-
         do {
             mostrarMenu();
             System.out.print("Seleccione una opción: ");
@@ -22,7 +31,7 @@ public class Main {
             scanner.nextLine();
 
             switch (opcion) {
-                case 1 -> mostrarMenuAdministrador(scanner);
+                case 1 -> mostrarMenuUsuarios(scanner);
                 case 2 -> mostrarMenuVehiculos(scanner);
                 case 3 -> mostrarMenuReservas(scanner);
                 case 4 -> establecerLimites(scanner);
@@ -33,8 +42,5 @@ public class Main {
         } while (opcion != 0);
 
 
-
-        scanner.close();
     }
-
 }

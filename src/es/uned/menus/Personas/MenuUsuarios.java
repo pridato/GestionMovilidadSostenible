@@ -1,4 +1,4 @@
-package es.uned.menus;
+package es.uned.menus.Personas;
 
 import es.uned.gestores.GestorUsuarios;
 import es.uned.model.Coordenadas;
