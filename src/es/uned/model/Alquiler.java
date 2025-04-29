@@ -4,6 +4,7 @@ import es.uned.enums.EstadoAlquiler;
 import es.uned.model.vehiculos.Vehiculo;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Clase que representa un alquiler de un vehículo.
@@ -20,8 +21,9 @@ public class Alquiler {
     private double importeFinal;
     private int tiempoDuracion;
 
-    public Alquiler(String id, Vehiculo vehiculo, Date fechaInicio, Date fechaFin, EstadoAlquiler estado, Base baseInicio, Base baseFin, double importeFinal, int tiempoDuracion) {
-        this.id = id;
+    /* Constructor de la clase Alquiler, con todos los datos */
+    public Alquiler(Vehiculo vehiculo, Date fechaInicio, Date fechaFin, EstadoAlquiler estado, Base baseInicio, Base baseFin, double importeFinal, int tiempoDuracion) {
+        this.id = UUID.randomUUID().toString();
         this.vehiculo = vehiculo;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -31,6 +33,24 @@ public class Alquiler {
         this.importeFinal = importeFinal;
         this.tiempoDuracion = tiempoDuracion;
     }
+
+    /* constructor por defecto para inicializar cualquier alquiler*/
+    public Alquiler(Vehiculo vehiculo, Date fechaInicio, EstadoAlquiler estado, Base baseInicio) {
+        this.id = UUID.randomUUID().toString();
+        this.vehiculo = vehiculo;
+        this.fechaInicio = fechaInicio;
+        this.estado = estado;
+        this.baseInicio = baseInicio;
+    }
+
+    /* constructor para reservar un vehículo a través de un alquiler */
+    public Alquiler(Vehiculo vehiculo, Date fechaInicio, EstadoAlquiler estado) {
+        this.id = UUID.randomUUID().toString();
+        this.vehiculo = vehiculo;
+        this.fechaInicio = fechaInicio;
+        this.estado = estado;
+    }
+
 
     public String getId() {
         return id;

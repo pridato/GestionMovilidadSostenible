@@ -47,7 +47,7 @@ public class dto {
                         new Coordenadas(14.5, 8.9),
                         7500.00,
                         true,
-                        new ArrayList<>(List.of(new Alquiler("ALQ123",
+                        new ArrayList<>(List.of(new Alquiler(
                                 new Moto(
                                         "MOT123",
                                         new Coordenadas(9.5, 7.9),
@@ -140,7 +140,6 @@ public class dto {
         List<Alquiler> alquileres = new ArrayList<>();
         alquileres.add(
                 new Alquiler(
-                        "ALQ123",
                         new Moto(
                                 "MOT123",
                                 new Coordenadas(9.5, 7.9),
@@ -161,7 +160,6 @@ public class dto {
         );
         alquileres.add(
                 new Alquiler(
-                        "ALQ124",
                         new Moto(
                                 "MOT124",
                                 new Coordenadas(9.5, 7.9),
@@ -183,7 +181,6 @@ public class dto {
 
         alquileres.add(
                 new Alquiler(
-                        "ALQ125",
                         new Moto(
                                 "MOT125",
                                 new Coordenadas(9.5, 7.9),

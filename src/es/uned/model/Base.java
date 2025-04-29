@@ -11,6 +11,7 @@ public class Base {
     private Coordenadas coordenadas;
     private int capacidadMaxima;
     private List<Alquiler> vehiculosAlquilados;
+    private boolean averiada = false;
 
     public Base(String id, Coordenadas coordenadas, int capacidadMaxima) {
         this.id = id;
@@ -48,6 +49,14 @@ public class Base {
 
     public void setVehiculosAlquilados(List<Alquiler> vehiculosAlquilados) {
         this.vehiculosAlquilados = vehiculosAlquilados;
+    }
+
+    public boolean isAveriada() {
+        return averiada;
+    }
+
+    public void setAveriada(boolean averiada) {
+        this.averiada = averiada;
     }
 
     @Override

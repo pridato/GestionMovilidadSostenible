@@ -6,5 +6,6 @@ package es.uned.enums;
 public enum EstadoVehiculo {
     DISPONIBLE,
     ALQUILADO,
-    AVERIADO
+    AVERIADO,
+    RESERVADO
 }
