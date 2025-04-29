@@ -70,6 +70,7 @@ public class MenuUsuario {
                 case 2 -> gv.consultarVehiculosDisponibles();
                 case 3 -> this.alquiler = alquilarVehiculo(scanner);
                 case 4 -> devolverVehiculo(scanner);
+                case 5 -> consultarDatosActualesUsuario(usuario);
                 case 0 -> System.out.println("Saliendo...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -155,6 +156,14 @@ public class MenuUsuario {
 
         ga.finalizarAlquiler(usuario, alquiler, base);
 
+    }
+
+    /**
+     * Método para consultar los datos actuales del usuario.
+     * @param usuario Usuario a consultar.
+     */
+    private void consultarDatosActualesUsuario(Usuario usuario) {
+        System.out.println(usuario);
     }
 
 }
