@@ -62,20 +62,28 @@ public class MenuAdministrador {
      * @param scanner Scanner para leer la entrada del usuario.
      */
     private static void gestionarUsuarios(Scanner scanner) {
-        mostrarMenuUsuarios();
+        int opcion;
+        do {
+            mostrarMenuUsuarios();
 
-        int opcion = scanner.nextInt();
-        scanner.nextLine(); // limpiar buffer
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // limpiar buffer
 
-        switch (opcion) {
-            case 1 -> altaUsuario(scanner);
-            case 2 -> bajaUsuario(scanner);
-            case 3 -> listarUsuarios(scanner);
-            case 4 -> promocionarUsuariosAPremium();
-            case 0 -> System.out.println("Volviendo...");
-            default -> System.out.println("Opción no válida.");
-        }
-
+            switch (opcion) {
+                case 1 -> altaUsuario(scanner);
+                case 2 -> bajaUsuario(scanner);
+                case 3 -> listarUsuarios(scanner);
+                case 4 -> promocionarUsuariosAPremium(scanner);
+                case 5 -> {
+                    System.out.println("Modificando descuentos de usuarios premium...");
+                    System.out.print("Introduce el descuento para usuarios premium: (0-100) ");
+                    int descuento = scanner.nextInt();
+                    gu.setDescuentoPremium(descuento);
+                }
+                case 0 -> System.out.println("Volviendo...");
+                default -> System.out.println("Opción no válida.");
+            }
+        } while (opcion != 0);
     }
 
 
@@ -132,7 +140,7 @@ public class MenuAdministrador {
                 default -> System.out.println("Opción no válida.");
             }
 
-        }while (opcion != 5) ;
+        } while (opcion != 5);
     }
 
     /**
@@ -193,6 +201,7 @@ public class MenuAdministrador {
         System.out.println("2. Baja de usuario");
         System.out.println("3. Listar usuarios");
         System.out.println("4. Promoción de Usuarios a Premium");
+        System.out.println("5. Modificar descuentos de usuarios premium");
         System.out.println("0. Volver");
         System.out.println("------------------------------");
     }
@@ -319,9 +328,22 @@ public class MenuAdministrador {
     /**
      * Promociona a los usuarios a Premium.
      */
-    private static void promocionarUsuariosAPremium() {
+    private static void promocionarUsuariosAPremium(Scanner scanner) {
         System.out.println("→ Promoción de usuarios a Premium");
 
+        System.out.println("¿Desea consultar los usuarios no premium? (S/N): ");
+
+        String opcion = scanner.nextLine().trim().toUpperCase();
+        if (opcion.equals("S")) {
+            gu.consultarUsuariosNoPremium();
+        }
+
+        System.out.print("Introduce el DNI del usuario a promocionar: ");
+        String dni = scanner.nextLine();
+
+        gu.promocionarUsuarioPremium(dni);
+
+        System.out.println("Usuario promocionado a Premium correctamente.");
     }
 
 

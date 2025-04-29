@@ -28,6 +28,7 @@ import static es.uned.utils.dto.cargarUsuarios;
 public class GestorUsuarios {
 
     List<Usuario> usuarios;
+    private int descuentoPremium = 10; // descuento del 10% (defecto) para usuarios premium
 
     /* constructor */
     public GestorUsuarios() {
@@ -133,5 +134,13 @@ public class GestorUsuarios {
      */
     public void consultarUsuariosNoPremium() {
         this.usuarios.stream().filter(usuario -> !usuario.getEsPremium()).forEach(usuario -> System.out.println(usuario.toString()));
+    }
+
+    public int getDescuentoPremium() {
+        return descuentoPremium;
+    }
+
+    public void setDescuentoPremium(int descuentoPremium) {
+        this.descuentoPremium = descuentoPremium;
     }
 }
