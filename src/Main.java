@@ -1,10 +1,9 @@
 import java.util.Scanner;
 
 import static es.uned.menus.MenuCoordenadas.establecerLimites;
-import static es.uned.menus.MenuPrincipal.mostrarMenu;
+import static es.uned.menus.MenuPrincipal.mostrarMenuRol;
 import static es.uned.menus.MenuReservas.mostrarMenuReservas;
-import static es.uned.menus.Personas.MenuAdministrador.mostrarMenuAdministrador;
-import static es.uned.menus.Personas.MenuUsuarios.mostrarMenuUsuarios;
+import static es.uned.menus.Personas.MenuAdministrador.gestionarOpcionesAdminstrador;
 import static es.uned.menus.MenuVehiculos.mostrarMenuVehiculos;
 
 public class Main {
@@ -16,13 +15,13 @@ public class Main {
         int opcion;
 
         do {
-            mostrarMenu();
+            mostrarMenuRol();
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
             scanner.nextLine();
 
             switch (opcion) {
-                case 1 -> mostrarMenuAdministrador(scanner);
+                case 1 -> gestionarOpcionesAdminstrador(scanner);
                 case 2 -> mostrarMenuVehiculos(scanner);
                 case 3 -> mostrarMenuReservas(scanner);
                 case 4 -> establecerLimites(scanner);
