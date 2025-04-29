@@ -33,14 +33,6 @@ public class Moto extends Vehiculo{
 
     @Override
     public String toString() {
-        return "Moto{" +
-                "estado=" + estado +
-                ", matricula='" + getMatricula() + '\'' +
-                ", coordenadas=" + getCoordenadas() +
-                ", estadoVehiculo=" + getEstado() +
-                ", bateria=" + getBateria() +
-                ", tarifaMinuto=" + getTarifaMinuto() +
-                ", penalizacion=" + getPenalizacion() +
-                '}';
+        return super.toString() + "\nEstado Moto: " + estado.toString() + "\n";
     }
 }

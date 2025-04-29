@@ -202,50 +202,97 @@ public class GestorVehiculos {
      * @param matricula matricula del vehículo a buscar
      * @return Lista de vehículos.
      */
-    public void modificarVehiculo(String matricula) {
-        //TODO: Implementar la modificación de un vehículo.
+    public void modificarVehiculo(String matricula, Scanner scanner) {
+        Vehiculo vehiculo = obtenerVehiculo(matricula);
+
+        if (vehiculo == null) {
+            System.out.println("Vehículo no encontrado.");
+            return;
+        }
+
+        int opcion;
+        do {
+            menuModificacion(vehiculo);
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpieza de buffer
+
+            switch (opcion) {
+                case 1 -> {
+                    System.out.print("Introduce la nueva matrícula: ");
+                    String nuevaMatricula = scanner.nextLine();
+                    vehiculo.setMatricula(nuevaMatricula);
+                }
+                case 2 -> {
+                    System.out.print("Introduce la nueva coordenada X: ");
+                    double x = scanner.nextDouble();
+                    System.out.print("Introduce la nueva coordenada Y: ");
+                    double y = scanner.nextDouble();
+                    vehiculo.setCoordenadas(new Coordenadas(x, y));
+                }
+
+                case 3 -> {
+                    System.out.print("Introduce el nuevo estado (DISPONIBLE, ALQUILADO, AVERIADO o RESERVADO): ");
+                    EstadoVehiculo nuevoEstado = EstadoVehiculo.valueOf(scanner.nextLine().toUpperCase());
+                    vehiculo.setEstado(nuevoEstado);
+                }
+
+                case 4 -> {
+                    System.out.print("Introduce el nuevo nivel de batería (0-100): ");
+                    int bateria = scanner.nextInt();
+                    if (bateria < 0 || bateria > 100) {
+                        throw new NumberFormatException("La batería debe estar entre 0 y 100.");
+                    }
+                    vehiculo.setBateria(bateria);
+                }
+
+                case 5 -> {
+                    System.out.print("Introduce la nueva tarifa por minuto (€): ");
+                    double tarifa = scanner.nextDouble();
+                    vehiculo.setTarifaMinuto(tarifa);
+                }
+
+                case 6 -> {
+                    System.out.print("Introduce la nueva penalización (€): ");
+                    double penalizacion = scanner.nextDouble();
+                    vehiculo.setPenalizacion(penalizacion);
+                }
+
+                case 7 -> {
+                    if (vehiculo instanceof Moto) {
+                        System.out.print("Introduce el nuevo estado de la moto (PEQUEÑA o GRANDE): ");
+                        EstadoMoto nuevoEstadoMoto = EstadoMoto.valueOf(scanner.nextLine().toUpperCase());
+                        ((Moto) vehiculo).setEstado(nuevoEstadoMoto);
+                    } else {
+                        System.out.println("Este vehículo no es una moto.");
+                    }
+                }
+
+                case 0 -> System.out.println("Saliendo del menú de modificación.");
+                default -> System.out.println("Opción no válida.");
+            }
+
+        }while (opcion!=0);
+
+
     }
 
     /**
-     * Método para marcar un vehículo como averiado.
-     * @param matricula matricula del vehículo a buscar
-     * @return true si se marca correctamente, false si no existe o es null.
+     * Método para mostrar el menú de modificación de un vehículo.
+     * @param vehiculo Vehículo a modificar.
      */
-    public boolean marcarVehiculoComoAveriado(String matricula) {
-        Vehiculo vehiculo = obtenerVehiculo(matricula);
-        if (vehiculo != null) {
-            vehiculo.setEstado(EstadoVehiculo.AVERIADO);
-            return true;
+    private void menuModificacion(Vehiculo vehiculo) {
+        System.out.println("Seleccione el campo a modificar:");
+        System.out.println("1. Matrícula");
+        System.out.println("2. Coordenadas");
+        System.out.println("3. Estado");
+        System.out.println("4. Batería");
+        System.out.println("5. Tarifa por minuto");
+        System.out.println("6. Penalización");
+        if(vehiculo instanceof Moto) {
+            System.out.println("7. Estado de la moto");
         }
-        return false;
-    }
-
-    /**
-     * Método para marcar un vehículo como reparado.
-     * @param matricula matricula del vehículo a buscar
-     * @return true si se marca correctamente, false si no existe o es null.
-     */
-    public boolean marcarVehiculoComoDisponible(String matricula) {
-        Vehiculo vehiculo = obtenerVehiculo(matricula);
-        if (vehiculo != null) {
-            vehiculo.setEstado(EstadoVehiculo.DISPONIBLE);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Método para marcar un vehículo como alquilado.
-     * @param matricula matricula del vehículo a buscar
-     * @return true si se marca correctamente, false si no existe o es null.
-     */
-    public boolean marcarVehiculoComoAlquilado(String matricula) {
-        Vehiculo vehiculo = obtenerVehiculo(matricula);
-        if (vehiculo != null) {
-            vehiculo.setEstado(EstadoVehiculo.ALQUILADO);
-            return true;
-        }
-        return false;
+        System.out.println("0. Salir");
+        System.out.print("Opción: ");
     }
 
     /**
@@ -265,6 +312,7 @@ public class GestorVehiculos {
      * @return Lista de vehículos.
      */
     public void consultarVehiculos() {
-        this.vehiculos.forEach(vehiculo -> System.out.println(vehiculo.toString()));
+        this.vehiculos.forEach(System.out::println);
     }
+
 }

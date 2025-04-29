@@ -1,6 +1,5 @@
 package es.uned.model.vehiculos;
 
-import es.uned.enums.EstadoMoto;
 import es.uned.enums.EstadoVehiculo;
 import es.uned.model.Coordenadas;
 
@@ -84,13 +83,16 @@ public abstract class Vehiculo {
 
     @Override
     public String toString() {
-        return "Vehiculo{" +
-                "matricula='" + matricula + '\'' +
-                ", coordenadas=" + coordenadas +
-                ", estado=" + estado +
-                ", bateria=" + bateria +
-                ", tarifaMinuto=" + tarifaMinuto +
-                ", penalizacion=" + penalizacion +
-                '}';
+        final String INDENT = "    ";
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append(" {\n");  // Nombre de la clase (Bicicleta, Moto, Patinete, etc.)
+        sb.append(INDENT).append("Matrícula: ").append(getMatricula()).append("\n");
+        sb.append(INDENT).append("Coordenadas: ").append(getCoordenadas().toString()).append("\n");
+        sb.append(INDENT).append("Estado: ").append(getEstado().toString()).append("\n");
+        sb.append(INDENT).append("Batería: ").append(getBateria()).append("%\n");
+        sb.append(INDENT).append("Tarifa por minuto: €").append(String.format("%.2f", getTarifaMinuto())).append("\n");
+        sb.append(INDENT).append("Penalización: €").append(String.format("%.2f", getPenalizacion())).append("\n");
+        sb.append("}");
+        return sb.toString();
     }
 }

@@ -26,6 +26,7 @@ public class MenuAdministrador {
         int opcion;
         do {
             mostrarMenuAdministrador();
+            System.out.println("------------------------------");
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
             scanner.nextLine();
@@ -43,6 +44,8 @@ public class MenuAdministrador {
                 }
                 default -> System.out.println("Opción no válida.");
             }
+
+            System.out.println("------------------------------");
 
         } while (opcion != 0);
 
@@ -102,6 +105,9 @@ public class MenuAdministrador {
                 case 2 -> {
                     // Modificar vehículo
                     System.out.println("Modificando vehículo...");
+                    System.out.print("Introduce la matrícula del vehículo a modificar: ");
+                    String matricula = scanner.nextLine();
+                    gv.modificarVehiculo(matricula, scanner);
                 }
                 case 3 -> {
                     // Eliminar vehículo
@@ -165,6 +171,7 @@ public class MenuAdministrador {
      * Muestra el menú del administrador.
      */
     private static void mostrarMenuAdministrador() {
+        System.out.println();
         System.out.println("----- Menú Administrador -----");
         System.out.println("1. Gestión de Usuarios");
         System.out.println("2. Gestión de Vehículos");
@@ -173,6 +180,8 @@ public class MenuAdministrador {
         System.out.println("5. Generar Estadísticas");
         System.out.println("6. Establecer límites de coordenadas");
         System.out.println("7. Salir");
+
+        System.out.println();
     }
 
     /**
@@ -185,6 +194,7 @@ public class MenuAdministrador {
         System.out.println("3. Listar usuarios");
         System.out.println("4. Promoción de Usuarios a Premium");
         System.out.println("0. Volver");
+        System.out.println("------------------------------");
     }
 
 
@@ -192,11 +202,13 @@ public class MenuAdministrador {
      * Muestra el menú de gestión de vehículos.
      */
     private static void mostrarMenuVehiculos() {
+        System.out.println("\n--- Gestión de Vehículos ---");
         System.out.println("1. Añadir Vehículo");
         System.out.println("2. Modificar Vehículo");
         System.out.println("3. Eliminar Vehículo");
         System.out.println("4. Listar Vehículos");
         System.out.println("5. Volver");
+        System.out.println("------------------------------");
     }
 
 
@@ -204,9 +216,11 @@ public class MenuAdministrador {
      * Muestra el menú de gestión de reparaciones.
      */
     private static void mostrarMenuReparaciones() {
+        System.out.println("\n--- Gestión de Reparaciones ---");
         System.out.println("1. Asignar reparación a vehículo");
         System.out.println("2. Asignar reparación a base");
         System.out.println("3. Volver");
+        System.out.println("------------------------------");
     }
 
 

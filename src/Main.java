@@ -39,11 +39,14 @@ public class Main {
      * Método para mostrar el menú de selección de rol.
      */
     private static void mostrarMenuRol() {
+        System.out.println("===================================");
         System.out.println("Seleccione su rol:");
         System.out.println("1. Administrador");
         System.out.println("2. Usuario");
         System.out.println("3. Encargado de mantenimiento");
         System.out.println("4. Mecánico");
+        System.out.println("0. Salir");
+        System.out.println("===================================");
     }
 
 }

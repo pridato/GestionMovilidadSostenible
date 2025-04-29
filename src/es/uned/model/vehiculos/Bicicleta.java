@@ -24,13 +24,8 @@ public class Bicicleta extends Vehiculo{
 
     @Override
     public String toString() {
-        return "Bicicleta{" +
-                "matricula='" + getMatricula() + '\'' +
-                ", coordenadas=" + getCoordenadas() +
-                ", estado=" + getEstado() +
-                ", bateria=" + getBateria() +
-                ", tarifaMinuto=" + getTarifaMinuto() +
-                ", penalizacion=" + getPenalizacion() +
-                '}';
+        return super.toString();
     }
+
+
 }

@@ -24,13 +24,7 @@ public class Patinete extends Vehiculo {
 
     @Override
     public String toString() {
-        return "Patinete{" +
-                "matricula='" + getMatricula() + '\'' +
-                ", coordenadas=" + getCoordenadas() +
-                ", estado=" + getEstado() +
-                ", bateria=" + getBateria() +
-                ", tarifaMinuto=" + getTarifaMinuto() +
-                ", penalizacion=" + getPenalizacion() +
-                '}';
+        return super.toString();
     }
+
 }
