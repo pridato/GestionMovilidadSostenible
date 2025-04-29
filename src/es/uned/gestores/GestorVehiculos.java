@@ -95,9 +95,13 @@ public class GestorVehiculos {
         scanner.nextLine(); // Limpieza de buffer
 
         Coordenadas coordenadas = new Coordenadas(x, y);
-
-        System.out.println("Selecciona el estado del vehículo (ACTIVO, INACTIVO, MANTENIMIENTO): ");
-        EstadoVehiculo estadoVehiculo = EstadoVehiculo.valueOf(scanner.nextLine().toUpperCase());
+        EstadoVehiculo estadoVehiculo = EstadoVehiculo.DISPONIBLE;;
+        try {
+            System.out.println("Selecciona el tipo de moto (DISPONIBLE, ALQUILADO, AVERIADO o RESERVADO): ");
+            estadoVehiculo = EstadoVehiculo.valueOf(scanner.nextLine().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Estado de vehículo no válido. Se asignará DISPONIBLE por defecto.");
+        }
 
         System.out.print("Introduce el nivel de batería (0-100): ");
         int bateria = scanner.nextInt();
@@ -124,10 +128,13 @@ public class GestorVehiculos {
      */
     private static Vehiculo crearMoto(Scanner scanner) {
         Object[] datos = leerDatosComunesVehiculo(scanner, "moto");
-
-        System.out.println("Selecciona el estado de la moto (DISPONIBLE, OCUPADA, RESERVADA, AVERIADA): ");
-        EstadoMoto estadoMoto = EstadoMoto.valueOf(scanner.nextLine().toUpperCase());
-
+        EstadoMoto estadoMoto = EstadoMoto.PEQUEÑA;
+        try {
+            System.out.println("Selecciona el estado de la moto (PEQUEÑA o GRANDE): ");
+            estadoMoto = EstadoMoto.valueOf(scanner.nextLine().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Estado de moto no válido. Se asignará PEQUEÑA por defecto.");
+        }
         return new Moto(
                 (String) datos[0],
                 (Coordenadas) datos[1],
@@ -178,10 +185,11 @@ public class GestorVehiculos {
 
     /**
      * Método para eliminar un vehículo de la lista de vehículos.
-     * @param vehiculo Vehiculo a eliminar.
+     * @param matricula matricula del Vehiculo a eliminar.
      * @return true si se elimina correctamente, false si no existe o es null.
      */
-    public boolean eliminarVehiculo(Vehiculo vehiculo) {
+    public boolean eliminarVehiculo(String matricula) {
+        Vehiculo vehiculo = obtenerVehiculo(matricula);
         if (vehiculo != null && this.vehiculos.contains(vehiculo)) {
             this.vehiculos.remove(vehiculo);
             return true;
@@ -252,4 +260,11 @@ public class GestorVehiculos {
                 .orElse(null);
     }
 
+    /**
+     * Método para consultar todos los vehículos.
+     * @return Lista de vehículos.
+     */
+    public void consultarVehiculos() {
+        this.vehiculos.forEach(vehiculo -> System.out.println(vehiculo.toString()));
+    }
 }
