@@ -2,6 +2,7 @@ package es.uned.gestores;
 
 import es.uned.enums.EstadoMoto;
 import es.uned.enums.EstadoVehiculo;
+import es.uned.model.Alquiler;
 import es.uned.model.Coordenadas;
 import es.uned.model.vehiculos.Bicicleta;
 import es.uned.model.vehiculos.Moto;
@@ -16,27 +17,30 @@ import static es.uned.utils.dto.*;
 
 /**
  * Clase GestorVehiculos que gestiona la lista de vehículos.
- *
- * Métodos:
- *
- * Dar de alta un vehículo
- *
- * Borrar/modificar un vehículo
- *
- * Marcar un vehículo como averiado
- *
- * Marcar un vehículo como alquilado
- *
- * Marcar un vehículo como disponible
+
  */
 public class GestorVehiculos {
 
     // Atributos
-    private final List<Vehiculo> vehiculos;
+    private static final GestorVehiculos instancia = new GestorVehiculos();
+
+    private List<Vehiculo> vehiculos = new ArrayList<>();
+
 
     // Constructor
     public GestorVehiculos() {
         this.vehiculos = new ArrayList<>(cargarVehiculos());
+
+    }
+
+    /**
+     * Método para devolver la instancia de la clase GestorVehiculos.
+     *
+     * Así evitamos crear una nueva instancia cada vez que se necesite.
+     * @return
+     */
+    public static GestorVehiculos getInstancia() {
+        return instancia;
     }
 
 
@@ -325,6 +329,27 @@ public class GestorVehiculos {
                 System.out.println(vehiculo);
             }
         }
+    }
+
+    /**
+     * Método para consultar el estado de batería de un vehículo.
+     *
+     * @param vehiculo Vehículo a consultar
+     * @param alquiler Alquiler asociado al vehículo
+     */
+    public void consultarBateria(Vehiculo vehiculo, Alquiler alquiler) {
+        if (vehiculo.getEstado() != EstadoVehiculo.ALQUILADO) {
+            throw new IllegalStateException("El vehículo no está alquilado.");
+        }
+
+        // simulamos que ya ha pasado el tiempo de alquiler
+        long tiempoAlquiler = System.currentTimeMillis() - alquiler.getFechaInicio().getTime();
+        int minutosAlquiler = (int) (tiempoAlquiler / (60 * 1000));
+
+        System.out.println("Tiempo transcurrido desde el inicio del alquiler: " + minutosAlquiler + " minutos");
+        alquiler.setTiempoDuracion(minutosAlquiler);
+        vehiculo.calcularBateriaRestante(alquiler.getTiempoDuracion());
+        System.out.println("Estado de batería del vehículo: " + vehiculo.getBateria() + "%");
     }
 
 }

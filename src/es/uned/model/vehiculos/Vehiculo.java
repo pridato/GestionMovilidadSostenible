@@ -11,11 +11,11 @@ public abstract class Vehiculo {
     private String matricula;
     private Coordenadas coordenadas;
     private EstadoVehiculo estado;
-    private int bateria;
+    protected double bateria;
     private double tarifaMinuto;
     private double penalizacion;
 
-    public Vehiculo(String matricula, Coordenadas coordenadas, EstadoVehiculo estado, int bateria, double tarifaMinuto, double penalizacion) {
+    public Vehiculo(String matricula, Coordenadas coordenadas, EstadoVehiculo estado, double bateria, double tarifaMinuto, double penalizacion) {
         this.matricula = matricula;
         this.coordenadas = coordenadas;
         this.estado = estado;
@@ -48,7 +48,7 @@ public abstract class Vehiculo {
         this.estado = estado;
     }
 
-    public int getBateria() {
+    public double getBateria() {
         return bateria;
     }
 
@@ -72,12 +72,32 @@ public abstract class Vehiculo {
         this.penalizacion = penalizacion;
     }
 
-    public abstract void setConsumoMinuto(double consumoMinuto);
+    public abstract void calcularBateriaRestante(int minutos);
 
     public abstract double calcularImporte(int minutos);
 
     public void setAveriado() {
         this.estado = EstadoVehiculo.AVERIADO;
+    }
+
+    /**
+     * Método para procesar el consumo de batería y calcular el importe a pagar.
+     * @param minutos minutos de uso del vehículo
+     * @param consumoMinuto consumo por minuto
+     * @return importe a pagar
+     */
+    protected double procesarConsumo(int minutos, double consumoMinuto) {
+        double bateriaConsumida = consumoMinuto * minutos;
+        int nuevaBateria = (int) (getBateria() - (int) bateriaConsumida);
+        setBateria(Math.max(nuevaBateria, 0));
+
+        double penalizacionAplicada = 0;
+        if (nuevaBateria <= 0) {
+            penalizacionAplicada = 1.0;
+            setPenalizacion(getPenalizacion() + penalizacionAplicada);
+        }
+
+        return minutos * getTarifaMinuto() + penalizacionAplicada;
     }
 
 

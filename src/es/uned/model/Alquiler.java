@@ -118,6 +118,7 @@ public class Alquiler {
     }
 
     public int getTiempoDuracion() {
+
         return tiempoDuracion;
     }
 

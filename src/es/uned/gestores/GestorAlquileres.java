@@ -39,7 +39,7 @@ public class GestorAlquileres {
      * @param vehiculo vehículo a alquilar
      * @param baseInicio base de inicio del alquiler
      */
-    public void iniciarAlquiler(Usuario usuario, Vehiculo vehiculo, Base baseInicio) {
+    public Alquiler iniciarAlquiler(Usuario usuario, Vehiculo vehiculo, Base baseInicio) {
 
         if(vehiculo.getEstado() != EstadoVehiculo.DISPONIBLE) {
             throw new IllegalStateException("El vehículo no está disponible para alquilar");
@@ -57,6 +57,8 @@ public class GestorAlquileres {
         this.alquileres.add(alquiler);
         System.out.println("Alquiler iniciado: " + alquiler.getId());
         usuario.getHistorialViajes().add(alquiler);
+
+        return alquiler;
     }
 
     /**
@@ -92,14 +94,14 @@ public class GestorAlquileres {
             importe *= (1 - usuario.getDescuento() / 100);
         }
 
-        alquiler.setImporteFinal(importe);
-        alquiler.setBaseFin(baseFin);
-        alquiler.setEstado(EstadoAlquiler.FINALIZADO);
-
         // si el usuario no tiene saldo suficiente, no se puede finalizar el alquiler
         if (usuario.getsaldo() < importe) {
             throw new IllegalStateException("Saldo insuficiente para finalizar el alquiler.");
         }
+
+        alquiler.setImporteFinal(importe);
+        alquiler.setBaseFin(baseFin);
+        alquiler.setEstado(EstadoAlquiler.FINALIZADO);
 
         // Descontar saldo al usuario
         usuario.recargarSaldo(-importe);
@@ -107,9 +109,6 @@ public class GestorAlquileres {
         // Actualizar estado del vehículo
         vehiculo.setEstado(EstadoVehiculo.DISPONIBLE);
 
-        // Simular el consumo de batería
-        int bateriaConsumida = duracionMinutos; // Por ejemplo, 1% por minuto
-        vehiculo.setBateria(Math.max(0, vehiculo.getBateria() - bateriaConsumida));
 
         // Penalización si batería llega a 0
         if (vehiculo.getBateria() == 0) {
@@ -151,5 +150,6 @@ public class GestorAlquileres {
     public List<Alquiler> consultarAlquileres() {
         return this.alquileres;
     }
+
 
 }

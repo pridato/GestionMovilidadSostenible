@@ -14,8 +14,8 @@ public class MenuAdministrador {
     private static Coordenadas limiteInferior;
     private static Coordenadas limiteSuperior;
 
-    private static final GestorUsuarios gu = new GestorUsuarios();
-    private static final GestorVehiculos gv = new GestorVehiculos();
+    private static final GestorUsuarios gu = GestorUsuarios.getInstancia();
+    private static final GestorVehiculos gv = GestorVehiculos.getInstancia();
 
     /**
      * Gestionar las opciones del menú del administrador.

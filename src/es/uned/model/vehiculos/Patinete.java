@@ -8,23 +8,26 @@ import es.uned.model.Coordenadas;
  */
 public class Patinete extends Vehiculo {
 
+    private final double consumoMinuto = 0.5;
+
     public Patinete(String matricula, Coordenadas coordenadas, EstadoVehiculo estado, int bateria, double tarifaMinuto, double penalizacion) {
         super(matricula, coordenadas, estado, bateria, tarifaMinuto, penalizacion);
     }
 
     @Override
-    public void setConsumoMinuto(double consumoMinuto) {
-
+    public void calcularBateriaRestante(int minutos) {
+        bateria -= (int) procesarConsumo(minutos, consumoMinuto);
     }
+
 
     @Override
     public double calcularImporte(int minutos) {
-        return 0;
+        return procesarConsumo(minutos, consumoMinuto);
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return super.toString() + "consumoMinuto=" + consumoMinuto;
     }
 
 }

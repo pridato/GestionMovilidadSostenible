@@ -27,13 +27,26 @@ import static es.uned.utils.dto.cargarUsuarios;
  */
 public class GestorUsuarios {
 
-    List<Usuario> usuarios;
+    private static final GestorUsuarios instancia = new GestorUsuarios();
+
+    private List<Usuario> usuarios = new ArrayList<>();
+
     private int descuentoPremium = 10; // descuento del 10% (defecto) para usuarios premium
+
 
     /* constructor */
     public GestorUsuarios() {
         this.usuarios = new ArrayList<>(cargarUsuarios()); // evitamos problema inmutabilidad
     }
+
+    /**
+     * Método para obtener la instancia del gestor de usuarios.
+     * @return instancia del gestor de usuarios.
+     */
+    public static GestorUsuarios getInstancia() {
+        return instancia;
+    }
+
 
     /**
      * Método para añadir nuevos usuarios
