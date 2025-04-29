@@ -1,9 +1,10 @@
+import es.uned.menus.MenuUsuario;
+
 import java.util.Scanner;
 
 import static es.uned.menus.MenuAdministrador.gestionarOpcionesAdminstrador;
 import static es.uned.menus.MenuMantenimiento.gestionarOpcionesMantenimiento;
 import static es.uned.menus.MenuMecanico.gestionarOpcionesMecanico;
-import static es.uned.menus.MenuUsuario.gestionarOpcionesUsuario;
 
 public class Main {
 
@@ -11,6 +12,7 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
+        MenuUsuario menuUsuario = new MenuUsuario();
         int opcion;
 
         do {
@@ -21,7 +23,7 @@ public class Main {
 
             switch (opcion) {
                 case 1 -> gestionarOpcionesAdminstrador(scanner);
-                case 2 -> gestionarOpcionesUsuario(scanner);
+                case 2 -> menuUsuario.gestionarOpcionesUsuario(scanner);
                 case 3 -> gestionarOpcionesMantenimiento(scanner);
                 case 4 -> gestionarOpcionesMecanico(scanner);
                 case 0 -> System.out.println("Saliendo del programa...");

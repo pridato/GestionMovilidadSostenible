@@ -2,7 +2,9 @@ package es.uned.gestores;
 
 import es.uned.model.Base;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static es.uned.utils.dto.cargarBases;
 
@@ -30,7 +32,7 @@ public class GestorBases {
 
     /* Constructor de la clase GestorBases. */
     public GestorBases() {
-        this.bases = cargarBases();
+        this.bases = new ArrayList<>(cargarBases());
     }
 
     /**
@@ -91,17 +93,29 @@ public class GestorBases {
                 .toList();
     }
 
+
     /**
-     * Método para obtener una lista de bases ordenada por ocupación.
-     * @return Lista de bases ordenada por ocupación.
+     * Método para consultar una base por su ID.
+     * @param id ID de la base a consultar.
+     * @return Base encontrada o null si no se encuentra.
      */
-    public List<Base> consultarBasesPorOcupacion() {
+    public Base consultarBasePorId(String id) {
         return this.bases.stream()
-                .sorted((base1, base2) -> {
-                    int ocupacionBase1 = base1.getVehiculosAlquilados().size();
-                    int ocupacionBase2 = base2.getVehiculosAlquilados().size();
-                    return Integer.compare(ocupacionBase1, ocupacionBase2);
-                })
-                .toList();
+                .filter(base -> Objects.equals(base.getId(), id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Método para consultar bases disponibles por ocupación.
+     */
+    public void consultarBasesDisponiblesPorOcupacion() {
+        if (this.bases.isEmpty()) {
+            System.out.println("No hay bases disponibles.");
+            return;
+        }
+        this.bases.stream()
+                .filter(base -> !base.isAveriada())
+                .forEach(b -> System.out.println(b.toString()));
     }
 }

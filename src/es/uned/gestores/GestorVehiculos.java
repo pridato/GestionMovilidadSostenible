@@ -8,6 +8,7 @@ import es.uned.model.vehiculos.Moto;
 import es.uned.model.vehiculos.Patinete;
 import es.uned.model.vehiculos.Vehiculo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -35,7 +36,7 @@ public class GestorVehiculos {
 
     // Constructor
     public GestorVehiculos() {
-        this.vehiculos = cargarVehiculos();
+        this.vehiculos = new ArrayList<>(cargarVehiculos());
     }
 
 
@@ -313,6 +314,17 @@ public class GestorVehiculos {
      */
     public void consultarVehiculos() {
         this.vehiculos.forEach(System.out::println);
+    }
+
+    /**
+     * Método para consultar el estado de batería de un vehículo.
+     */
+    public void consultarVehiculosDisponibles() {
+        for (Vehiculo vehiculo : this.vehiculos) {
+            if (vehiculo.getEstado() == EstadoVehiculo.DISPONIBLE) {
+                System.out.println(vehiculo);
+            }
+        }
     }
 
 }

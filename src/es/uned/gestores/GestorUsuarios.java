@@ -143,4 +143,22 @@ public class GestorUsuarios {
     public void setDescuentoPremium(int descuentoPremium) {
         this.descuentoPremium = descuentoPremium;
     }
+
+    /**
+     * Método para listar todos los usuarios.
+     */
+    public void listarUsuarios() {
+        for(int i=0; i<usuarios.size(); i++){
+            System.out.println(i +" -> " + usuarios.get(i).getDNI() + " " + usuarios.get(i).getNombre() + " " + usuarios.get(i).getApellidos());
+        }
+    }
+
+    /**
+     * Método para obtener un usuario por su índice.
+     * @param i índice del usuario en la lista.
+     * @return usuario en la posición i.
+     */
+    public Usuario obtenerUsuarioIndice(int i) {
+        return usuarios.get(i);
+    }
 }
