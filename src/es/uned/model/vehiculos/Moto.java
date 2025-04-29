@@ -31,12 +31,19 @@ public class Moto extends Vehiculo{
 
     @Override
     public void calcularBateriaRestante(int minutos) {
-        bateria -= (int) procesarConsumo(minutos, consumoMinuto);
+        // Se calcula el consumo de bateria restando la bateria menos la bateria consumida
+        double bateriaConsumida = minutos * consumoMinuto;
+        if (bateriaConsumida > getBateria()) {
+            System.out.println("No hay suficiente bateria para realizar el alquiler");
+            return;
+        }
+
+        setBateria((bateria - bateriaConsumida));
     }
 
     @Override
     public double calcularImporte(int minutos) {
-        return procesarConsumo(minutos, consumoMinuto);
+        return 0;
     }
 
     @Override

@@ -52,7 +52,7 @@ public abstract class Vehiculo {
         return bateria;
     }
 
-    public void setBateria(int bateria) {
+    public void setBateria(double bateria) {
         this.bateria = bateria;
     }
 
@@ -80,25 +80,7 @@ public abstract class Vehiculo {
         this.estado = EstadoVehiculo.AVERIADO;
     }
 
-    /**
-     * Método para procesar el consumo de batería y calcular el importe a pagar.
-     * @param minutos minutos de uso del vehículo
-     * @param consumoMinuto consumo por minuto
-     * @return importe a pagar
-     */
-    protected double procesarConsumo(int minutos, double consumoMinuto) {
-        double bateriaConsumida = consumoMinuto * minutos;
-        int nuevaBateria = (int) (getBateria() - (int) bateriaConsumida);
-        setBateria(Math.max(nuevaBateria, 0));
 
-        double penalizacionAplicada = 0;
-        if (nuevaBateria <= 0) {
-            penalizacionAplicada = 1.0;
-            setPenalizacion(getPenalizacion() + penalizacionAplicada);
-        }
-
-        return minutos * getTarifaMinuto() + penalizacionAplicada;
-    }
 
 
     @Override

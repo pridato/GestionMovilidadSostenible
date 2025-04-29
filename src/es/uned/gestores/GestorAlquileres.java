@@ -116,6 +116,11 @@ public class GestorAlquileres {
             usuario.recargarSaldo(-penalizacion);
             System.out.println("Penalización aplicada al usuario por agotar batería: " + penalizacion + "€");
         }
+
+        System.out.println("Alquiler finalizado: " + alquiler.getId());
+        System.out.println("Importe final: " + alquiler.getImporteFinal() + "€");
+        System.out.println("Duración: " + alquiler.getTiempoDuracion() + " minutos");
+        System.out.println("Saldo actual del usuario: " + usuario.getsaldo() + "€");
     }
 
     /**

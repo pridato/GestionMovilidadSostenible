@@ -64,7 +64,7 @@ public class MenuUsuario {
                         System.out.println("No tienes ningún vehículo alquilado.");
                         break;
                     }
-                    consultarEstadoBateria(this.alquiler.getVehiculo(), this.alquiler);
+                    consultarEstadoBateria(this.alquiler.getVehiculo());
                 }
 
                 case 2 -> gv.consultarVehiculosDisponibles();
@@ -92,7 +92,7 @@ public class MenuUsuario {
     /**
      * Método para consultar el estado de batería del vehículo.
      */
-    private static void consultarEstadoBateria(Vehiculo vehiculo, Alquiler alquiler) {
+    private void consultarEstadoBateria(Vehiculo vehiculo) {
         System.out.println("Consultando estado de batería...");
         gv.consultarBateria(vehiculo, alquiler);
     }
@@ -103,17 +103,34 @@ public class MenuUsuario {
      * @param scanner Scanner para leer la entrada del usuario.
      */
     private Alquiler alquilarVehiculo(Scanner scanner) {
-        gv.consultarVehiculosDisponibles();
-        System.out.println("Introduce la matrícula del vehículo que deseas alquilar:");
-        String matricula = scanner.nextLine();
+        Vehiculo vehiculo;
+        String matricula;
 
+        do {
+            gv.consultarVehiculosDisponibles();
+            System.out.println("Introduce la matrícula del vehículo que deseas alquilar:");
+            matricula = scanner.nextLine();
 
-        Vehiculo vehiculo = gv.obtenerVehiculo(matricula);
+            vehiculo = gv.obtenerVehiculo(matricula);
+            if (vehiculo == null) {
+                System.out.println("Vehículo no encontrado.");
+                matricula = "";
+            }
+        } while (matricula.isEmpty());
 
-        gb.consultarBasesDisponiblesPorOcupacion();
-        System.out.println("Introduce el ID de la base donde deseas alquilar el vehículo:");
-        String idBase = scanner.nextLine();
-        Base base = gb.consultarBasePorId(idBase);
+        Base base;
+        String idBase;
+        do {
+            gb.consultarBasesDisponiblesPorOcupacion();
+            System.out.println("Introduce el ID de la base donde deseas alquilar el vehículo:");
+            idBase = scanner.nextLine();
+            base = gb.consultarBasePorId(idBase);
+            if (base == null) {
+                System.out.println("Base no encontrada.");
+                idBase = "";
+            }
+        } while (idBase.isEmpty());
+
         return ga.iniciarAlquiler(usuario, vehiculo, base);
     }
 
@@ -121,9 +138,23 @@ public class MenuUsuario {
      * Método para devolver un vehículo.
      * @param scanner Scanner para leer la entrada del usuario.
      */
-    private static void devolverVehiculo(Scanner scanner) {
-        System.out.println("Devolviendo vehículo...");
-        // Lógica real aquí
+    private void devolverVehiculo(Scanner scanner) {
+
+        Base base;
+        String idBase;
+        do {
+            gb.consultarBasesDisponiblesPorOcupacion();
+            System.out.println("Introduce el ID de la base donde deseas finalizar el alquilar:");
+            idBase = scanner.nextLine();
+            base = gb.consultarBasePorId(idBase);
+            if (base == null) {
+                System.out.println("Base no encontrada.");
+                idBase = "";
+            }
+        } while (idBase.isEmpty());
+
+        ga.finalizarAlquiler(usuario, alquiler, base);
+
     }
 
 }
