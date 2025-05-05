@@ -15,8 +15,8 @@ public class GestorEstadisticas {
      */
     public static List<Base> obtenerBasesMasUtilizadas(List<Base> bases) {
         bases.sort((b1, b2) -> Integer.compare(
-                b2.getVehiculosAlquilados() != null ? b2.getVehiculosAlquilados().size() : 0,
-                b1.getVehiculosAlquilados() != null ? b1.getVehiculosAlquilados().size() : 0
+                b2.getVehiculos() != null ? b2.getVehiculos().size() : 0,
+                b1.getVehiculos() != null ? b1.getVehiculos().size() : 0
         ));
         return bases;
     }

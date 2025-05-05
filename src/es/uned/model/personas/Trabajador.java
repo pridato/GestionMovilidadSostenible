@@ -24,12 +24,10 @@ public class Trabajador extends Persona {
     @Override
     public String toString() {
         final String INDENT = "    ";
-        StringBuilder sb = new StringBuilder();
-        sb.append("Trabajador {\n");
-        sb.append(super.toString());
-        sb.append(INDENT).append("Fecha de contratación: ").append(fechaContratacion).append("\n");
-        sb.append("}");
-        return sb.toString();
+        return "Trabajador {\n" +
+                super.toString() +
+                INDENT + "Fecha de contratación: " + fechaContratacion + "\n" +
+                "}";
     }
 
 }

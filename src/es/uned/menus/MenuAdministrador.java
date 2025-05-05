@@ -161,8 +161,8 @@ public class MenuAdministrador {
                 case 4 -> gv.consultarVehiculos();
                 case 5 -> gv.setTarifaMinuto(scanner);
                 case 6 -> gv.consultarBaterias(scanner);
-                case 7 -> gi.visualizarProblemasVehículos();
-                case 8 -> gi.asignarVehiculoTrabajador(scanner);
+                case 7 -> gi.visualizarProblemasVehículos(scanner);
+                case 8 -> gi.asignarVehiculoTrabajador(scanner, gp);
                 case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -175,25 +175,26 @@ public class MenuAdministrador {
      * @param scanner
      */
     private static void gestionarMenuBases(Scanner scanner) {
-        System.out.println("\n--- Gestión de bases ---");
-        System.out.println("1. Visualizar estado de las bases");
-        System.out.println("2. Asignar bases a mecánicos");
-        System.out.println("3. Consultar bases disponibles");
-        System.out.println("4. Consultar bases por ocupación");
-        System.out.println("5. Generar estadísticas de bases ordenadas por demanda");
-        System.out.println("0. Volver");
-        System.out.println("------------------------------");
+
 
         int opcion = 0;
 
         do {
+            System.out.println("\n--- Gestión de bases ---");
+            System.out.println("1. Visualizar estado de las bases");
+            System.out.println("2. Asignar bases a mecánicos");
+            System.out.println("3. Consultar bases disponibles");
+            System.out.println("4. Consultar bases por ocupación");
+            System.out.println("5. Generar estadísticas de bases ordenadas por demanda");
+            System.out.println("0. Volver");
+            System.out.println("------------------------------");
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
             scanner.nextLine(); // limpiar buffer
 
             switch (opcion) {
-                case 1 -> gb.consultarEstadoBases();
-                case 2 -> gi.asignarBaseTrabajador(scanner);
+                case 1 -> gb.consultarEstadoBases(scanner);
+                case 2 -> gi.asignarBaseTrabajador(scanner, gp);
                 case 3 -> gb.consultarBasesDisponibles();
                 case 4 -> gb.consultarBasesPorOcupacion();
                 case 5 -> gb.generarEstadisticasBases();

@@ -236,6 +236,20 @@ public class GestorPersonas {
     }
 
     /**
+     * Método para obtener la lista de trabajadores disponibles.
+     */
+    public void consultarTrabajadoresDisponibles() {
+        // mostrar solo mecanicos y mantenimiento
+        for (Persona persona : personas) {
+            if (persona instanceof Mecanico mecanico) {
+                System.out.println("El mecánico " + mecanico.getNombre() + " " + mecanico.getApellidos() + "con dni "+ mecanico.getDNI() + " está disponible.");
+            } else if (persona instanceof Mantenimiento mantenimiento) {
+                System.out.println("El mantenimiento " + mantenimiento.getNombre() + " " + mantenimiento.getApellidos()  + "con dni "+ mantenimiento.getDNI() + " está disponible.");
+            }
+        }
+    }
+
+    /**
      * Método para obtener la lista de usuarios que han utilizado vehículos.
      */
     public void utilizacionVehiculosPorUsuario() {

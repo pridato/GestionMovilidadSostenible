@@ -91,7 +91,7 @@ public class dto {
         );
 
         personas.add(new Usuario(
-                        "06428542X",
+                        "06428545X",
                         "Paco",
                         "Ruiz",
                         "paco@gmail.com",
@@ -135,7 +135,7 @@ public class dto {
 
         personas.add(
                 new Mantenimiento(
-                        "06428542X",
+                        "06428544X",
                         "Sara",
                         "Mrtínez",
                         "sara@gmail.com",
@@ -149,7 +149,7 @@ public class dto {
 
         personas.add(
                 new Administrador(
-                        "06428542X",
+                        "06428543X",
                         "Sara",
                         "Mrtínez",
                         "sara@gmail.com",
@@ -294,9 +294,27 @@ public class dto {
     public static List<Incidencia> cargarIncidencias() {
         List<Incidencia> incidencias = new ArrayList<>();
 
-        incidencias.add(new Incidencia((Usuario)cargarPersonas().getFirst(), cargarVehiculos().get(1), "En reparación", new Date()));
-        incidencias.add(new Incidencia((Usuario)cargarPersonas().getFirst(),cargarVehiculos().getFirst(), "En reparación", new Date()));
-        incidencias.add(new Incidencia((Usuario)cargarPersonas().getFirst(), cargarVehiculos().getLast(), "En reparación", new Date()));
+        incidencias.add(new Incidencia(
+                (Usuario) cargarPersonas().getFirst(),
+                cargarVehiculos().get(1),
+                "Se ha detectado una pérdida de aceite en el motor durante la revisión rutinaria.",
+                new Date()
+        ));
+
+        incidencias.add(new Incidencia(
+                (Usuario) cargarPersonas().getFirst(),
+                cargarVehiculos().getFirst(),
+                "Vehículo en reparación por fallo en el sistema de frenos traseros.",
+                new Date()
+        ));
+
+        incidencias.add(new Incidencia(
+                (Usuario) cargarPersonas().getFirst(),
+                cargarVehiculos().getLast(),
+                "En reparación por problemas eléctricos en el panel de instrumentos.",
+                new Date()
+        ));
+
 
         return incidencias;
     }

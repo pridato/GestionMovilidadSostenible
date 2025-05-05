@@ -2,10 +2,7 @@ package es.uned.gestores;
 
 import es.uned.model.Base;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static es.uned.utils.dto.cargarBases;
 
@@ -30,7 +27,7 @@ import static es.uned.utils.dto.cargarBases;
 public class GestorBases {
 
     private static final GestorBases instancia = new GestorBases();
-    private List<Base> bases = new ArrayList<>();
+    private final List<Base> bases;
 
 
     /* Constructor de la clase GestorBases. */
@@ -50,14 +47,18 @@ public class GestorBases {
     /**
      * Método para consultar el estado de las bases.
      */
-    public void consultarEstadoBases() {
+    public void consultarEstadoBases(Scanner scanner) {
         System.out.println("Estado de las bases:");
         for (Base base : bases) {
-            System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas() +
+            System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas().getX() + ", " + base.getCoordenadas().getY() +
                     ", Capacidad máxima: " + base.getCapacidadMaxima() +
-                    ", Vehículos alquilados: " + base.getVehiculosAlquilados().size() +
-                    ", Averiada: " + base.isAveriada());
+                    ", Vehículos alquilados: " + base.getVehiculos().size() +
+                    ", Huecos disponibles: " + (base.getCapacidadMaxima() - base.getVehiculos().size()) +
+                    ", Averiada: " + (base.isAveriada() ? "Sí" : "No"));
         }
+
+        System.out.println("Presione una tecla para continuar...");
+        scanner.nextLine();
     }
 
     /**
@@ -66,7 +67,7 @@ public class GestorBases {
     public void consultarBasesDisponibles() {
         System.out.println("Bases disponibles:");
         for (Base base : bases) {
-            if (!base.isAveriada() && base.getVehiculosAlquilados().size() < base.getCapacidadMaxima()) {
+            if (!base.isAveriada() && base.getVehiculos().size() < base.getCapacidadMaxima()) {
                 System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas() +
                         ", Capacidad máxima: " + base.getCapacidadMaxima());
             }
@@ -80,8 +81,8 @@ public class GestorBases {
         // consultar bases ordenadas por ocupacion
         this.bases.stream().
                 filter(base -> !base.isAveriada()).
-                sorted(Comparator.comparingInt(base -> base.getVehiculosAlquilados().size())).
-                forEach(base -> System.out.println("ID: " + base.getId() + ", Ocupación: " + base.getVehiculosAlquilados().size() + "/" + base.getCapacidadMaxima()));
+                sorted(Comparator.comparingInt(base -> base.getVehiculos().size())).
+                forEach(base -> System.out.println("ID: " + base.getId() + ", Ocupación: " + base.getVehiculos().size() + "/" + base.getCapacidadMaxima()));
     }
 
     /**
@@ -91,10 +92,10 @@ public class GestorBases {
         System.out.println("Estadísticas de las bases:");
         this.bases.stream()
                 .filter(base -> !base.isAveriada())
-                .sorted(Comparator.comparing((Base base) -> base.getVehiculosAlquilados().size()).reversed())
+                .sorted(Comparator.comparing((Base base) -> base.getVehiculos().size()).reversed())
                 .forEach(base -> System.out.println(
                         "ID: " + base.getId() +
-                                ", Ocupación: " + base.getVehiculosAlquilados().size() +
+                                ", Ocupación: " + base.getVehiculos().size() +
                                 "/" + base.getCapacidadMaxima()
                 ));
     }

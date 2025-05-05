@@ -1,7 +1,9 @@
 package es.uned.model.personas;
 
 import es.uned.model.Base;
+import es.uned.model.vehiculos.Vehiculo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,11 +13,13 @@ import java.util.List;
 public class Mantenimiento extends Trabajador{
 
     private List<Base> basesAsignadas;
+    private List<Vehiculo> vehiculosAsignados;
 
 
     public Mantenimiento(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion, List<Base> basesAsignadas) {
         super(DNI, nombre, apellidos, email, telefono, fechaContratacion);
         this.basesAsignadas = basesAsignadas;
+        this.vehiculosAsignados = new ArrayList<>();
     }
 
     public List<Base> getBasesAsignadas() {
@@ -27,16 +31,23 @@ public class Mantenimiento extends Trabajador{
     }
 
     /**
-     * Método para asignar una base al trabajador de mantenimiento.
-     * @param base base a asignar
-     * @return true si se ha asignado correctamente, false en caso contrario
+     * Método para asignar un vehículo al trabajador de mantenimiento.
+     * @param vehiculo vehículo a asignar
      */
-    public boolean asignarBase(Base base) {
+    public void asignarVehiculo(Vehiculo vehiculo) {
+        if (vehiculo != null) {
+            this.vehiculosAsignados.add(vehiculo);
+        }
+    }
+    /**
+     * Método para asignar una base al trabajador de mantenimiento.
+     *
+     * @param base base a asignar
+     */
+    public void asignarBase(Base base) {
         if (base != null) {
             this.basesAsignadas.add(base);
-            return true;
         }
-        return false;
     }
 
     @Override
@@ -55,8 +66,24 @@ public class Mantenimiento extends Trabajador{
             sb.append(INDENT).append(INDENT).append("(Sin bases asignadas)\n");
         }
 
+        if (vehiculosAsignados != null && !vehiculosAsignados.isEmpty()) {
+            sb.append(INDENT).append("Vehículos asignados:\n");
+            for (Vehiculo vehiculo : vehiculosAsignados) {
+                sb.append(INDENT).append(INDENT).append("- ").append(vehiculo).append("\n");
+            }
+        } else {
+            sb.append(INDENT).append("Vehículos asignados: (Sin vehículos asignados)\n");
+        }
+
         sb.append("}");
         return sb.toString();
     }
 
+    public List<Vehiculo> getVehiculosAsignados() {
+        return vehiculosAsignados;
+    }
+
+    public void setVehiculosAsignados(List<Vehiculo> vehiculosAsignados) {
+        this.vehiculosAsignados = vehiculosAsignados;
+    }
 }

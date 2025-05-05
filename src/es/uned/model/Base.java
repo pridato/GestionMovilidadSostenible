@@ -1,5 +1,8 @@
 package es.uned.model;
 
+import es.uned.model.vehiculos.Vehiculo;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,13 +13,14 @@ public class Base {
     private String id;
     private Coordenadas coordenadas;
     private int capacidadMaxima;
-    private List<Alquiler> vehiculosAlquilados;
+    private List<Vehiculo> vehiculos;
     private boolean averiada = false;
 
     public Base(String id, Coordenadas coordenadas, int capacidadMaxima) {
         this.id = id;
         this.coordenadas = coordenadas;
         this.capacidadMaxima = capacidadMaxima;
+        this.vehiculos = new ArrayList<>();
     }
 
     public String getId() {
@@ -43,12 +47,12 @@ public class Base {
         this.capacidadMaxima = capacidadMaxima;
     }
 
-    public List<Alquiler> getVehiculosAlquilados() {
-        return vehiculosAlquilados;
+    public List<Vehiculo> getVehiculos() {
+        return vehiculos;
     }
 
-    public void setVehiculosAlquilados(List<Alquiler> vehiculosAlquilados) {
-        this.vehiculosAlquilados = vehiculosAlquilados;
+    public void setVehiculosAlquilados(List<Vehiculo> vehiculosAlquilados) {
+        this.vehiculos = vehiculosAlquilados;
     }
 
     public boolean isAveriada() {
@@ -65,7 +69,7 @@ public class Base {
                 "    ID: " + id + "\n" +
                 "    Coordenadas: " + (coordenadas != null ? coordenadas.toString() : "No disponibles") + "\n" +
                 "    Capacidad Máxima: " + capacidadMaxima + "\n" +
-                "    Vehículos Alquilados: " + (vehiculosAlquilados != null ? vehiculosAlquilados.toString() : "No disponibles") + "\n" +
+                "    Vehículos Alquilados: " + (vehiculos != null ? vehiculos.toString() : "No disponibles") + "\n" +
                 "}";
     }
 }
