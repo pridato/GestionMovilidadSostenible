@@ -6,10 +6,7 @@ import es.uned.model.personas.*;
 import es.uned.utils.GeolocalizacionPorIP;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static es.uned.menus.MenuAdministrador.leerCoordenadasManualmente;
 import static es.uned.utils.dto.cargarPersonas;
@@ -19,7 +16,8 @@ public class GestorPersonas {
 
     private static final GestorPersonas instancia = new GestorPersonas();
 
-    private final List<Persona> personas = new ArrayList<>();
+    private final Set<Persona> personas = new HashSet<>();
+
 
     /* constructor */
     public GestorPersonas() {
@@ -29,6 +27,7 @@ public class GestorPersonas {
 
     /**
      * Método para obtener la instancia del gestor de personas.
+     *
      * @return instancia del gestor de personas.
      */
     public static GestorPersonas getInstancia() {
@@ -82,6 +81,7 @@ public class GestorPersonas {
         }
         Persona persona = null;
 
+
         switch (opcionTipo) {
             case 1 -> {
                 System.out.println("¿Desea usar localización automática por IP? (S/N): ");
@@ -97,7 +97,8 @@ public class GestorPersonas {
                 } else {
                     coordenadas = leerCoordenadasManualmente(scanner);
                 }
-                new Usuario(dni, nombre, apellidos, email, telefono, coordenadas);
+
+                persona = new Usuario(dni, nombre, apellidos, email, telefono, coordenadas);
             }
             case 2 -> persona = new Administrador(dni, nombre, apellidos, email, telefono, fecha);
             case 3 -> persona = new Mecanico(dni, nombre, apellidos, email, telefono, fecha, null, null);
@@ -106,12 +107,16 @@ public class GestorPersonas {
             }
         }
 
+
         if (persona != null) {
-            personas.add(persona);
+            if (!personas.add(persona)) {
+                throw new IllegalArgumentException("Ya existe una persona con ese DNI.");
+            }
             System.out.println("Persona creada: " + persona);
         } else {
-            System.out.println("Error al crear la persona.");
+            System.out.println("Error al crear la persona. ");
         }
+
     }
 
 
@@ -204,13 +209,7 @@ public class GestorPersonas {
         }
     }
 
-    /**
-     * Método para obtener la lista de personas.
-     * @return lista de personas.
-     */
-    public List<Persona> getPersonas() {
-        return personas;
-    }
+
 
     /**
      * Método para buscar una persona por su DNI.

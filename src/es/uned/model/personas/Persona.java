@@ -92,6 +92,19 @@ public class Persona {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Persona other)) return false;
+        return this.DNI.equals(other.DNI);
+    }
+
+    @Override
+    public int hashCode() {
+        return DNI.hashCode();
+    }
+
+
+    @Override
     public String toString() {
         final String INDENT = "    ";
         StringBuilder sb = new StringBuilder();

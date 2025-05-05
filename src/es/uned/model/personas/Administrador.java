@@ -15,6 +15,7 @@ public class Administrador extends Trabajador {
     @Override
     public String toString() {
         return "Administrador {\n" +
+                super.toString() +
                 "}";
     }
 

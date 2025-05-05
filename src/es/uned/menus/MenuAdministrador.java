@@ -86,7 +86,13 @@ public class MenuAdministrador {
             scanner.nextLine(); // limpiar buffer
 
             switch (opcion) {
-                case 1 -> gp.crearPersona(scanner);
+                case 1 -> {
+                    try {
+                        gp.crearPersona(scanner);
+                    } catch (Exception e) {
+                        System.out.println("Error al crear la persona: " + e.getMessage());
+                    }
+                }
                 case 2 -> gp.eliminarPersona(scanner);
                 case 3 -> gp.modificarPersona(scanner);
                 case 4 -> gp.listarPersonas();
