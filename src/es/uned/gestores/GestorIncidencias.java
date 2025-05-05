@@ -93,34 +93,33 @@ public class GestorIncidencias {
 
         Incidencia incidencia = buscarIncidenciaPorId(idIncidencia);
 
+        if (incidencia == null) {
+            System.out.println("Incidencia no encontrada.");
+            return;
+        }
         incidencia.getVehiculo().setEstado(EstadoVehiculo.AVERIADO);
 
-        if (incidencia != null) {
-            System.out.println("¿Desea consultar los trabajadores? (s/n)");
-            String respuesta2 = scanner.nextLine();
-            if (respuesta2.equalsIgnoreCase("s")) {
-                gp.consultarTrabajadoresDisponibles();
-            }
-            System.out.print("Introduce el DNI del trabajador: ");
-            String dni = scanner.nextLine();
-            Trabajador trabajador = (Trabajador) gp.buscarPersonaPorDNI(dni);
+        System.out.println("¿Desea consultar los trabajadores? (s/n)");
+        String respuesta2 = scanner.nextLine();
+        if (respuesta2.equalsIgnoreCase("s")) {
+            gp.consultarTrabajadoresDisponibles();
+        }
+        System.out.print("Introduce el DNI del trabajador: ");
+        String dni = scanner.nextLine();
+        Trabajador trabajador = (Trabajador) gp.buscarPersonaPorDNI(dni);
 
-            // como la incidencia solo puede ser de un mecanico o de mantenimiento comprobamos
-            if(trabajador instanceof Mantenimiento || trabajador instanceof Mecanico) {
-                incidencia.setEncargado(trabajador);
-                    if (trabajador instanceof Mecanico mecanico) {
-                        mecanico.asignarVehiculo(incidencia.getVehiculo());
-                    } else {
-                        Mantenimiento mantenimiento = (Mantenimiento) trabajador;
-                        mantenimiento.asignarVehiculo(incidencia.getVehiculo());
-                    }
-                System.out.println("Vehículo asignado al trabajador con dni: " + dni + " y nombre " + trabajador.getNombre() + " " + trabajador.getApellidos());
-            } else {
-                System.out.println("El trabajador no es un mecánico o un mantenimiento.");
-            }
-
+        // como la incidencia solo puede ser de un mecanico o de mantenimiento comprobamos
+        if(trabajador instanceof Mantenimiento || trabajador instanceof Mecanico) {
+            incidencia.setEncargado(trabajador);
+                if (trabajador instanceof Mecanico mecanico) {
+                    mecanico.asignarVehiculo(incidencia.getVehiculo());
+                } else {
+                    Mantenimiento mantenimiento = (Mantenimiento) trabajador;
+                    mantenimiento.asignarVehiculo(incidencia.getVehiculo());
+                }
+            System.out.println("Vehículo asignado al trabajador con dni: " + dni + " y nombre " + trabajador.getNombre() + " " + trabajador.getApellidos());
         } else {
-            System.out.println("Incidencia no encontrada.");
+            System.out.println("El trabajador no es un mecánico o un mantenimiento.");
         }
 
     }
