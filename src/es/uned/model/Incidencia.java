@@ -17,14 +17,24 @@ public class Incidencia {
     private String descripcion;
     private Date fechaReporte;
     private Trabajador encargado;
+    private Base base;
 
-    public Incidencia(String id, Usuario usuario, Vehiculo vehiculo, String descripcion, Date fechaReporte, Trabajador encargado) {
-        this.id = id;
+    /* constructor con vehiculos */
+    public Incidencia(Usuario usuario, Vehiculo vehiculo, String descripcion, Date fechaReporte) {
+        this.id = String.valueOf(System.currentTimeMillis()); // valor aleatorio
         this.usuario = usuario;
         this.vehiculo = vehiculo;
         this.descripcion = descripcion;
         this.fechaReporte = fechaReporte;
-        this.encargado = encargado;
+    }
+
+    /* constructor con bases */
+    public Incidencia(Usuario usuario, String descripcion, Date fechaReporte, Base base) {
+        this.id = String.valueOf(System.currentTimeMillis()); // valor aleatorio
+        this.usuario = usuario;
+        this.descripcion = descripcion;
+        this.fechaReporte = fechaReporte;
+        this.base = base;
     }
 
     public Usuario getUsuario() {
@@ -85,5 +95,13 @@ public class Incidencia {
                 ", fechaReporte=" + fechaReporte +
                 ", encargado=" + encargado +
                 '}';
+    }
+
+    public Base getBase() {
+        return base;
+    }
+
+    public void setBase(Base base) {
+        this.base = base;
     }
 }

@@ -1,8 +1,7 @@
 package es.uned.menus;
 
+import es.uned.gestores.GestorIncidencias;
 import es.uned.gestores.GestorPersonas;
-import es.uned.gestores.GestorTrabajadores;
-import es.uned.gestores.GestorUsuarios;
 import es.uned.gestores.GestorVehiculos;
 import es.uned.model.Coordenadas;
 import java.util.Scanner;
@@ -18,6 +17,7 @@ public class MenuAdministrador {
 
     private static final GestorVehiculos gv = GestorVehiculos.getInstancia();
     private static final GestorPersonas gp = GestorPersonas.getInstancia();
+    private static final GestorIncidencias gi = GestorIncidencias.getInstancia();
 
     /**
      * Gestionar las opciones del menú del administrador.
@@ -36,8 +36,8 @@ public class MenuAdministrador {
             switch (opcion) {
                 case 1 -> gestionarUsuarios(scanner);
                 case 2 -> gestionarVehiculos(scanner);
-                case 3 -> visualizarBateria();
-                case 4 -> gestionarReparaciones(scanner);
+                case 3 -> gv.consultarBaterias();
+                case 4 -> gi.visualizarProblemasVehículos();
                 case 5 -> generarEstadisticas();
                 case 6 -> establecerLimitesCoordenadas(scanner);
                 case 0 -> System.out.println("Saliendo del programa...");
@@ -173,7 +173,7 @@ public class MenuAdministrador {
         System.out.println("1. Gestión de Usuarios");
         System.out.println("2. Gestión de Vehículos");
         System.out.println("3. Visualización de Estado de la Batería de los Vehículos");
-        System.out.println("4. Reparación de Vehículos y Bases");
+        System.out.println("4. Visualización problemas mecánicos de los vehículos");
         System.out.println("5. Generar Estadísticas");
         System.out.println("6. Establecer límites de coordenadas");
         System.out.println("0. Salir");
@@ -273,16 +273,6 @@ public class MenuAdministrador {
 
 
 
-    // ------------------------------
-    // Métodos para baterías
-    // ------------------------------
-
-    /**
-     * Visualiza el estado de las baterías de los vehículos.
-     */
-    private static void visualizarBateria() {
-        System.out.println("Visualizando Estado de Baterías...");
-    }
 
     // ------------------------------
     // Métodos para estadísticas

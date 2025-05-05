@@ -243,9 +243,9 @@ public class dto {
     public static List<Incidencia> cargarIncidencias() {
         List<Incidencia> incidencias = new ArrayList<>();
 
-        incidencias.add(new Incidencia("INC123", (Usuario)cargarPersonas().getFirst(), cargarVehiculos().get(1), "En reparación", new Date(), (Trabajador)cargarPersonas().get(2)));
-        incidencias.add(new Incidencia("INC124", (Usuario)cargarPersonas().getFirst(),cargarVehiculos().getFirst(), "En reparación", new Date(), (Trabajador)cargarPersonas().get(2)));
-        incidencias.add(new Incidencia("INC125",(Usuario)cargarPersonas().getFirst(), cargarVehiculos().getLast(), "En reparación", new Date(), (Trabajador)cargarPersonas().get(2)));
+        incidencias.add(new Incidencia((Usuario)cargarPersonas().getFirst(), cargarVehiculos().get(1), "En reparación", new Date()));
+        incidencias.add(new Incidencia((Usuario)cargarPersonas().getFirst(),cargarVehiculos().getFirst(), "En reparación", new Date()));
+        incidencias.add(new Incidencia((Usuario)cargarPersonas().getFirst(), cargarVehiculos().getLast(), "En reparación", new Date()));
 
         return incidencias;
     }

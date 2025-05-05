@@ -387,4 +387,15 @@ public class GestorVehiculos {
 
     }
 
+
+    /**
+     * Método para consultar el estado de batería de todos los vehículos.
+     */
+    public void consultarBaterias() {
+        for (Vehiculo vehiculo : this.vehiculos) {
+            if (vehiculo.getEstado() == EstadoVehiculo.DISPONIBLE) {
+                System.out.println("Vehículo: " + vehiculo.getMatricula() + ", Batería: " + vehiculo.getBateria() + "%");
+            }
+        }
+    }
 }
