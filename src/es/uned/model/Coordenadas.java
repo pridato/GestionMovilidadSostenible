@@ -37,6 +37,18 @@ public class Coordenadas {
         return Math.sqrt(Math.pow(c.getX() - this.x, 2) + Math.pow(c.getY() - this.y, 2));
     }
 
+    /**
+     * Comprueba si las coordenadas actuales están dentro de los límites especificados.
+     * @param minX mínimo valor permitido en el eje X
+     * @param maxX máximo valor permitido en el eje X
+     * @param minY mínimo valor permitido en el eje Y
+     * @param maxY máximo valor permitido en el eje Y
+     * @return true si las coordenadas están dentro de los límites, false en caso contrario
+     */
+    public boolean estaDentroDeLimites(double minX, double maxX, double minY, double maxY) {
+        return x >= minX && x <= maxX && y >= minY && y <= maxY;
+    }
+
     @Override
     public String toString() {
         final String INDENT = "    ";

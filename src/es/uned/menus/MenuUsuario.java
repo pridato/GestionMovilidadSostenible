@@ -71,6 +71,7 @@ public class MenuUsuario {
                 case 3 -> this.alquiler = alquilarVehiculo(scanner);
                 case 4 -> devolverVehiculo(scanner);
                 case 5 -> consultarDatosActualesUsuario(usuario);
+                case 6 -> consultarAlquileresUsuario(usuario);
                 case 0 -> System.out.println("Saliendo...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -87,6 +88,8 @@ public class MenuUsuario {
         System.out.println("2. Consultar vehículos disponibles");
         System.out.println("3. Alquilar un vehículo");
         System.out.println("4. Devolver vehículo");
+        System.out.println("5. Consultar mis datos actuales");
+        System.out.println("6. Consultar mis alquileres");
         System.out.println("0. Salir");
     }
 
@@ -154,7 +157,7 @@ public class MenuUsuario {
             }
         } while (idBase.isEmpty());
 
-        ga.finalizarAlquiler(usuario, alquiler, base);
+        GestorAlquileres.finalizarAlquiler(usuario, alquiler, base);
 
     }
 
@@ -166,4 +169,19 @@ public class MenuUsuario {
         System.out.println(usuario);
     }
 
+    /**
+     * Método para consultar los alquileres del usuario.
+     * @param usuario Usuario a consultar.
+     */
+    private void consultarAlquileresUsuario(Usuario usuario) {
+        if (ga.consultarAlquileres().isEmpty()) {
+            System.out.println("No tienes ningún alquiler.");
+            return;
+        }
+
+        System.out.println("Alquileres del usuario " + usuario.getNombre() + ":");
+        for (Alquiler alquiler : ga.consultarAlquileres()) {
+                System.out.println(alquiler);
+        }
+    }
 }

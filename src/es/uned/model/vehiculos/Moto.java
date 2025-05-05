@@ -4,12 +4,24 @@ import es.uned.enums.EstadoMoto;
 import es.uned.enums.EstadoVehiculo;
 import es.uned.model.Coordenadas;
 
+import static es.uned.utils.consts.TARIFA_MINUTO_MOTO;
+
 public class Moto extends Vehiculo{
     private EstadoMoto estado;
     private double consumoMinuto;
 
     public Moto(String matricula, Coordenadas coordenadas, EstadoVehiculo estado, int bateria, double tarifaMinuto, double penalizacion, EstadoMoto estadoMoto) {
         super(matricula, coordenadas, estado, bateria, tarifaMinuto, penalizacion);
+        this.estado = estadoMoto;
+        if (estadoMoto == EstadoMoto.PEQUEÑA) {
+            consumoMinuto = 0.4;
+        } else if (estadoMoto == EstadoMoto.GRANDE) {
+            consumoMinuto = 0.25;
+        }
+    }
+
+    public Moto(String matricula, Coordenadas coordenadas, EstadoVehiculo estado, double penalizacion, EstadoMoto estadoMoto) {
+        super(matricula, coordenadas, estado, 100, TARIFA_MINUTO_MOTO, penalizacion);
         this.estado = estadoMoto;
         if (estadoMoto == EstadoMoto.PEQUEÑA) {
             consumoMinuto = 0.4;

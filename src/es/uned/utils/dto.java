@@ -4,7 +4,9 @@ import es.uned.enums.EstadoMoto;
 import es.uned.enums.EstadoVehiculo;
 import es.uned.model.*;
 import es.uned.model.personas.*;
+import es.uned.model.vehiculos.Bicicleta;
 import es.uned.model.vehiculos.Moto;
+import es.uned.model.vehiculos.Patinete;
 import es.uned.model.vehiculos.Vehiculo;
 
 import java.util.ArrayList;
@@ -101,10 +103,7 @@ public class dto {
                         "Mrtínez",
                         "sara@gmail.com",
                         575324644,
-                        new Date(),
-                        new ArrayList<>(
-                                List.of("Permiso1", "Permiso2")
-                        )
+                        new Date()
                 )
         );
 
@@ -131,77 +130,7 @@ public class dto {
                 .map(persona -> (Usuario) persona)
                 .toList();
     }
-    /**
-     * Método para crear una lista de alquileres de ejemplo.
-     *
-     * @return Lista de alquileres.
-     */
-    public static List<Alquiler> cargarAlquileres() {
-        List<Alquiler> alquileres = new ArrayList<>();
-        alquileres.add(
-                new Alquiler(
-                        new Moto(
-                                "MOT123",
-                                new Coordenadas(9.5, 7.9),
-                                EstadoVehiculo.DISPONIBLE,
-                                80,
-                                10000,
-                                50.0,
-                                EstadoMoto.PEQUEÑA
-                        ),
-                        null,
-                        new Date(),
-                        null,
-                        null,
-                        null,
-                        0.0,
-                        0
-                )
-        );
-        alquileres.add(
-                new Alquiler(
-                        new Moto(
-                                "MOT124",
-                                new Coordenadas(9.5, 7.9),
-                                EstadoVehiculo.DISPONIBLE,
-                                80,
-                                10000,
-                                50.0,
-                                EstadoMoto.PEQUEÑA
-                        ),
-                        null,
-                        new Date(),
-                        null,
-                        null,
-                        null,
-                        0.0,
-                        0
-                )
-        );
 
-        alquileres.add(
-                new Alquiler(
-                        new Moto(
-                                "MOT125",
-                                new Coordenadas(9.5, 7.9),
-                                EstadoVehiculo.DISPONIBLE,
-                                80,
-                                10000,
-                                50.0,
-                                EstadoMoto.PEQUEÑA
-                        ),
-                        null,
-                        new Date(),
-                        null,
-                        null,
-                        null,
-                        0.0,
-                        0
-                )
-        );
-
-        return alquileres;
-    }
 
 
     /**
@@ -227,9 +156,12 @@ public class dto {
     public static List<Vehiculo> cargarVehiculos() {
         List<Vehiculo> vehiculos = new ArrayList<>();
 
-        vehiculos.add(new Moto("MOT123", new Coordenadas(9.5, 7.9), EstadoVehiculo.DISPONIBLE, 80, 10000, 50.0, EstadoMoto.PEQUEÑA));
-        vehiculos.add(new Moto("MOT124", new Coordenadas(14.5, 8.9), EstadoVehiculo.DISPONIBLE, 80, 10000, 50.0, EstadoMoto.PEQUEÑA));
-        vehiculos.add(new Moto("MOT125", new Coordenadas(12.5, 6.9), EstadoVehiculo.DISPONIBLE, 80, 10000, 50.0, EstadoMoto.PEQUEÑA));
+        vehiculos.add(new Moto("MOT123", new Coordenadas(9.5, 7.9), EstadoVehiculo.DISPONIBLE,  50.0, EstadoMoto.PEQUEÑA));
+        vehiculos.add(new Moto("MOT124", new Coordenadas(14.5, 8.9), EstadoVehiculo.DISPONIBLE,  50.0, EstadoMoto.PEQUEÑA));
+        vehiculos.add(new Moto("MOT125", new Coordenadas(12.5, 6.9), EstadoVehiculo.DISPONIBLE, 50.0, EstadoMoto.PEQUEÑA));
+        vehiculos.add(new Bicicleta("BIC123", new Coordenadas(9.5, 7.9), EstadoVehiculo.DISPONIBLE, 50.0));
+        vehiculos.add(new Bicicleta("BIC124", new Coordenadas(14.5, 8.9), EstadoVehiculo.DISPONIBLE, 50.0));
+        vehiculos.add(new Patinete("PAT123", new Coordenadas(12.5, 6.9), EstadoVehiculo.DISPONIBLE, 50.0));
 
         return vehiculos;
     }

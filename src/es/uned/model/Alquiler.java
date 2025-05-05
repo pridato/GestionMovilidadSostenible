@@ -128,18 +128,16 @@ public class Alquiler {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Alquiler {\n");
-        sb.append("    ID: ").append(id).append("\n");
-        sb.append("    Vehículo: ").append(vehiculo != null ? vehiculo.toString() : "No disponible").append("\n");
-        sb.append("    Fecha de Inicio: ").append(fechaInicio != null ? fechaInicio.toString() : "No disponible").append("\n");
-        sb.append("    Fecha de Fin: ").append(fechaFin != null ? fechaFin.toString() : "No disponible").append("\n");
-        sb.append("    Estado: ").append(estado != null ? estado.toString() : "No disponible").append("\n");
-        sb.append("    Base de Inicio: ").append(baseInicio != null ? baseInicio.toString() : "No disponible").append("\n");
-        sb.append("    Base de Fin: ").append(baseFin != null ? baseFin.toString() : "No disponible").append("\n");
-        sb.append("    Importe Final: ").append(importeFinal).append("\n");
-        sb.append("    Duración (en horas): ").append(tiempoDuracion).append("\n");
-        sb.append("}");
-        return sb.toString();
+        return "Alquiler {\n" +
+                "    ID: " + id + "\n" +
+                "    Vehículo: " + (vehiculo != null ? vehiculo.toString() : "No disponible") + "\n" +
+                "    Fecha de Inicio: " + (fechaInicio != null ? fechaInicio.toString() : "No disponible") + "\n" +
+                "    Fecha de Fin: " + (fechaFin != null ? fechaFin.toString() : "No disponible") + "\n" +
+                "    Estado: " + (estado != null ? estado.toString() : "No disponible") + "\n" +
+                "    Base de Inicio: " + (baseInicio != null ? baseInicio.toString() : "No disponible") + "\n" +
+                "    Base de Fin: " + (baseFin != null ? baseFin.toString() : "No disponible") + "\n" +
+                "    Importe Final: " + importeFinal + "\n" +
+                "    Duración (en minutos): " + tiempoDuracion + "\n" +
+                "}";
     }
 }

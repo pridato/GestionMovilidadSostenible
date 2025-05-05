@@ -27,11 +27,21 @@ import static es.uned.utils.dto.cargarTrabajadores;
  */
 public class GestorTrabajadores {
 
+    private static final GestorTrabajadores instancia = new GestorTrabajadores();
+
     private final List<Trabajador> trabajadores;
 
     /* constructor */
     public GestorTrabajadores() {
         this.trabajadores = cargarTrabajadores();
+    }
+
+    /**
+     * Método para obtener la instancia del gestor de trabajadores.
+     * @return instancia del gestor de trabajadores.
+     */
+    public static GestorTrabajadores getInstancia() {
+        return instancia;
     }
 
     /**

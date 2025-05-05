@@ -1,21 +1,23 @@
 package es.uned.menus;
 
+import es.uned.gestores.GestorPersonas;
+import es.uned.gestores.GestorTrabajadores;
 import es.uned.gestores.GestorUsuarios;
 import es.uned.gestores.GestorVehiculos;
 import es.uned.model.Coordenadas;
-import es.uned.model.personas.Usuario;
-import es.uned.utils.GeolocalizacionPorIP;
-
 import java.util.Scanner;
+
+import static es.uned.utils.consts.LIMITES_COORDENADAS_INFERIOR;
+import static es.uned.utils.consts.LIMITES_COORDENADAS_SUPERIOR;
 
 public class MenuAdministrador {
 
     // variables auxiliares para la definición de límites en las coordenadas
-    private static Coordenadas limiteInferior;
-    private static Coordenadas limiteSuperior;
+    public static Coordenadas limiteInferior = LIMITES_COORDENADAS_INFERIOR;
+    public static Coordenadas limiteSuperior = LIMITES_COORDENADAS_SUPERIOR;
 
-    private static final GestorUsuarios gu = GestorUsuarios.getInstancia();
     private static final GestorVehiculos gv = GestorVehiculos.getInstancia();
+    private static final GestorPersonas gp = GestorPersonas.getInstancia();
 
     /**
      * Gestionar las opciones del menú del administrador.
@@ -38,10 +40,7 @@ public class MenuAdministrador {
                 case 4 -> gestionarReparaciones(scanner);
                 case 5 -> generarEstadisticas();
                 case 6 -> establecerLimitesCoordenadas(scanner);
-                case 7 -> {
-                    System.out.println("Saliendo del programa...");
-                    opcion = 0;
-                }
+                case 0 -> System.out.println("Saliendo del programa...");
                 default -> System.out.println("Opción no válida.");
             }
 
@@ -70,16 +69,10 @@ public class MenuAdministrador {
             scanner.nextLine(); // limpiar buffer
 
             switch (opcion) {
-                case 1 -> altaUsuario(scanner);
-                case 2 -> bajaUsuario(scanner);
-                case 3 -> listarUsuarios(scanner);
-                case 4 -> promocionarUsuariosAPremium(scanner);
-                case 5 -> {
-                    System.out.println("Modificando descuentos de usuarios premium...");
-                    System.out.print("Introduce el descuento para usuarios premium: (0-100) ");
-                    int descuento = scanner.nextInt();
-                    gu.setDescuentoPremium(descuento);
-                }
+                case 1 -> gp.añadirPersonas(scanner);
+                case 2 -> gp.eliminarPersona(scanner);
+                case 3 -> gp.listarPersonas();
+                case 4 -> gp.modificarPersona(scanner);
                 case 0 -> System.out.println("Volviendo...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -130,17 +123,13 @@ public class MenuAdministrador {
                     }
 
                 }
-                case 4 -> {
-                    gv.consultarVehiculos();
-                }
-                case 5 -> {
-                    // Volver
-                    System.out.println("Volviendo al menú principal...");
-                }
+                case 4 -> gv.consultarVehiculos();
+                case 5 -> establecerTarifasVehiculos(scanner);
+                case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
 
-        } while (opcion != 5);
+        } while (opcion != 0);
     }
 
     /**
@@ -187,7 +176,7 @@ public class MenuAdministrador {
         System.out.println("4. Reparación de Vehículos y Bases");
         System.out.println("5. Generar Estadísticas");
         System.out.println("6. Establecer límites de coordenadas");
-        System.out.println("7. Salir");
+        System.out.println("0. Salir");
 
         System.out.println();
     }
@@ -199,9 +188,8 @@ public class MenuAdministrador {
         System.out.println("\n--- Gestión de Usuarios ---");
         System.out.println("1. Alta de usuario");
         System.out.println("2. Baja de usuario");
-        System.out.println("3. Listar usuarios");
-        System.out.println("4. Promoción de Usuarios a Premium");
-        System.out.println("5. Modificar descuentos de usuarios premium");
+        System.out.println("3. Modificar usuario");
+        System.out.println("4. Listar usuarios");
         System.out.println("0. Volver");
         System.out.println("------------------------------");
     }
@@ -216,7 +204,8 @@ public class MenuAdministrador {
         System.out.println("2. Modificar Vehículo");
         System.out.println("3. Eliminar Vehículo");
         System.out.println("4. Listar Vehículos");
-        System.out.println("5. Volver");
+        System.out.println("5. Establecer tarifas de vehículos");
+        System.out.println("0. Volver");
         System.out.println("------------------------------");
     }
 
@@ -233,119 +222,6 @@ public class MenuAdministrador {
     }
 
 
-    // ------------------------------
-    // Métodos para gestionar usuarios
-    // ------------------------------
-
-    /**
-     * Muestra el menú de alta de usuario y gestiona la entrada del usuario.
-     *
-     * @param scanner Scanner para leer la entrada del usuario.
-     */
-    private static void altaUsuario(Scanner scanner) {
-        System.out.println("→ Alta de usuario");
-
-        System.out.print("DNI: ");
-        String dni = scanner.nextLine();
-
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
-
-        System.out.print("Apellidos: ");
-        String apellidos = scanner.nextLine();
-
-        System.out.print("Correo electrónico: ");
-        String email = scanner.nextLine();
-
-        System.out.print("Telefono: ");
-        int telefono = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.println("¿Desea usar localización automática por IP? (S/N): ");
-        String opcion = scanner.nextLine().trim().toUpperCase();
-
-        Coordenadas coordenadas;
-
-        if (opcion.equals("S")) {
-            coordenadas = GeolocalizacionPorIP.obtenerCoordenadasDesdeIP();
-            if (coordenadas == null) {
-                System.out.println("No se pudo obtener la ubicación automáticamente. Introduzca manualmente.");
-                coordenadas = leerCoordenadasManualmente(scanner);
-            }
-        } else {
-            coordenadas = leerCoordenadasManualmente(scanner);
-        }
-
-        Usuario nuevoUsuario = new Usuario(dni, nombre, apellidos, email, telefono, coordenadas);
-        boolean resultado = gu.añadirUsuario(nuevoUsuario);
-
-        if (resultado) {
-            System.out.println("Usuario añadido correctamente.");
-        } else {
-            System.out.println("No se pudo añadir el usuario.");
-        }
-    }
-
-    /**
-     * Muestra el menú de baja de usuario y gestiona la entrada del usuario.
-     *
-     * @param scanner Scanner para leer la entrada del usuario.
-     */
-    private static void bajaUsuario(Scanner scanner) {
-        System.out.println("→ Baja de usuario");
-        System.out.print("Introduce el DNI del usuario a eliminar: ");
-        String dni = scanner.nextLine();
-
-        boolean resultado = gu.eliminarUsuario(dni);
-
-        if (resultado) {
-            System.out.println("Usuario eliminado correctamente.");
-        } else {
-            System.out.println("No se pudo eliminar el usuario.");
-        }
-    }
-
-    private static void listarUsuarios(Scanner scanner) {
-        System.out.println("→ Listado de usuarios");
-        // elegir mostrar todos, solo premium, solo no premium
-        int opcion = 0;
-        System.out.println("1. Mostrar todos los usuarios");
-        System.out.println("2. Mostrar solo usuarios premium");
-        System.out.println("3. Mostrar solo usuarios no premium");
-        System.out.print("Elige una opción: ");
-        opcion = scanner.nextInt();
-
-        scanner.nextLine(); // limpiar buffer
-
-        switch (opcion) {
-            case 1 -> gu.consultarUsuarios();
-            case 2 -> gu.consultarUsuariosPremium();
-            case 3 -> gu.consultarUsuariosNoPremium();
-            default -> System.out.println("Opción no válida.");
-        }
-    }
-
-    /**
-     * Promociona a los usuarios a Premium.
-     */
-    private static void promocionarUsuariosAPremium(Scanner scanner) {
-        System.out.println("→ Promoción de usuarios a Premium");
-
-        System.out.println("¿Desea consultar los usuarios no premium? (S/N): ");
-
-        String opcion = scanner.nextLine().trim().toUpperCase();
-        if (opcion.equals("S")) {
-            gu.consultarUsuariosNoPremium();
-        }
-
-        System.out.print("Introduce el DNI del usuario a promocionar: ");
-        String dni = scanner.nextLine();
-
-        gu.promocionarUsuarioPremium(dni);
-
-        System.out.println("Usuario promocionado a Premium correctamente.");
-    }
-
 
     // ------------------------------
     // Métodos coordenadas
@@ -357,7 +233,7 @@ public class MenuAdministrador {
      * @param scanner Scanner para leer la entrada del usuario.
      * @return Coordenadas introducidas por el usuario.
      */
-    private static Coordenadas leerCoordenadasManualmente(Scanner scanner) {
+    public static Coordenadas leerCoordenadasManualmente(Scanner scanner) {
         System.out.print("Introduce la coordenada X (longitud): ");
         double x = scanner.nextDouble();
         System.out.print("Introduce la coordenada Y (latitud): ");
@@ -394,23 +270,7 @@ public class MenuAdministrador {
         System.out.println("Límites establecidos.");
     }
 
-    /**
-     * Devuelve las coordenadas del límite inferior.
-     *
-     * @return Coordenadas del límite inferior.
-     */
-    public static Coordenadas getLimiteInferior() {
-        return limiteInferior;
-    }
 
-    /**
-     * Devuelve las coordenadas del límite superior.
-     *
-     * @return Coordenadas del límite superior.
-     */
-    public static Coordenadas getLimiteSuperior() {
-        return limiteSuperior;
-    }
 
 
     // ------------------------------
@@ -434,5 +294,18 @@ public class MenuAdministrador {
     private static void generarEstadisticas() {
         System.out.println("Generando estadísticas...");
         // Implementar lógica para generar estadísticas
+    }
+
+    // ------------------------------
+    // Métodos para tarifas
+    // ------------------------------
+
+    /**
+     * Establece las tarifas de los vehículos.
+     * @param scanner Scanner para leer la entrada del usuario.
+     */
+    private static void establecerTarifasVehiculos(Scanner scanner) {
+        gv.setTarifaMinuto(scanner);
+        System.out.println("Tarifa establecida correctamente.");
     }
 }

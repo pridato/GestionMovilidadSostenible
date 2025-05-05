@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static es.uned.menus.MenuAdministrador.limiteInferior;
+import static es.uned.menus.MenuAdministrador.limiteSuperior;
+
 /**
  * Clase GestorAlquileres.
  *
@@ -67,7 +70,7 @@ public class GestorAlquileres {
      * @param alquiler alquiler a finalizar
      * @param baseFin base de finalización del alquiler
      */
-    public void finalizarAlquiler(Usuario usuario, Alquiler alquiler, Base baseFin) {
+    public static void finalizarAlquiler(Usuario usuario, Alquiler alquiler, Base baseFin) {
         if(alquiler.getEstado() != EstadoAlquiler.EN_CURSO) {
             throw new IllegalStateException("El alquiler no está en curso");
         }
@@ -115,6 +118,18 @@ public class GestorAlquileres {
             double penalizacion = vehiculo.getPenalizacion();
             usuario.recargarSaldo(-penalizacion);
             System.out.println("Penalización aplicada al usuario por agotar batería: " + penalizacion + "€");
+        }
+
+        // si el vehiculo sale de los limites de la base, penalizar
+
+        double minX = limiteInferior.getX();
+        double maxX = limiteSuperior.getX();
+        double minY = limiteInferior.getY();
+        double maxY = limiteSuperior.getY();
+        if(!alquiler.getVehiculo().getCoordenadas().estaDentroDeLimites(minX, maxX, minY, maxY)) {
+            System.out.println("El vehículo ha salido de los límites de la base. Penalización aplicada.");
+            double penalizacion = vehiculo.getPenalizacion();
+            usuario.recargarSaldo(-penalizacion);
         }
 
         System.out.println("Alquiler finalizado: " + alquiler.getId());

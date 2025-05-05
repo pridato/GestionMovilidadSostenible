@@ -108,21 +108,11 @@ public class GestorVehiculos {
             System.out.println("Estado de vehículo no válido. Se asignará DISPONIBLE por defecto.");
         }
 
-        System.out.print("Introduce el nivel de batería (0-100): ");
-        int bateria = scanner.nextInt();
-
-        if (bateria < 0 || bateria > 100) {
-            throw new NumberFormatException("La batería debe estar entre 0 y 100.");
-        }
-
-        System.out.print("Introduce la tarifa por minuto (€): ");
-        double tarifaMinuto = scanner.nextDouble();
-
         System.out.print("Introduce la penalización (€): ");
         double penalizacion = scanner.nextDouble();
         scanner.nextLine(); // Limpieza de buffer
 
-        return new Object[]{matricula, coordenadas, estadoVehiculo, bateria, tarifaMinuto, penalizacion};
+        return new Object[]{matricula, coordenadas, estadoVehiculo, penalizacion};
     }
 
 
@@ -133,23 +123,24 @@ public class GestorVehiculos {
      */
     private static Vehiculo crearMoto(Scanner scanner) {
         Object[] datos = leerDatosComunesVehiculo(scanner, "moto");
+
         EstadoMoto estadoMoto = EstadoMoto.PEQUEÑA;
         try {
-            System.out.println("Selecciona el estado de la moto (PEQUEÑA o GRANDE): ");
+            System.out.print("Selecciona el tamaño de la moto (PEQUEÑA o GRANDE): ");
             estadoMoto = EstadoMoto.valueOf(scanner.nextLine().toUpperCase());
         } catch (IllegalArgumentException e) {
-            System.out.println("Estado de moto no válido. Se asignará PEQUEÑA por defecto.");
+            System.out.println("Tamaño no válido. Se asignará PEQUEÑA por defecto.");
         }
+
         return new Moto(
                 (String) datos[0],
                 (Coordenadas) datos[1],
                 (EstadoVehiculo) datos[2],
-                (int) datos[3],
-                (double) datos[4],
-                (double) datos[5],
+                (double) datos[3],
                 estadoMoto
         );
     }
+
 
 
     /**
@@ -163,9 +154,7 @@ public class GestorVehiculos {
                 (String) datos[0],
                 (Coordenadas) datos[1],
                 (EstadoVehiculo) datos[2],
-                (int) datos[3],
-                (double) datos[4],
-                (double) datos[5]
+                (double) datos[3]
         );
     }
 
@@ -181,9 +170,7 @@ public class GestorVehiculos {
                 (String) datos[0],
                 (Coordenadas) datos[1],
                 (EstadoVehiculo) datos[2],
-                (int) datos[3],
-                (double) datos[4],
-                (double) datos[5]
+                (double) datos[3]
         );
     }
 
@@ -350,6 +337,54 @@ public class GestorVehiculos {
         alquiler.setTiempoDuracion(minutosAlquiler);
         vehiculo.calcularBateriaRestante(alquiler.getTiempoDuracion());
         System.out.println("Estado de batería del vehículo: " + vehiculo.getBateria() + "%");
+    }
+
+    /**
+     * Método para establecer tarifas por defecto en los vehículos.
+     * @param scanner Scanner para leer la entrada del usuario
+     */
+    public void setTarifaMinuto(Scanner scanner) {
+        int opcion = 0;
+
+        System.out.println("Seleccione el tipo de vehículo:");
+        System.out.println("1. Moto");
+        System.out.println("2. Patinete");
+        System.out.println("3. Bicicleta");
+        System.out.println("0. Salir");
+        System.out.print("Opción: ");
+        opcion = scanner.nextInt();
+        scanner.nextLine(); // Limpieza de buffer
+
+        System.out.println("Estableciendo tarifas de vehículos...");
+        System.out.print("Introduce la tarifa por minuto: ");
+        double tarifa = scanner.nextDouble();
+
+        switch (opcion) {
+            case 1 -> {
+                for (Vehiculo vehiculo : this.vehiculos) {
+                    if (vehiculo instanceof Moto) {
+                        vehiculo.setTarifaMinuto(tarifa);
+                    }
+                }
+            }
+            case 2 -> {
+                for (Vehiculo vehiculo : this.vehiculos) {
+                    if (vehiculo instanceof Patinete) {
+                        vehiculo.setTarifaMinuto(tarifa);
+                    }
+                }
+            }
+            case 3 -> {
+                for (Vehiculo vehiculo : this.vehiculos) {
+                    if (vehiculo instanceof Bicicleta) {
+                        vehiculo.setTarifaMinuto(tarifa);
+                    }
+                }
+            }
+            case 0 -> System.out.println("Saliendo del menú de modificación.");
+            default -> System.out.println("Opción no válida.");
+        }
+
     }
 
 }

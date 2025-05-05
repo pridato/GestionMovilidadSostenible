@@ -48,31 +48,7 @@ public class GestorUsuarios {
     }
 
 
-    /**
-     * Método para añadir nuevos usuarios
-     * @param usuario usuario a añadir
-     * @return true si se ha añadido correctamente, false en caso contrario
-     */
-    public boolean añadirUsuario(Usuario usuario) {
-        if (usuario != null) {
-            this.usuarios.add(usuario);
-            return true;
-        }
-        return false;
-    }
 
-    /**
-     * Método para buscar un usuario por su DNI.
-     * @param DNI identificador del usuario a buscar.
-     * @return El usuario encontrado o null si no se encuentra.
-     */
-    public boolean eliminarUsuario(String DNI) {
-       return this.usuarios.removeIf(usuario -> usuario.getDNI().equals(DNI));
-    }
-
-    public void modificarUsuario(String DNI) {
-        // TODO: Implementar lógica para modificar un usuario
-    }
 
     /**
      * Método para promocionar un usuario a premium.
@@ -85,17 +61,6 @@ public class GestorUsuarios {
                 .ifPresent(usuario -> usuario.setEsPremium(true));
     }
 
-    /**
-     * Método para buscar un usuario por su DNI.
-     * @param DNI El DNI del usuario a buscar.
-     * @return El usuario encontrado o null si no se encuentra.
-     */
-    private Usuario buscarUsuario(String DNI) {
-        return this.usuarios.stream()
-                .filter(usuario -> usuario.getDNI().equals(DNI))
-                .findFirst()
-                .orElse(null);
-    }
 
     /**
      * Método para recargar el saldo de un usuario.
