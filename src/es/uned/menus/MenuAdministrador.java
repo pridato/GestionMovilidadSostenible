@@ -160,7 +160,7 @@ public class MenuAdministrador {
                 }
                 case 4 -> gv.consultarVehiculos();
                 case 5 -> gv.setTarifaMinuto(scanner);
-                case 6 -> gv.consultarBaterias();
+                case 6 -> gv.consultarBaterias(scanner);
                 case 7 -> gi.visualizarProblemasVehículos();
                 case 8 -> gi.asignarVehiculoTrabajador(scanner);
                 case 0 -> System.out.println("Volviendo al menú principal...");
