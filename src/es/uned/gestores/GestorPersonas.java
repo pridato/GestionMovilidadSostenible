@@ -102,7 +102,7 @@ public class GestorPersonas {
             }
             case 2 -> persona = new Administrador(dni, nombre, apellidos, email, telefono, fecha);
             case 3 -> persona = new Mecanico(dni, nombre, apellidos, email, telefono, fecha, null, null);
-            case 4 -> persona = new Mantenimiento(dni, nombre, apellidos, email, telefono, fecha, null);
+            case 4 -> persona = new Mantenimiento(dni, nombre, apellidos, email, telefono, fecha);
             default -> {
             }
         }

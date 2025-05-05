@@ -140,10 +140,8 @@ public class dto {
                         "Mrtínez",
                         "sara@gmail.com",
                         575324644,
-                        new Date(),
-                        new ArrayList<>(
-                                List.of(new Base("Base1", new Coordenadas(9.5, 7.9), 100))
-                        )
+                        new Date()
+
                 )
         );
 
@@ -313,6 +311,14 @@ public class dto {
                 cargarVehiculos().getLast(),
                 "En reparación por problemas eléctricos en el panel de instrumentos.",
                 new Date()
+        ));
+
+        incidencias.add(
+                new Incidencia(
+                        (Usuario) cargarPersonas().getFirst(),
+                        "La base está desbordada de vehículos y no se pueden aparcar más.",
+                        new Date(),
+                        (Base) cargarBases().getFirst()
         ));
 
 

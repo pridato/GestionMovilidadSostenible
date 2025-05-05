@@ -1,8 +1,10 @@
 package es.uned.model.personas;
 
+import es.uned.model.Base;
 import es.uned.model.Factura;
 import es.uned.model.vehiculos.Vehiculo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,10 +15,12 @@ public class Mecanico extends Trabajador{
 
     private List<Vehiculo> vehiculosAsignados;
     private List<Factura> facturasEmitidas;
+    private List<Base> basesAsignadas;
 
     public Mecanico(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion, List<Vehiculo> vehiculosAsignados, List<Factura> facturasEmitidas) {
         super(DNI, nombre, apellidos, email, telefono, fechaContratacion);
         this.vehiculosAsignados = vehiculosAsignados;
+        this.basesAsignadas = new ArrayList<>();
         this.facturasEmitidas = facturasEmitidas;
     }
 
@@ -28,17 +32,34 @@ public class Mecanico extends Trabajador{
         this.vehiculosAsignados = vehiculosAsignados;
     }
 
+    public List<Base> getBasesAsignadas() {
+        return basesAsignadas;
+    }
+
+    public void setBasesAsignadas(List<Base> basesAsignadas) {
+        this.basesAsignadas = basesAsignadas;
+    }
+
+    /**
+     * Método para asignar una base al trabajador de mantenimiento.
+     *
+     * @param base base a asignar
+     */
+    public void asignarBase(Base base) {
+        if (base != null) {
+            this.basesAsignadas.add(base);
+        }
+    }
+
     /**
      * Método para asignar un vehículo al mecánico.
+     *
      * @param vehiculo vehículo a asignar
-     * @return true si se ha asignado correctamente, false en caso contrario
      */
-    public boolean asignarVehiculo(Vehiculo vehiculo) {
+    public void asignarVehiculo(Vehiculo vehiculo) {
         if (vehiculo != null) {
             this.vehiculosAsignados.add(vehiculo);
-            return true;
         }
-        return false;
     }
 
     public List<Factura> getFacturasEmitidas() {
@@ -54,8 +75,7 @@ public class Mecanico extends Trabajador{
         final String INDENT = "    ";
         StringBuilder sb = new StringBuilder();
         sb.append("Mecanico {\n");
-        sb.append(super.toString());  // Llama al toString() de la clase base Trabajador
-        sb.append(INDENT).append("Fecha de contratación: ").append(getFechaContratacion()).append("\n");
+        sb.append(super.toString());
         sb.append(INDENT).append("Vehículos asignados:\n");
 
         if (vehiculosAsignados != null && !vehiculosAsignados.isEmpty()) {
@@ -74,6 +94,16 @@ public class Mecanico extends Trabajador{
             }
         } else {
             sb.append(INDENT).append(INDENT).append("(Sin facturas emitidas)\n");
+        }
+
+        sb.append(INDENT).append("Bases asignadas:\n");
+        if (basesAsignadas != null && !basesAsignadas.isEmpty()) {
+            sb.append(INDENT).append("Bases asignadas:\n");
+            for (Base base : basesAsignadas) {
+                sb.append(INDENT).append(INDENT).append("- ").append(base).append("\n");
+            }
+        } else {
+            sb.append(INDENT).append("Sin bases asignadas\n");
         }
 
         sb.append("}");

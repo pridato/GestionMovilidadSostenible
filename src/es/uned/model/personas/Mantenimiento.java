@@ -12,23 +12,15 @@ import java.util.List;
  */
 public class Mantenimiento extends Trabajador{
 
-    private List<Base> basesAsignadas;
     private List<Vehiculo> vehiculosAsignados;
 
 
-    public Mantenimiento(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion, List<Base> basesAsignadas) {
+    public Mantenimiento(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion) {
         super(DNI, nombre, apellidos, email, telefono, fechaContratacion);
-        this.basesAsignadas = basesAsignadas;
         this.vehiculosAsignados = new ArrayList<>();
     }
 
-    public List<Base> getBasesAsignadas() {
-        return basesAsignadas;
-    }
 
-    public void setBasesAsignadas(List<Base> basesAsignadas) {
-        this.basesAsignadas = basesAsignadas;
-    }
 
     /**
      * Método para asignar un vehículo al trabajador de mantenimiento.
@@ -39,16 +31,7 @@ public class Mantenimiento extends Trabajador{
             this.vehiculosAsignados.add(vehiculo);
         }
     }
-    /**
-     * Método para asignar una base al trabajador de mantenimiento.
-     *
-     * @param base base a asignar
-     */
-    public void asignarBase(Base base) {
-        if (base != null) {
-            this.basesAsignadas.add(base);
-        }
-    }
+
 
     @Override
     public String toString() {
@@ -57,14 +40,6 @@ public class Mantenimiento extends Trabajador{
         sb.append("Mantenimiento {\n");
         sb.append(super.toString());  // Llama al toString() de la clase padre Trabajador
         sb.append(INDENT).append("Bases asignadas:\n");
-
-        if (basesAsignadas != null && !basesAsignadas.isEmpty()) {
-            for (Base base : basesAsignadas) {
-                sb.append(INDENT).append(INDENT).append("- ").append(base).append("\n");
-            }
-        } else {
-            sb.append(INDENT).append(INDENT).append("(Sin bases asignadas)\n");
-        }
 
         if (vehiculosAsignados != null && !vehiculosAsignados.isEmpty()) {
             sb.append(INDENT).append("Vehículos asignados:\n");
