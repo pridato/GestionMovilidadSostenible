@@ -9,7 +9,7 @@ public class Trabajador extends Persona {
     private Date fechaContratacion;
 
     public Trabajador(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion) {
-        super(nombre, apellidos, DNI, email, telefono);
+        super(DNI,nombre, apellidos, email, telefono);
         this.fechaContratacion = fechaContratacion;
     }
 

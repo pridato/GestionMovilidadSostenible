@@ -3,6 +3,7 @@ package es.uned.gestores;
 import es.uned.model.Base;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,94 +29,88 @@ import static es.uned.utils.dto.cargarBases;
  */
 public class GestorBases {
 
-    private final List<Base> bases;
+    private static final GestorBases instancia = new GestorBases();
+    private List<Base> bases = new ArrayList<>();
+
 
     /* Constructor de la clase GestorBases. */
     public GestorBases() {
-        this.bases = new ArrayList<>(cargarBases());
+        this.bases = cargarBases();
     }
 
     /**
-     * Método para añadir una base a la lista de bases.
-     * @return true si se ha añadido correctamente, false en caso contrario.
+     * Método para obtener la instancia del gestor de bases.
+     * @return instancia del gestor de bases.
      */
-    public boolean altaBase(Base base) {
-        if (base != null) {
-            this.bases.add(base);
-            return true;
+    public static GestorBases getInstancia() {
+        return instancia;
+    }
+
+
+    /**
+     * Método para consultar el estado de las bases.
+     */
+    public void consultarEstadoBases() {
+        System.out.println("Estado de las bases:");
+        for (Base base : bases) {
+            System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas() +
+                    ", Capacidad máxima: " + base.getCapacidadMaxima() +
+                    ", Vehículos alquilados: " + base.getVehiculosAlquilados().size() +
+                    ", Averiada: " + base.isAveriada());
         }
-        return false;
     }
 
     /**
-     * Método para modificar una base de la lista de bases.
-     * @param base Base a buscar.
-     * @return true si se ha modificado correctamente, false en caso contrario.
+     * Método para consultar bases por disponibilidad.
      */
-    public boolean modificarBase(Base base) {
-        // TODO: modificar la base
-        return false;
-    }
-
-    /**
-     * Método para eliminar una base de la lista de bases.
-     * @param base Base a eliminar.
-     * @return true si se ha eliminado correctamente, false en caso contrario.
-     */
-    public boolean eliminarBase(Base base) {
-        if (base != null) {
-            this.bases.remove(base);
-            return true;
+    public void consultarBasesDisponibles() {
+        System.out.println("Bases disponibles:");
+        for (Base base : bases) {
+            if (!base.isAveriada() && base.getVehiculosAlquilados().size() < base.getCapacidadMaxima()) {
+                System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas() +
+                        ", Capacidad máxima: " + base.getCapacidadMaxima());
+            }
         }
-        return false;
     }
 
     /**
-     * Método para marcar una base como averiada.
-     * @param base Base a marcar como averiada.
-     * @return true si se ha marcado correctamente, false en caso contrario.
+     * Método para consultar bases por ocupación.
      */
-    public boolean marcarBaseComoAveriada(Base base) {
-        if (base != null) {
-            base.setAveriada(true);
-            return true;
-        }
-        return false;
+    public void consultarBasesPorOcupacion() {
+        // consultar bases ordenadas por ocupacion
+        this.bases.stream().
+                filter(base -> !base.isAveriada()).
+                sorted(Comparator.comparingInt(base -> base.getVehiculosAlquilados().size())).
+                forEach(base -> System.out.println("ID: " + base.getId() + ", Ocupación: " + base.getVehiculosAlquilados().size() + "/" + base.getCapacidadMaxima()));
     }
 
     /**
-     * Método para obtener una lista de bases disponibles.
-     * @return Lista de bases disponibles.
+     * Generar estadisticas de las bases
      */
-    public List<Base> getBasesDisponibles() {
-        return this.bases.stream()
+    public void generarEstadisticasBases() {
+        System.out.println("Estadísticas de las bases:");
+        this.bases.stream()
                 .filter(base -> !base.isAveriada())
-                .toList();
+                .sorted(Comparator.comparing((Base base) -> base.getVehiculosAlquilados().size()).reversed())
+                .forEach(base -> System.out.println(
+                        "ID: " + base.getId() +
+                                ", Ocupación: " + base.getVehiculosAlquilados().size() +
+                                "/" + base.getCapacidadMaxima()
+                ));
     }
 
-
     /**
-     * Método para consultar una base por su ID.
+     * Método para obtener una base por su ID.
      * @param id ID de la base a consultar.
-     * @return Base encontrada o null si no se encuentra.
+     * @return Base correspondiente al ID proporcionado, o null si no se encuentra.
      */
     public Base consultarBasePorId(String id) {
-        return this.bases.stream()
+        return bases.stream()
                 .filter(base -> Objects.equals(base.getId(), id))
                 .findFirst()
                 .orElse(null);
     }
 
-    /**
-     * Método para consultar bases disponibles por ocupación.
-     */
-    public void consultarBasesDisponiblesPorOcupacion() {
-        if (this.bases.isEmpty()) {
-            System.out.println("No hay bases disponibles.");
-            return;
-        }
-        this.bases.stream()
-                .filter(base -> !base.isAveriada())
-                .forEach(b -> System.out.println(b.toString()));
-    }
+
+
 }

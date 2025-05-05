@@ -14,7 +14,7 @@ public class Mantenimiento extends Trabajador{
 
 
     public Mantenimiento(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion, List<Base> basesAsignadas) {
-        super(nombre, apellidos, DNI, email, telefono, fechaContratacion);
+        super(DNI, nombre, apellidos, email, telefono, fechaContratacion);
         this.basesAsignadas = basesAsignadas;
     }
 

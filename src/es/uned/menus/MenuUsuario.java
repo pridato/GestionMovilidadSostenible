@@ -125,7 +125,7 @@ public class MenuUsuario {
         Base base;
         String idBase;
         do {
-            gb.consultarBasesDisponiblesPorOcupacion();
+            gb.consultarBasesDisponibles();
             System.out.println("Introduce el ID de la base donde deseas alquilar el vehículo:");
             idBase = scanner.nextLine();
             base = gb.consultarBasePorId(idBase);
@@ -147,7 +147,7 @@ public class MenuUsuario {
         Base base;
         String idBase;
         do {
-            gb.consultarBasesDisponiblesPorOcupacion();
+            gb.consultarBasesPorOcupacion();
             System.out.println("Introduce el ID de la base donde deseas finalizar el alquilar:");
             idBase = scanner.nextLine();
             base = gb.consultarBasePorId(idBase);

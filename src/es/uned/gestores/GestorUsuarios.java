@@ -47,8 +47,17 @@ public class GestorUsuarios {
         return instancia;
     }
 
-
-
+    /**
+     * Método para buscar un usuario por su DNI.
+     * @param DNI DNI del usuario.
+     * @return true si se ha creado correctamente, false en caso contrario.
+     */
+    private Usuario buscarUsuario(String DNI) {
+        return this.usuarios.stream()
+                .filter(usuario -> usuario.getDNI().equals(DNI))
+                .findFirst()
+                .orElse(null);
+    }
 
     /**
      * Método para promocionar un usuario a premium.

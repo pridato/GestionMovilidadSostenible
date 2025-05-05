@@ -1,5 +1,6 @@
 package es.uned.gestores;
 
+import es.uned.model.Alquiler;
 import es.uned.model.Coordenadas;
 import es.uned.model.personas.*;
 import es.uned.utils.GeolocalizacionPorIP;
@@ -18,7 +19,7 @@ public class GestorPersonas {
 
     private static final GestorPersonas instancia = new GestorPersonas();
 
-    private List<Persona> personas = new ArrayList<>();
+    private final List<Persona> personas = new ArrayList<>();
 
     /* constructor */
     public GestorPersonas() {
@@ -36,14 +37,26 @@ public class GestorPersonas {
 
     /**
      * Método para crear nuevas personas (Usuarios, Administradores, Mecánicos y Mantenimiento).
-     * @param scanner
-     * @return
+     *
+     * @param scanner scanner para leer la entrada del usuario
      */
-    public boolean añadirPersonas(Scanner scanner) {
+    public void crearPersona(Scanner scanner) {
+        System.out.print("DNI: ");
+        String dni = scanner.nextLine();
 
-        Persona persona = crearPersonaGenerica(scanner);
+        System.out.print("Nombre: ");
+        String nombre = scanner.nextLine();
 
-        // Mostrar las opciones de tipos de usuario
+        System.out.print("Apellidos: ");
+        String apellidos = scanner.nextLine();
+
+        System.out.print("Correo electrónico: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Telefono: ");
+        int telefono = scanner.nextInt();
+        scanner.nextLine();
+
         System.out.println("Elija el tipo de Persona a crear:");
         System.out.println("1. Usuario");
         System.out.println("2. Administrador");
@@ -55,7 +68,6 @@ public class GestorPersonas {
 
         Date fecha = new Date();
 
-        // sí son trabajadores obtener la fecha de contratación para evitar código duplicado
         if (opcionTipo != 1 && opcionTipo < 5) {
             System.out.println("Fecha de contratación (dd/MM/yyyy): ");
             String fechaContratacion = scanner.nextLine();
@@ -68,14 +80,14 @@ public class GestorPersonas {
                 System.out.println("Error al parsear la fecha. Usando fecha actual.");
             }
         }
+        Persona persona = null;
+
         switch (opcionTipo) {
-            case 1 ->{
-                // Usuario con su localización
+            case 1 -> {
                 System.out.println("¿Desea usar localización automática por IP? (S/N): ");
                 String opcion = scanner.nextLine().trim().toUpperCase();
 
                 Coordenadas coordenadas;
-
                 if (opcion.equals("S")) {
                     coordenadas = GeolocalizacionPorIP.obtenerCoordenadasDesdeIP();
                     if (coordenadas == null) {
@@ -85,52 +97,35 @@ public class GestorPersonas {
                 } else {
                     coordenadas = leerCoordenadasManualmente(scanner);
                 }
-
-                Usuario usuario = (Usuario) persona;
-                usuario.setCoordenadas(coordenadas);
-                personas.add(usuario);
-
-                return true;
+                new Usuario(dni, nombre, apellidos, email, telefono, coordenadas);
             }
-            case 2 -> {
-                Administrador administrador = (Administrador) persona;
-                administrador.setFechaContratacion(fecha);
-                personas.add(administrador);
-
-                return true;
-            }
-            case 3 -> {
-                Mecanico mecanico = (Mecanico) persona;
-                mecanico.setFechaContratacion(fecha);
-                personas.add(mecanico);
-
-                return true;
-            }
-
-            case 4 -> {
-                Mantenimiento mantenimiento = (Mantenimiento) persona;
-                mantenimiento.setFechaContratacion(fecha);
-                personas.add(mantenimiento);
-
-                return true;
+            case 2 -> persona = new Administrador(dni, nombre, apellidos, email, telefono, fecha);
+            case 3 -> persona = new Mecanico(dni, nombre, apellidos, email, telefono, fecha, null, null);
+            case 4 -> persona = new Mantenimiento(dni, nombre, apellidos, email, telefono, fecha, null);
+            default -> {
             }
         }
-        return false;
+
+        if (persona != null) {
+            personas.add(persona);
+            System.out.println("Persona creada: " + persona);
+        } else {
+            System.out.println("Error al crear la persona.");
+        }
     }
+
 
     /**
      * Método para eliminar personas del sistema
+     *
      * @param scanner scanner para leer la entrada del usuario
-     * @return true si se ha eliminado una persona, false si no se ha eliminado
      */
-    public boolean eliminarPersona(Scanner scanner) {
+    public void eliminarPersona(Scanner scanner) {
         System.out.println("Introduzca el DNI de la persona a eliminar: ");
         String dni = scanner.nextLine();
-        int tamaño = personas.size();
 
         personas.removeIf(persona -> persona.getDNI().equals(dni));
 
-        return personas.size() < tamaño;
     }
 
     /**
@@ -222,38 +217,38 @@ public class GestorPersonas {
      * @param dni DNI de la persona a buscar.
      * @return Persona encontrada o null si no se encuentra.
      */
-    private Persona buscarPersonaPorDNI(String dni) {
+    public Persona buscarPersonaPorDNI(String dni) {
         return personas.stream()
                 .filter(persona -> persona.getDNI().equals(dni))
                 .findFirst()
                 .orElse(null);
     }
 
+
     /**
-     * Método para crear una persona genérica.
-     * @param scanner scanner para leer la entrada del usuario
-     * @return Persona creada
+     * Método para obtener la lista de usuarios que deben ser premium.
      */
-    private Persona crearPersonaGenerica(Scanner scanner) {
-        System.out.print("DNI: ");
-        String dni = scanner.nextLine();
+    public void usuariosDeberianSerPremium() {
+        for (Persona persona : personas) {
+            if (persona instanceof Usuario usuario && usuario.getHistorialViajes().size() > 4) {
+                System.out.println("El usuario " + usuario.getNombre() + " " + usuario.getApellidos() + " debería ser premium.");
+            }
+        }
+    }
 
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
-
-        System.out.print("Apellidos: ");
-        String apellidos = scanner.nextLine();
-
-        System.out.print("Correo electrónico: ");
-        String email = scanner.nextLine();
-
-        System.out.print("Telefono: ");
-        int telefono = scanner.nextInt();
-        scanner.nextLine();
-
-
-
-        return new Persona(nombre, apellidos, dni, email, telefono);
+    /**
+     * Método para obtener la lista de usuarios que han utilizado vehículos.
+     */
+    public void utilizacionVehiculosPorUsuario() {
+        for (Persona persona : personas) {
+            if (persona instanceof Usuario usuario) {
+                System.out.println("El usuario " + usuario.getNombre() + " " + usuario.getApellidos() + " ha utilizado los siguientes vehículos:");
+                for (Alquiler alquiler : usuario.getHistorialViajes()) {
+                    System.out.println(alquiler.getVehiculo());
+                    System.out.println("Fecha de alquiler: " + alquiler.getFechaInicio() + " - " + alquiler.getFechaFin());
+                }
+            }
+        }
     }
 
 }

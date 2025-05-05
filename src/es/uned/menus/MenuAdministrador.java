@@ -1,5 +1,6 @@
 package es.uned.menus;
 
+import es.uned.gestores.GestorBases;
 import es.uned.gestores.GestorIncidencias;
 import es.uned.gestores.GestorPersonas;
 import es.uned.gestores.GestorVehiculos;
@@ -18,6 +19,7 @@ public class MenuAdministrador {
     private static final GestorVehiculos gv = GestorVehiculos.getInstancia();
     private static final GestorPersonas gp = GestorPersonas.getInstancia();
     private static final GestorIncidencias gi = GestorIncidencias.getInstancia();
+    private static final GestorBases gb = GestorBases.getInstancia();
 
     /**
      * Gestionar las opciones del menú del administrador.
@@ -27,19 +29,26 @@ public class MenuAdministrador {
     public static void gestionarOpcionesAdminstrador(Scanner scanner) {
         int opcion;
         do {
-            mostrarMenuAdministrador();
+            System.out.println();
+            System.out.println("----- Menú Administrador -----");
+            System.out.println("1. Gestión de Personas");
+            System.out.println("2. Gestión de Vehículos");
+            System.out.println("3. Gestión de bases");
+            System.out.println("4. Generar Estadísticas");
+            System.out.println("5. Establecer límites de coordenadas");
+            System.out.println("0. Salir");
+            System.out.println();
             System.out.println("------------------------------");
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
             scanner.nextLine();
 
             switch (opcion) {
-                case 1 -> gestionarUsuarios(scanner);
-                case 2 -> gestionarVehiculos(scanner);
-                case 3 -> gv.consultarBaterias();
-                case 4 -> gi.visualizarProblemasVehículos();
-                case 5 -> generarEstadisticas();
-                case 6 -> establecerLimitesCoordenadas(scanner);
+                case 1 -> gestionarMenuUsuarios(scanner);
+                case 2 -> gestionarMenuVehiculos(scanner);
+                case 3 -> gestionarMenuBases(scanner);
+                case 4 -> generarEstadisticas();
+                case 5 -> establecerLimitesCoordenadas(scanner);
                 case 0 -> System.out.println("Saliendo del programa...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -60,19 +69,29 @@ public class MenuAdministrador {
      *
      * @param scanner Scanner para leer la entrada del usuario.
      */
-    private static void gestionarUsuarios(Scanner scanner) {
+    private static void gestionarMenuUsuarios(Scanner scanner) {
         int opcion;
         do {
-            mostrarMenuUsuarios();
+            System.out.println("\n--- Gestión de Personas ---");
+            System.out.println("1. Alta de personas ");
+            System.out.println("2. Baja de personas");
+            System.out.println("3. Modificar personas");
+            System.out.println("4. Listar personas");
+            System.out.println("5. Usuarios que deberían promover a premium");
+            System.out.println("6. Visualizar utilización de los vehículos y sus importes");
+            System.out.println("0. Volver");
+            System.out.println("------------------------------");
 
             opcion = scanner.nextInt();
             scanner.nextLine(); // limpiar buffer
 
             switch (opcion) {
-                case 1 -> gp.añadirPersonas(scanner);
+                case 1 -> gp.crearPersona(scanner);
                 case 2 -> gp.eliminarPersona(scanner);
-                case 3 -> gp.listarPersonas();
-                case 4 -> gp.modificarPersona(scanner);
+                case 3 -> gp.modificarPersona(scanner);
+                case 4 -> gp.listarPersonas();
+                case 5 -> gp.usuariosDeberianSerPremium();
+                case 6 -> gp.utilizacionVehiculosPorUsuario();
                 case 0 -> System.out.println("Volviendo...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -85,13 +104,23 @@ public class MenuAdministrador {
      *
      * @param scanner Scanner para leer la entrada del usuario.
      */
-    private static void gestionarVehiculos(Scanner scanner) {
+    private static void gestionarMenuVehiculos(Scanner scanner) {
         System.out.println("Gestionando Vehículos...");
 
 
         int opcion;
         do {
-            mostrarMenuVehiculos();
+            System.out.println("\n--- Gestión de Vehículos ---");
+            System.out.println("1. Añadir Vehículo");
+            System.out.println("2. Modificar Vehículo");
+            System.out.println("3. Eliminar Vehículo");
+            System.out.println("4. Listar Vehículos");
+            System.out.println("5. Establecer tarifas de vehículos");
+            System.out.println("6. Visualizar estado de la Batería de los Vehículos");
+            System.out.println("7. Visualizar problemas mecánicos de los Vehículos");
+            System.out.println("8. Asignar vehículo a un trabajador");
+            System.out.println("0. Volver");
+            System.out.println("------------------------------");
             opcion = scanner.nextInt();
             scanner.nextLine();  // Limpiar el buffer
 
@@ -124,7 +153,10 @@ public class MenuAdministrador {
 
                 }
                 case 4 -> gv.consultarVehiculos();
-                case 5 -> establecerTarifasVehiculos(scanner);
+                case 5 -> gv.setTarifaMinuto(scanner);
+                case 6 -> gv.consultarBaterias();
+                case 7 -> gi.visualizarProblemasVehículos();
+                case 8 -> gi.asignarVehiculoTrabajador(scanner);
                 case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -133,92 +165,37 @@ public class MenuAdministrador {
     }
 
     /**
-     * Gestiona las opciones del menú de gestión de reparaciones.
-     *
-     * @param scanner Scanner para leer la entrada del usuario.
+     * Gestiona las opciones del menú de gestión de bases.
+     * @param scanner
      */
-    private static void gestionarReparaciones(Scanner scanner) {
-        mostrarMenuReparaciones();
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (opcion) {
-            case 1 -> {
-                // Asignar reparación a vehículo
-                System.out.println("Asignando reparación a vehículo...");
-            }
-            case 2 -> {
-                // Asignar reparación a base
-                System.out.println("Asignando reparación a base...");
-            }
-            case 3 -> {
-                // Volver
-                System.out.println("Volviendo al menú principal...");
-            }
-            default -> System.out.println("Opción no válida.");
-        }
-    }
-
-
-    // -------------------------------
-    // Métodos de mostrar menús
-    // -------------------------------
-
-    /**
-     * Muestra el menú del administrador.
-     */
-    private static void mostrarMenuAdministrador() {
-        System.out.println();
-        System.out.println("----- Menú Administrador -----");
-        System.out.println("1. Gestión de Usuarios");
-        System.out.println("2. Gestión de Vehículos");
-        System.out.println("3. Visualización de Estado de la Batería de los Vehículos");
-        System.out.println("4. Visualización problemas mecánicos de los vehículos");
-        System.out.println("5. Generar Estadísticas");
-        System.out.println("6. Establecer límites de coordenadas");
-        System.out.println("0. Salir");
-
-        System.out.println();
-    }
-
-    /**
-     * Muestra el menú de gestión de usuarios.
-     */
-    private static void mostrarMenuUsuarios() {
-        System.out.println("\n--- Gestión de Usuarios ---");
-        System.out.println("1. Alta de usuario");
-        System.out.println("2. Baja de usuario");
-        System.out.println("3. Modificar usuario");
-        System.out.println("4. Listar usuarios");
+    private static void gestionarMenuBases(Scanner scanner) {
+        System.out.println("\n--- Gestión de bases ---");
+        System.out.println("1. Visualizar estado de las bases");
+        System.out.println("2. Asignar bases a mecánicos");
+        System.out.println("3. Consultar bases disponibles");
+        System.out.println("4. Consultar bases por ocupación");
+        System.out.println("5. Generar estadísticas de bases ordenadas por demanda");
         System.out.println("0. Volver");
         System.out.println("------------------------------");
-    }
 
+        int opcion = 0;
 
-    /**
-     * Muestra el menú de gestión de vehículos.
-     */
-    private static void mostrarMenuVehiculos() {
-        System.out.println("\n--- Gestión de Vehículos ---");
-        System.out.println("1. Añadir Vehículo");
-        System.out.println("2. Modificar Vehículo");
-        System.out.println("3. Eliminar Vehículo");
-        System.out.println("4. Listar Vehículos");
-        System.out.println("5. Establecer tarifas de vehículos");
-        System.out.println("0. Volver");
-        System.out.println("------------------------------");
-    }
+        do {
+            System.out.print("Seleccione una opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // limpiar buffer
 
+            switch (opcion) {
+                case 1 -> gb.consultarEstadoBases();
+                case 2 -> gi.asignarBaseTrabajador(scanner);
+                case 3 -> gb.consultarBasesDisponibles();
+                case 4 -> gb.consultarBasesPorOcupacion();
+                case 5 -> gb.generarEstadisticasBases();
+                case 0 -> System.out.println("Volviendo al menú principal...");
+                default -> System.out.println("Opción no válida.");
+            }
+        } while (opcion != 0);
 
-    /**
-     * Muestra el menú de gestión de reparaciones.
-     */
-    private static void mostrarMenuReparaciones() {
-        System.out.println("\n--- Gestión de Reparaciones ---");
-        System.out.println("1. Asignar reparación a vehículo");
-        System.out.println("2. Asignar reparación a base");
-        System.out.println("3. Volver");
-        System.out.println("------------------------------");
     }
 
 
@@ -286,16 +263,5 @@ public class MenuAdministrador {
         // Implementar lógica para generar estadísticas
     }
 
-    // ------------------------------
-    // Métodos para tarifas
-    // ------------------------------
 
-    /**
-     * Establece las tarifas de los vehículos.
-     * @param scanner Scanner para leer la entrada del usuario.
-     */
-    private static void establecerTarifasVehiculos(Scanner scanner) {
-        gv.setTarifaMinuto(scanner);
-        System.out.println("Tarifa establecida correctamente.");
-    }
 }

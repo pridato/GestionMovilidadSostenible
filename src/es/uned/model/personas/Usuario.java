@@ -30,7 +30,7 @@ public class Usuario extends Persona {
     }
 
     public Usuario(String dni, String nombre, String apellidos, String email, int telefono, Coordenadas coordenadas) {
-        super(nombre, apellidos, dni, email, telefono);
+        super(dni, nombre, apellidos, email, telefono);
         this.saldo = 0.0;
         this.esPremium = false;
         this.fechaCreacion = new Date();
@@ -38,7 +38,7 @@ public class Usuario extends Persona {
     }
 
     public Usuario(String dni, String nombre, String apellidos, String email, int telefono,Date fechaCreacion, Coordenadas coordenadas, double saldo, Boolean esPremium, List<Alquiler> historialViajes) {
-        super(nombre, apellidos, dni, email, telefono);
+        super(dni, nombre, apellidos, email, telefono);
         this.saldo = saldo;
         this.esPremium = esPremium;
         this.fechaCreacion = fechaCreacion;

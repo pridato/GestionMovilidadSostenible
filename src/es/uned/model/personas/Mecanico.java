@@ -14,8 +14,8 @@ public class Mecanico extends Trabajador{
     private List<Vehiculo> vehiculosAsignados;
     private List<Factura> facturasEmitidas;
 
-    public Mecanico(String nombre, String apellidos, String DNI, String email, int telefono, Date fechaContratacion, List<Vehiculo> vehiculosAsignados, List<Factura> facturasEmitidas) {
-        super(nombre, apellidos, DNI, email, telefono, fechaContratacion);
+    public Mecanico(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion, List<Vehiculo> vehiculosAsignados, List<Factura> facturasEmitidas) {
+        super(DNI, nombre, apellidos, email, telefono, fechaContratacion);
         this.vehiculosAsignados = vehiculosAsignados;
         this.facturasEmitidas = facturasEmitidas;
     }

@@ -13,12 +13,19 @@ public class Persona {
     private String email;
     private int telefono;
 
-    public Persona(String nombre, String apellidos, String DNI, String email, int telefono) throws DniInvalidoException {
+    public Persona(String DNI, String nombre, String apellidos, String email, int telefono) throws DniInvalidoException {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.DNI = DNI;
+        validarDNI(DNI);
         this.email = email;
+        if(!this.email.contains("@")) {
+            throw new IllegalArgumentException("El email no es válido");
+        }
         this.telefono = telefono;
+        if (String.valueOf(telefono).length() != 9) {
+            throw new IllegalArgumentException("El teléfono no es válido");
+        }
     }
 
     /**
