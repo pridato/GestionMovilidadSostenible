@@ -324,7 +324,7 @@ public class GestorVehiculos {
     public void consultarVehiculosDisponibles() {
         // mostrar vehiculos disponibles y sus bases
         System.out.println("Vehículos disponibles:");
-        StringBuilder mensaje = new StringBuilder();
+        StringBuilder mensaje;
 
         for (Vehiculo vehiculo : this.vehiculos) {
              mensaje = new StringBuilder("Vehículo: " + vehiculo.getMatricula() + ", " +
@@ -342,7 +342,7 @@ public class GestorVehiculos {
                         mensaje.append(", Sin base asignada");
                     }
                 }
-                System.out.println(vehiculo);
+                System.out.println(mensaje);
             }
         }
     }
