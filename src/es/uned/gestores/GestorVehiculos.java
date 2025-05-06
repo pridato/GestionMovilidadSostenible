@@ -45,6 +45,10 @@ public class GestorVehiculos {
         return instancia;
     }
 
+    public List<Vehiculo> getVehiculos() {
+        return vehiculos;
+    }
+
 
     /**
      * Método para crear nuevo vehiculo

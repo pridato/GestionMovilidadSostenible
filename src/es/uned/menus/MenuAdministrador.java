@@ -7,14 +7,15 @@ import es.uned.gestores.GestorVehiculos;
 import es.uned.model.Coordenadas;
 import java.util.Scanner;
 
-import static es.uned.utils.consts.LIMITES_COORDENADAS_INFERIOR;
-import static es.uned.utils.consts.LIMITES_COORDENADAS_SUPERIOR;
+import static es.uned.utils.consts.*;
 
 public class MenuAdministrador {
 
     // variables auxiliares para la definición de límites en las coordenadas
     public static Coordenadas limiteInferior = LIMITES_COORDENADAS_INFERIOR;
     public static Coordenadas limiteSuperior = LIMITES_COORDENADAS_SUPERIOR;
+
+    public static double descuentoPremium = DESCUENTO_PREMIUM;
 
     public static final GestorVehiculos gestorVehiculos = GestorVehiculos.getInstancia();
     public static final GestorPersonas gestorPersonas = GestorPersonas.getInstancia();
@@ -80,6 +81,7 @@ public class MenuAdministrador {
             System.out.println("5. Usuarios que deberían promover a premium");
             System.out.println("6. Visualizar utilización de los vehículos y sus importes");
             System.out.println("7. Promover a premium");
+            System.out.println("8. Modificar descuento de usuarios premium");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
 
@@ -100,6 +102,7 @@ public class MenuAdministrador {
                 case 5 -> gestorPersonas.usuariosDeberianSerPremium();
                 case 6 -> gestorPersonas.utilizacionVehiculosPorUsuario();
                 case 7 -> gestorPersonas.promoverUsuarioAPremium(scanner);
+                case 8 -> descuentoPremium = gestorPersonas.modificarDescuentoPremium(scanner);
                 case 0 -> System.out.println("Volviendo...");
                 default -> System.out.println("Opción no válida.");
             }

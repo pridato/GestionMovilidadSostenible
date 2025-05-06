@@ -55,8 +55,9 @@ public class Moto extends Vehiculo{
 
     @Override
     public double calcularImporte(int minutos) {
-        return TARIFA_MINUTO_MOTO * minutos;
+        return getTarifaMinuto() * minutos;
     }
+
 
     @Override
     public String toString() {

@@ -11,4 +11,6 @@ public class consts {
     public static final double TARIFA_MINUTO_PATINETE = 0.5;
     public static final double TARIFA_MINUTO_BICICLETA = 0.2;
 
+    public static final double DESCUENTO_PREMIUM = 0.1;
+
 }

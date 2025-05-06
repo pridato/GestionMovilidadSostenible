@@ -62,6 +62,15 @@ public class Alquiler {
         this.baseInicio = baseInicio;
     }
 
+    public Alquiler(Vehiculo vehiculo, Date fechaInicio, EstadoAlquiler estado, Base baseInicio, Coordenadas coordenadas) {
+        this.id = UUID.randomUUID().toString();
+        this.vehiculo = vehiculo;
+        this.fechaInicio = fechaInicio;
+        this.estado = estado;
+        this.baseInicio = baseInicio;
+        this.coordenadasInicio = coordenadas;
+    }
+
     /* constructor con coordenadas */
     public Alquiler(Vehiculo vehiculo, Date fechaInicio, EstadoAlquiler estado, Coordenadas coordenadasInicio) {
         this.id = UUID.randomUUID().toString();
@@ -149,6 +158,12 @@ public class Alquiler {
     public int getTiempoDuracion() {
 
         return tiempoDuracion;
+    }
+
+    public void comprobarAlquilerCurso() {
+        if(!estado.equals(EstadoAlquiler.EN_CURSO)) {
+            throw new IllegalStateException("El alquiler no está en curso");
+        }
     }
 
     public void setTiempoDuracion(int tiempoDuracion) {

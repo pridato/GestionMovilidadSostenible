@@ -6,11 +6,17 @@ import es.uned.model.Incidencia;
 import es.uned.model.personas.Mantenimiento;
 import es.uned.model.personas.Mecanico;
 import es.uned.model.personas.Trabajador;
+import es.uned.model.personas.Usuario;
+import es.uned.model.vehiculos.Vehiculo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import static es.uned.menus.MenuAdministrador.gestorBases;
+import static es.uned.menus.MenuAdministrador.gestorVehiculos;
+import static es.uned.menus.MenuUsuario.gestorAlquiler;
 import static es.uned.utils.dto.cargarIncidencias;
 
 public class GestorIncidencias {
@@ -26,6 +32,69 @@ public class GestorIncidencias {
 
     public static GestorIncidencias getInstancia() {
         return instancia;
+    }
+
+    /**
+     * Método para generar una incidencia sobre un vehículo o una base
+     * @param usuario Usuario que reporta la incidencia
+     * @param scanner Scanner para leer la entrada del usuario
+     */
+    public void generarIncidencia(Usuario usuario, Scanner scanner) {
+        System.out.println("----- Gestión de Incidencias -----");
+        System.out.println("1. Crear incidencia sobre un vehículo");
+        System.out.println("2. Crear incidencia sobre una base");
+        System.out.println("0. Salir");
+
+        System.out.print("Seleccione una opción: ");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+
+        Vehiculo vehiculo = null;
+        Base base = null;
+
+        if(opcion == 1) {
+            System.out.println("Creando incidencia sobre un vehículo");
+
+            gestorVehiculos.consultarVehiculosDisponibles();
+            System.out.print("Introduce la matrícula del vehículo: ");
+            String matricula = scanner.nextLine();
+            vehiculo = gestorVehiculos.obtenerVehiculo(matricula);
+
+
+            if (vehiculo == null) {
+                System.out.println("No se ha seleccionado ningún vehículo.");
+                return;
+            }
+            vehiculo.setEstado(EstadoVehiculo.AVERIADO);
+            System.out.print("Comente brevemente que ocurrió en el vehículo: ");
+        } else if(opcion == 2) {
+            System.out.println("Creando incidencia sobre una base");
+
+            gestorBases.consultarBasesDisponibles();
+
+            System.out.print("Introduce el ID de la base: ");
+            String idBase = scanner.nextLine();
+            base = gestorBases.consultarBasePorId(idBase);
+
+            if (base == null) {
+                System.out.println("No se ha encontrado la base.");
+                return;
+            }
+            base.setAveriada(true);
+            System.out.print("Comente brevemente que ocurrió en la base: ");
+        }
+
+
+        String descripcion = scanner.nextLine();
+
+        Incidencia incidencia = new Incidencia(usuario, descripcion, new Date(), base, vehiculo);
+        incidencias.add(incidencia);
+
+
+        System.out.println("Incidencia generada con éxito.");
+        System.out.println("ID de la incidencia: " + incidencia.getId());
+        System.out.println("Descripción: " + incidencia.getDescripcion());
+        System.out.println("Fecha de reporte: " + incidencia.getFechaReporte());
     }
 
     /**

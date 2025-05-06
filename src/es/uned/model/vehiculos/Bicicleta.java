@@ -34,7 +34,7 @@ public class Bicicleta extends Vehiculo{
 
     @Override
     public double calcularImporte(int minutos) {
-        return TARIFA_MINUTO_BICICLETA * minutos;
+        return getTarifaMinuto() * minutos;
     }
 
     @Override

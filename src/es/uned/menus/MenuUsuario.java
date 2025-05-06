@@ -16,7 +16,8 @@ import static es.uned.menus.MenuAdministrador.*;
 public class MenuUsuario {
 
     private static final GestorUsuarios gestorUsuarios = GestorUsuarios.getInstancia();
-    private static final GestorAlquileres gestorAlquiler = GestorAlquileres.getInstancia();
+    public static final GestorAlquileres gestorAlquiler = GestorAlquileres.getInstancia();
+
     Usuario usuario;
     Alquiler alquiler;
 
@@ -52,45 +53,124 @@ public class MenuUsuario {
 
         System.out.println("Bienvenido " + usuario.getNombre() + " " + usuario.getApellidos());
         do {
-            mostrarMenuUsuario();
+            System.out.println("-------------------------");
+            System.out.println("1. Gestión Personal");
+            System.out.println("2. Gestión de Vehículos");
+            System.out.println("3. Información General");
+            System.out.println("4. Incidencias");
+            System.out.println("0. Salir");
+            System.out.println("-------------------------");
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
             scanner.nextLine();
 
             switch (opcion) {
-                case 1 -> {
-                    if (alquiler == null) {
-                        System.out.println("No tienes ningún vehículo alquilado.");
-                        break;
-                    }
-                    consultarEstadoBateria(this.alquiler.getVehiculo());
-                }
-
-                case 2 -> gestorVehiculos.consultarVehiculosDisponibles();
-                case 3 -> {
-                    try {
-                        this.alquiler = gestorAlquiler.iniciarAlquiler(usuario, scanner);
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
-                case 4 -> GestorAlquileres.finalizarAlquiler(usuario, alquiler, scanner);
-                case 5 -> consultarDatosActualesUsuario(usuario);
-                case 6 -> gestorAlquiler.consultarAlquileresUsuario(usuario);
-                case 7 -> {
-                    System.out.println("Límites de coordenadas:");
-                    System.out.println("X: " + limiteInferior);
-                    System.out.println("Y: " + limiteSuperior);
-                }
-                case 8 -> System.out.println("Saldo actual: " + usuario.getsaldo());
-                case 9 -> recargarSaldo(scanner);
-                case 10 -> gestorAlquiler.reservarVehiculo(usuario, scanner);
+                case 1 -> gestionarOpcionesUsuarioPersonal(scanner);
+                case 2 -> gestionarOpcionesVehiculos(scanner);
+                case 3 -> gestionarOpcionesInformacionGeneral(scanner);
+                case 4 -> gestorIncidencias.generarIncidencia(usuario, scanner);
                 case 0 -> System.out.println("Saliendo...");
                 default -> System.out.println("Opción no válida.");
             }
 
         } while (opcion != 0);
     }
+
+    /**
+     * Método para gestionar las opciones de usuario personal.
+     * @param scanner Scanner para leer la entrada del usuario.
+     */
+    private void gestionarOpcionesUsuarioPersonal(Scanner scanner) {
+        System.out.println("----- Gestión Personal -----");
+        System.out.println("1. Consultar mis datos actuales");
+        System.out.println("2. Consultar mis alquileres");
+        System.out.println("3. Consultar saldo");
+        System.out.println("4. Recargar saldo");
+        System.out.println("0. Salir");
+
+        System.out.print("Seleccione una opción: ");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+        switch (opcion) {
+            case 1 -> consultarDatosActualesUsuario(usuario);
+            case 2 -> gestorAlquiler.consultarAlquileresUsuario(usuario);
+            case 3 -> System.out.println("Saldo actual: " + usuario.getsaldo());
+            case 4 -> recargarSaldo(scanner);
+            case 0 -> System.out.println("Saliendo...");
+            default -> System.out.println("Opción no válida.");
+        }
+    }
+
+    /**
+     * Método para gestionar las opciones de vehiculos
+     * @param scanner Scanner para leer la entrada del usuario.
+     */
+    private void gestionarOpcionesVehiculos(Scanner scanner) {
+        System.out.println("----- Gestión de Vehículos -----");
+        System.out.println("1. Consultar vehículos disponibles");
+        System.out.println("2. Alquilar un vehículo");
+        System.out.println("3. Devolver vehículo");
+        System.out.println("4. Reservar vehículo");
+        System.out.println("5. Consultar estado de batería");
+        System.out.println("0. Salir");
+
+        System.out.print("Seleccione una opción: ");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+        switch (opcion) {
+            case 1 -> gestorVehiculos.consultarVehiculosDisponibles();
+            case 2 -> {
+                try {
+                    this.alquiler = gestorAlquiler.iniciarAlquiler(usuario, scanner, alquiler);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+            case 3 -> GestorAlquileres.finalizarAlquiler(usuario, alquiler, scanner);
+            case 4 -> this.alquiler = gestorAlquiler.reservarVehiculo(usuario, scanner);
+            case 5 -> {
+                if (alquiler == null) {
+                    System.out.println("No tienes ningún vehículo alquilado.");
+                    break;
+                }
+                consultarEstadoBateria(this.alquiler.getVehiculo());
+            }
+            case 0 -> System.out.println("Saliendo...");
+            default -> System.out.println("Opción no válida.");
+        }
+    }
+
+    /**
+     * Método para gestionar las opciones de información general.
+     * @param scanner Scanner para leer la entrada del usuario.
+     */
+    private void gestionarOpcionesInformacionGeneral(Scanner scanner) {
+        System.out.println("----- Información General -----");
+        System.out.println("1. Consultar límites en las coordenadas");
+        System.out.println("2. Consultar tarifas");
+        System.out.println("3. Consultar descuento de usuarios premium");
+        System.out.println("0. Salir");
+
+        System.out.print("Seleccione una opción: ");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+        if (opcion == 1) {
+            System.out.println("Límites de coordenadas:");
+            System.out.println("X: " + limiteInferior);
+            System.out.println("Y: " + limiteSuperior);
+        } else if (opcion == 2) {
+            System.out.println("Tarifas:");
+            // tarifas de cada...
+        } else if (opcion == 3) {
+            System.out.println("Descuento de usuarios premium: " + descuentoPremium*100 + "%");
+        }
+        else if (opcion == 0) {
+            System.out.println("Saliendo...");
+        } else {
+            System.out.println("Opción no válida.");
+        }
+    }
+
 
     /**
      * Método para recargar el saldo del usuario.
@@ -106,24 +186,6 @@ public class MenuUsuario {
             usuario.recargarSaldo(cantidad);
             System.out.println("Saldo recargado. Nuevo saldo: " + usuario.getsaldo());
         }
-    }
-
-    /**
-     * Método para mostrar el menú de usuario.
-     */
-    private static void mostrarMenuUsuario() {
-        System.out.println("----- Menú Usuario -----");
-        System.out.println("1. Consultar estado de batería de mi vehículo");
-        System.out.println("2. Consultar vehículos disponibles");
-        System.out.println("3. Alquilar un vehículo");
-        System.out.println("4. Devolver vehículo");
-        System.out.println("5. Consultar mis datos actuales");
-        System.out.println("6. Consultar mis alquileres");
-        System.out.println("7. Consultar límites en las coordenadas");
-        System.out.println("8. Consultar saldo");
-        System.out.println("9. Recargar saldo");
-        System.out.println("10. Reservar vehículo");
-        System.out.println("0. Salir");
     }
 
     /**

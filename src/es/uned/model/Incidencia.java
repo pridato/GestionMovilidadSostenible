@@ -37,6 +37,15 @@ public class Incidencia {
         this.base = base;
     }
 
+    public Incidencia(Usuario usuario, String descripcion, Date fechaReporte, Base base, Vehiculo vehiculo) {
+        this.id = String.valueOf(System.currentTimeMillis()); // valor aleatorio
+        this.usuario = usuario;
+        this.descripcion = descripcion;
+        this.fechaReporte = fechaReporte;
+        this.base = base;
+        this.vehiculo = vehiculo;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }

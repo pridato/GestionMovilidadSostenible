@@ -301,6 +301,29 @@ public class GestorPersonas {
         }
     }
 
+    /**
+     * Método para modificar el descuento para usuarios premium.
+     * @param scanner scanner para leer la entrada del usuario
+     */
+    public double modificarDescuentoPremium(Scanner scanner) {
+        System.out.println("Introduzca el nuevo descuento para usuarios premium (0-100): ");
+        double nuevoDescuento = scanner.nextDouble() / 100;
+        scanner.nextLine();
+
+        if (nuevoDescuento < 0 || nuevoDescuento > 1) {
+            System.out.println("El descuento debe estar entre 0 y 100.");
+            modificarDescuentoPremium(scanner);
+        }
+        else {
+            for(Persona persona : personas) {
+                if (persona instanceof Usuario usuario) {
+                    usuario.setDescuento(nuevoDescuento);
+                }
+            }
+            System.out.println("El descuento para usuarios premium ha sido modificado a: " + nuevoDescuento);
+        }
+        return nuevoDescuento;
+    }
 }
 
 

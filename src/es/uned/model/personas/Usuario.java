@@ -94,6 +94,15 @@ public class Usuario extends Persona {
         this.saldo += saldo;
     }
 
+    /**
+     * Método para verificar si tiene saldo suficiente para iniciar un alquiler.
+     */
+    public void verificarSaldo() {
+        if (saldo <= 0) {
+            throw new IllegalStateException("Saldo insuficiente para iniciar el alquiler.");
+        }
+    }
+
     @Override
     public String toString() {
         final String INDENT = "    ";

@@ -34,8 +34,9 @@ public class Patinete extends Vehiculo {
 
     @Override
     public double calcularImporte(int minutos) {
-        return TARIFA_MINUTO_PATINETE * minutos;
+        return getTarifaMinuto() * minutos;
     }
+
 
     @Override
     public String toString() {

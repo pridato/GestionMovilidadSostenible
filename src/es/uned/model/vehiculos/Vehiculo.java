@@ -80,7 +80,16 @@ public abstract class Vehiculo {
         this.estado = EstadoVehiculo.AVERIADO;
     }
 
-
+    /**
+     * Verifica si el vehículo está disponible.
+     */
+    public void verificarDisponibilidad() {
+        if(!estado.equals(EstadoVehiculo.DISPONIBLE)) {
+            throw new IllegalStateException("El vehículo no está disponible.");
+        } else if (bateria <= 0) {
+            throw new IllegalStateException("El vehículo no tiene batería suficiente.");
+        }
+    }
 
 
     @Override
