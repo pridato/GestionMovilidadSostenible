@@ -78,17 +78,25 @@ public class GestorAlquileres {
         vehiculo.setEstado(EstadoVehiculo.ALQUILADO);
 
         Alquiler alquiler;
+        Base baseInicio = gestorBases.obtenerBaseVehiculo(vehiculo.getMatricula());
+
+        if(baseInicio == null){
+            baseInicio = obtenerBaseParaAlquilar(scanner);
+        }
 
         // si es bici o patinete requiere base
         if (vehiculo instanceof Bicicleta || vehiculo instanceof Patinete) {
-            Base baseInicio = obtenerBaseParaAlquilar(scanner);
+            System.out.println("Va a alquilar el vehículo " + vehiculo.getMatricula() + " en la base " + baseInicio.getId());
+
             alquiler = new Alquiler(
                     vehiculo,
                     new Date(),
                     EstadoAlquiler.EN_CURSO,
                     baseInicio
             );
-        } else {
+
+        }
+        else {
             System.out.println("Va a alquilar el vehículo " + vehiculo.getMatricula() + " en las coordenadas " + vehiculo.getCoordenadas().getX() + ", " + vehiculo.getCoordenadas().getY());
             alquiler = new Alquiler(
                     vehiculo,
@@ -247,26 +255,35 @@ public class GestorAlquileres {
      * Método para reservar un vehículo
      *
      * @param usuario  usuario que reserva el alquiler
-     * @param vehiculo vehiculo a reservar
+     * @param scanner scanner para leer la entrada del usuario
      */
-    public void reservarVehiculo(Usuario usuario, Vehiculo vehiculo) {
+    public void reservarVehiculo(Usuario usuario, Scanner scanner) {
         // si el usuario no es premium abortar...
         if (!usuario.getEsPremium()) {
             throw new IllegalStateException("Solo los usuarios premium pueden reservar vehículos.");
         }
 
-        // si el vehículo no está disponible abortar...
-        if (vehiculo.getEstado() != EstadoVehiculo.DISPONIBLE) {
-            throw new IllegalStateException("El vehículo no está disponible para reservar.");
+        Vehiculo vehiculo = null;
+        try {
+            // obtenemos un vehiculo para alquilar
+            vehiculo = obtenerVehiculoParaAlquilar(scanner);
+
+            // si el vehículo no está disponible abortar...
+            if (vehiculo.getEstado() != EstadoVehiculo.DISPONIBLE) {
+                throw new IllegalStateException("El vehículo no está disponible para reservar.");
+            }
+
+            Alquiler alquiler = new Alquiler(
+                    vehiculo,
+                    new Date(),
+                    EstadoAlquiler.RESERVADO
+            );
+
+            this.alquileres.add(alquiler);
+
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
         }
-
-        Alquiler alquiler = new Alquiler(
-                vehiculo,
-                new Date(),
-                EstadoAlquiler.RESERVADO
-        );
-
-        this.alquileres.add(alquiler);
     }
 
     /**
@@ -291,7 +308,8 @@ public class GestorAlquileres {
 
         System.out.println("Alquileres del usuario " + usuario.getNombre() + ":");
         for (Alquiler alquiler : usuario.getHistorialViajes()) {
-            System.out.println(alquiler);
+            System.out.println(alquiler.getId() + " - " + alquiler.getVehiculo().getMatricula() + " - " + alquiler.getEstado() +
+                    " - " + alquiler.getFechaInicio() + " - " + alquiler.getFechaFin() + " - " + alquiler.getImporteFinal());
         }
     }
 }

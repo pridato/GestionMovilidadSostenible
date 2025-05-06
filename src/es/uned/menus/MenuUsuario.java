@@ -82,11 +82,30 @@ public class MenuUsuario {
                     System.out.println("X: " + limiteInferior);
                     System.out.println("Y: " + limiteSuperior);
                 }
+                case 8 -> System.out.println("Saldo actual: " + usuario.getsaldo());
+                case 9 -> recargarSaldo(scanner);
+                case 10 -> gestorAlquiler.reservarVehiculo(usuario, scanner);
                 case 0 -> System.out.println("Saliendo...");
                 default -> System.out.println("Opción no válida.");
             }
 
         } while (opcion != 0);
+    }
+
+    /**
+     * Método para recargar el saldo del usuario.
+     * @param scanner Scanner para leer la entrada del usuario.
+     */
+    private void recargarSaldo(Scanner scanner) {
+        System.out.print("Introduzca la cantidad a recargar: ");
+        double cantidad = scanner.nextDouble();
+        scanner.nextLine();
+        if (cantidad <= 0) {
+            System.out.println("La cantidad debe ser mayor que 0.");
+        } else {
+            usuario.recargarSaldo(cantidad);
+            System.out.println("Saldo recargado. Nuevo saldo: " + usuario.getsaldo());
+        }
     }
 
     /**
@@ -101,6 +120,9 @@ public class MenuUsuario {
         System.out.println("5. Consultar mis datos actuales");
         System.out.println("6. Consultar mis alquileres");
         System.out.println("7. Consultar límites en las coordenadas");
+        System.out.println("8. Consultar saldo");
+        System.out.println("9. Recargar saldo");
+        System.out.println("10. Reservar vehículo");
         System.out.println("0. Salir");
     }
 

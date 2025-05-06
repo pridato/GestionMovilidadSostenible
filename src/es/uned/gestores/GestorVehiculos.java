@@ -78,6 +78,14 @@ public class GestorVehiculos {
         }
 
         if (vehiculo != null && !this.vehiculos.contains(vehiculo)) {
+            if(! (vehiculo instanceof Moto)) {
+                gestorBases.consultarBasesDisponibles();
+                System.out.println("Seleccione la base a la que desea añadir el vehículo:");
+                String idBase = scanner.nextLine();
+                Base base = gestorBases.consultarBasePorId(idBase);
+                base.añadirVehiculo(vehiculo);
+            }
+
             this.vehiculos.add(vehiculo);
             return true;
         }
