@@ -55,6 +55,18 @@ public class Base {
         this.vehiculos = vehiculosAlquilados;
     }
 
+    /**
+     * Añade un vehículo a la base.
+     * @param vehiculo Vehículo a añadir.
+     */
+    public void añadirVehiculo(Vehiculo vehiculo) {
+        if (vehiculos.size() < capacidadMaxima) {
+            vehiculos.add(vehiculo);
+        } else {
+            System.out.println("No se puede añadir el vehículo. Capacidad máxima alcanzada.");
+        }
+    }
+
     public boolean isAveriada() {
         return averiada;
     }

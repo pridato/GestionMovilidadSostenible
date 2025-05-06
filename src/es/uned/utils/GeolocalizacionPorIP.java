@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Scanner;
 
 public class GeolocalizacionPorIP {
 
@@ -23,6 +24,12 @@ public class GeolocalizacionPorIP {
             double lat = extraerDouble(respuesta, "\"lat\":");
             double lon = extraerDouble(respuesta, "\"lon\":");
 
+            // extraemos la ciudad y el país
+            String ciudad = extraerString(respuesta, "\"city\":\"");
+            String pais = extraerString(respuesta, "\"country\":\"");
+
+            System.out.println("Ciudad: " + ciudad);
+            System.out.println("País: " + pais);
             // lon = x, lat = y
             return new Coordenadas(lon, lat);
 
@@ -30,6 +37,26 @@ public class GeolocalizacionPorIP {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Método para extraer un valor string de un string JSON.
+     *
+     * @param texto texto JSON
+     * @param clave clave a buscar
+     * @return valor string extraído
+     */
+    private static String extraerString(String texto, String clave) {
+        // buscamos la clave en el string, si no existe devolvemos null
+        int inicio = texto.indexOf(clave);
+        if (inicio == -1) return null;
+
+        // buscamos el valor asociado a la clave
+        inicio += clave.length();
+        int fin = texto.indexOf("\"", inicio + 1);
+
+        // extraemos el valor y lo convertimos a string
+        return texto.substring(inicio, fin);
     }
 
     /**
@@ -87,5 +114,20 @@ public class GeolocalizacionPorIP {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Lee las coordenadas manualmente desde la entrada del usuario.
+     *
+     * @param scanner Scanner para leer la entrada del usuario.
+     * @return Coordenadas introducidas por el usuario.
+     */
+    public static Coordenadas leerCoordenadasManualmente(Scanner scanner) {
+        System.out.print("Introduce la coordenada X (longitud): ");
+        double x = scanner.nextDouble();
+        System.out.print("Introduce la coordenada Y (latitud): ");
+        double y = scanner.nextDouble();
+        scanner.nextLine(); // limpiar buffer
+        return new Coordenadas(x, y);
     }
 }

@@ -3,6 +3,7 @@ package es.uned.gestores;
 import es.uned.enums.EstadoMoto;
 import es.uned.enums.EstadoVehiculo;
 import es.uned.model.Alquiler;
+import es.uned.model.Base;
 import es.uned.model.Coordenadas;
 import es.uned.model.vehiculos.Bicicleta;
 import es.uned.model.vehiculos.Moto;
@@ -13,18 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static es.uned.utils.dto.*;
+import static es.uned.menus.MenuAdministrador.gestorBases;
+import static es.uned.utils.dto.cargarVehiculos;
 
 /**
  * Clase GestorVehiculos que gestiona la lista de vehículos.
-
  */
 public class GestorVehiculos {
 
     // Atributos
     private static final GestorVehiculos instancia = new GestorVehiculos();
 
-    private List<Vehiculo> vehiculos = new ArrayList<>();
+    private final List<Vehiculo> vehiculos;
 
 
     // Constructor
@@ -35,8 +36,9 @@ public class GestorVehiculos {
 
     /**
      * Método para devolver la instancia de la clase GestorVehiculos.
-     *
+     * <p>
      * Así evitamos crear una nueva instancia cada vez que se necesite.
+     *
      * @return
      */
     public static GestorVehiculos getInstancia() {
@@ -84,8 +86,9 @@ public class GestorVehiculos {
 
     /**
      * Ya que los 3 tipos de vehículos tienen atributos comunes, se crea un método para leer los datos comunes.
+     *
      * @param scanner Scanner para leer la entrada del usuario
-     * @param tipo Tipo de vehículo (moto, patinete, bicicleta)
+     * @param tipo    Tipo de vehículo (moto, patinete, bicicleta)
      * @return Array de objetos con los datos comunes del vehículo
      */
     private static Object[] leerDatosComunesVehiculo(Scanner scanner, String tipo) {
@@ -100,7 +103,8 @@ public class GestorVehiculos {
         scanner.nextLine(); // Limpieza de buffer
 
         Coordenadas coordenadas = new Coordenadas(x, y);
-        EstadoVehiculo estadoVehiculo = EstadoVehiculo.DISPONIBLE;;
+        EstadoVehiculo estadoVehiculo = EstadoVehiculo.DISPONIBLE;
+        ;
         try {
             System.out.println("Selecciona el tipo de moto (DISPONIBLE, ALQUILADO, AVERIADO o RESERVADO): ");
             estadoVehiculo = EstadoVehiculo.valueOf(scanner.nextLine().toUpperCase());
@@ -118,6 +122,7 @@ public class GestorVehiculos {
 
     /**
      * Método para crear una moto.
+     *
      * @param scanner Scanner para leer la entrada del usuario
      * @return Vehiculo creado
      */
@@ -142,9 +147,9 @@ public class GestorVehiculos {
     }
 
 
-
     /**
      * Método para crear un patinete.
+     *
      * @param scanner Scanner para leer la entrada del usuario
      * @return Vehiculo creado
      */
@@ -161,6 +166,7 @@ public class GestorVehiculos {
 
     /**
      * Método para crear una bicicleta.
+     *
      * @param scanner Scanner para leer la entrada del usuario
      * @return Vehiculo creado
      */
@@ -177,6 +183,7 @@ public class GestorVehiculos {
 
     /**
      * Método para eliminar un vehículo de la lista de vehículos.
+     *
      * @param matricula matricula del Vehiculo a eliminar.
      * @return true si se elimina correctamente, false si no existe o es null.
      */
@@ -191,6 +198,7 @@ public class GestorVehiculos {
 
     /**
      * Método para obtener la lista de vehículos.
+     *
      * @param matricula matricula del vehículo a buscar
      * @return Lista de vehículos.
      */
@@ -263,13 +271,14 @@ public class GestorVehiculos {
                 default -> System.out.println("Opción no válida.");
             }
 
-        }while (opcion!=0);
+        } while (opcion != 0);
 
 
     }
 
     /**
      * Método para mostrar el menú de modificación de un vehículo.
+     *
      * @param vehiculo Vehículo a modificar.
      */
     private void menuModificacion(Vehiculo vehiculo) {
@@ -280,7 +289,7 @@ public class GestorVehiculos {
         System.out.println("4. Batería");
         System.out.println("5. Tarifa por minuto");
         System.out.println("6. Penalización");
-        if(vehiculo instanceof Moto) {
+        if (vehiculo instanceof Moto) {
             System.out.println("7. Estado de la moto");
         }
         System.out.println("0. Salir");
@@ -289,6 +298,7 @@ public class GestorVehiculos {
 
     /**
      * Método para obtener un vehículo de la lista de vehículos.
+     *
      * @param matricula matricula del vehículo a buscar
      * @return El vehículo encontrado o null si no se encuentra.
      */
@@ -301,6 +311,7 @@ public class GestorVehiculos {
 
     /**
      * Método para consultar todos los vehículos.
+     *
      * @return Lista de vehículos.
      */
     public void consultarVehiculos() {
@@ -311,8 +322,26 @@ public class GestorVehiculos {
      * Método para consultar el estado de batería de un vehículo.
      */
     public void consultarVehiculosDisponibles() {
+        // mostrar vehiculos disponibles y sus bases
+        System.out.println("Vehículos disponibles:");
+        StringBuilder mensaje = new StringBuilder();
+
         for (Vehiculo vehiculo : this.vehiculos) {
+             mensaje = new StringBuilder("Vehículo: " + vehiculo.getMatricula() + ", " +
+                     "Batería: " + vehiculo.getBateria() + "%, " +
+                     "Tarifa por minuto: " + vehiculo.getTarifaMinuto() + "€, penalización: " + vehiculo.getPenalizacion() + "€" +
+                     "Penalización: " + vehiculo.getPenalizacion() + "€");
             if (vehiculo.getEstado() == EstadoVehiculo.DISPONIBLE) {
+                if (vehiculo instanceof Moto) {
+                    mensaje.append(", Coordenadas: (").append(vehiculo.getCoordenadas().getX()).append(", ").append(vehiculo.getCoordenadas().getY()).append("), ");
+                } else {
+                    Base base = gestorBases.obtenerBaseVehiculo(vehiculo.getMatricula());
+                    if (base != null) {
+                        mensaje.append(", Base: ").append(base.getId()).append(", Coordenadas: (").append(base.getCoordenadas().getX()).append(", ").append(base.getCoordenadas().getY()).append(")");
+                    } else {
+                        mensaje.append(", Sin base asignada");
+                    }
+                }
                 System.out.println(vehiculo);
             }
         }
@@ -341,6 +370,7 @@ public class GestorVehiculos {
 
     /**
      * Método para establecer tarifas por defecto en los vehículos.
+     *
      * @param scanner Scanner para leer la entrada del usuario
      */
     public void setTarifaMinuto(Scanner scanner) {
@@ -400,5 +430,21 @@ public class GestorVehiculos {
 
         System.out.println("Presione ENTER para continuar...");
         scanner.nextLine();
+    }
+
+    /**
+     * Método para consultar los vehículos disponibles para alquilar.
+     */
+    public void consultarVehiculosParaAlquilar() {
+        System.out.println("Vehículos disponibles para alquilar:");
+        for (Vehiculo vehiculo : this.vehiculos) {
+            if (vehiculo.getEstado() == EstadoVehiculo.DISPONIBLE) {
+                // mostrar tipo de vehiculo
+                String tipoVehiculo =
+                        vehiculo instanceof Moto ? "Moto" : vehiculo instanceof Patinete ? "Patinete" :
+                                vehiculo instanceof Bicicleta ? "Bicicleta" : "Desconocido";
+                System.out.println(tipoVehiculo + ", Matricula: " + vehiculo.getMatricula() + ", Batería: " + vehiculo.getBateria() + "%, Tarifa por minuto: " + vehiculo.getTarifaMinuto() + "€, penalización: " + vehiculo.getPenalizacion() + "€");
+            }
+        }
     }
 }

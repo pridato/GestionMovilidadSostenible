@@ -8,7 +8,7 @@ import es.uned.utils.GeolocalizacionPorIP;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static es.uned.menus.MenuAdministrador.leerCoordenadasManualmente;
+import static es.uned.utils.GeolocalizacionPorIP.leerCoordenadasManualmente;
 import static es.uned.utils.dto.cargarPersonas;
 import static es.uned.utils.dto.cargarTrabajadores;
 
@@ -23,6 +23,10 @@ public class GestorPersonas {
     public GestorPersonas() {
         this.personas.addAll(cargarPersonas());
         this.personas.addAll(cargarTrabajadores());
+    }
+
+    public Set<Persona> getPersonas() {
+        return personas;
     }
 
     /**
@@ -260,6 +264,39 @@ public class GestorPersonas {
                     System.out.println(alquiler.getVehiculo());
                     System.out.println("Fecha de alquiler: " + alquiler.getFechaInicio() + " - " + alquiler.getFechaFin());
                 }
+            }
+        }
+    }
+
+    /**
+     * Método para promover a un usuario a premium.
+     */
+    public void promoverUsuarioAPremium(Scanner scanner) {
+
+        System.out.println("Lista de usuarios:");
+        consultarUsuarios();
+        System.out.println("Introduzca el DNI del usuario a promover: ");
+        String dni = scanner.nextLine();
+        Persona persona = buscarPersonaPorDNI(dni);
+
+        if (persona == null) {
+            System.out.println("Usuario no encontrado.");
+            return;
+        }
+
+        if (persona instanceof Usuario usuario) {
+            usuario.setEsPremium(true);
+            System.out.println("El usuario " + usuario.getNombre() + " " + usuario.getApellidos() + " ha sido promovido a premium.");
+        } else {
+            System.out.println("La persona no es un usuario.");
+        }
+
+    }
+
+    public void consultarUsuarios() {
+        for (Persona persona : personas) {
+            if (persona instanceof Usuario usuario) {
+                System.out.println("El usuario " + usuario.getNombre() + " " + usuario.getApellidos() + " con dni "+ usuario.getDNI() + " tiene " + usuario.getHistorialViajes().size() + " viajes.");
             }
         }
     }

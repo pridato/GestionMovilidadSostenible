@@ -6,6 +6,7 @@ import es.uned.model.personas.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 
+import static es.uned.menus.MenuAdministrador.gestorPersonas;
 import static es.uned.utils.dto.cargarUsuarios;
 
 /**
@@ -29,14 +30,21 @@ public class GestorUsuarios {
 
     private static final GestorUsuarios instancia = new GestorUsuarios();
 
-    private List<Usuario> usuarios = new ArrayList<>();
 
     private int descuentoPremium = 10; // descuento del 10% (defecto) para usuarios premium
 
 
-    /* constructor */
-    public GestorUsuarios() {
-        this.usuarios = new ArrayList<>(cargarUsuarios()); // evitamos problema inmutabilidad
+    /**
+     * Funciona como una variable global para almacenar los usuarios.
+     * Se usa un get para hacer posible la modificación de la lista de usuarios.
+     * 
+     * @return lista de usuarios.
+     */
+    private List<Usuario> getUsuarios() {
+        return gestorPersonas.getPersonas().stream()
+                .filter(p -> p instanceof Usuario)
+                .map(p -> (Usuario) p)
+                .toList();
     }
 
     /**
@@ -53,7 +61,7 @@ public class GestorUsuarios {
      * @return true si se ha creado correctamente, false en caso contrario.
      */
     private Usuario buscarUsuario(String DNI) {
-        return this.usuarios.stream()
+        return getUsuarios().stream()
                 .filter(usuario -> usuario.getDNI().equals(DNI))
                 .findFirst()
                 .orElse(null);
@@ -64,7 +72,7 @@ public class GestorUsuarios {
      * @param DNI El DNI del usuario a promocionar.
      */
     public void promocionarUsuarioPremium(String DNI) {
-        this.usuarios.stream()
+        getUsuarios().stream()
                 .filter(usuario -> usuario.getDNI().equals(DNI))
                 .findFirst()
                 .ifPresent(usuario -> usuario.setEsPremium(true));
@@ -104,7 +112,7 @@ public class GestorUsuarios {
      * @return lista de usuarios.
      */
     public void consultarUsuarios() {
-        this.usuarios.forEach(usuario -> System.out.println(usuario.toString()));
+        getUsuarios().forEach(usuario -> System.out.println(usuario.toString()));
     }
 
     /**
@@ -112,7 +120,7 @@ public class GestorUsuarios {
      * @return lista de usuarios premium.
      */
     public void consultarUsuariosPremium() {
-        this.usuarios.stream().filter(Usuario::getEsPremium).forEach(usuario -> System.out.println(usuario.toString()));
+        getUsuarios().stream().filter(Usuario::getEsPremium).forEach(usuario -> System.out.println(usuario.toString()));
     }
 
     /**
@@ -120,7 +128,7 @@ public class GestorUsuarios {
      * @return lista de usuarios no premium.
      */
     public void consultarUsuariosNoPremium() {
-        this.usuarios.stream().filter(usuario -> !usuario.getEsPremium()).forEach(usuario -> System.out.println(usuario.toString()));
+        getUsuarios().stream().filter(usuario -> !usuario.getEsPremium()).forEach(usuario -> System.out.println(usuario.toString()));
     }
 
     public int getDescuentoPremium() {
@@ -135,6 +143,7 @@ public class GestorUsuarios {
      * Método para listar todos los usuarios.
      */
     public void listarUsuarios() {
+        List<Usuario> usuarios = getUsuarios();
         for(int i=0; i<usuarios.size(); i++){
             System.out.println(i +" -> " + usuarios.get(i).getDNI() + " " + usuarios.get(i).getNombre() + " " + usuarios.get(i).getApellidos());
         }
@@ -146,6 +155,6 @@ public class GestorUsuarios {
      * @return usuario en la posición i.
      */
     public Usuario obtenerUsuarioIndice(int i) {
-        return usuarios.get(i);
+        return getUsuarios().get(i);
     }
 }

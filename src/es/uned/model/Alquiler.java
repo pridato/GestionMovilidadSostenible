@@ -21,6 +21,25 @@ public class Alquiler {
     private double importeFinal;
     private int tiempoDuracion;
 
+    public Coordenadas getCoordenadasFin() {
+        return coordenadasFin;
+    }
+
+    public void setCoordenadasFin(Coordenadas coordenadasFin) {
+        this.coordenadasFin = coordenadasFin;
+    }
+
+    public Coordenadas getCoordenadasInicio() {
+        return coordenadasInicio;
+    }
+
+    public void setCoordenadasInicio(Coordenadas coordenadasInicio) {
+        this.coordenadasInicio = coordenadasInicio;
+    }
+
+    private Coordenadas coordenadasInicio;
+    private Coordenadas coordenadasFin;
+
     /* Constructor de la clase Alquiler, con todos los datos */
     public Alquiler(Vehiculo vehiculo, Date fechaInicio, Date fechaFin, EstadoAlquiler estado, Base baseInicio, Base baseFin, double importeFinal, int tiempoDuracion) {
         this.id = UUID.randomUUID().toString();
@@ -42,6 +61,16 @@ public class Alquiler {
         this.estado = estado;
         this.baseInicio = baseInicio;
     }
+
+    /* constructor con coordenadas */
+    public Alquiler(Vehiculo vehiculo, Date fechaInicio, EstadoAlquiler estado, Coordenadas coordenadasInicio) {
+        this.id = UUID.randomUUID().toString();
+        this.vehiculo = vehiculo;
+        this.fechaInicio = fechaInicio;
+        this.estado = estado;
+        this.coordenadasInicio = coordenadasInicio;
+    }
+
 
     /* constructor para reservar un vehículo a través de un alquiler */
     public Alquiler(Vehiculo vehiculo, Date fechaInicio, EstadoAlquiler estado) {
@@ -138,6 +167,8 @@ public class Alquiler {
                 "    Base de Fin: " + (baseFin != null ? baseFin.toString() : "No disponible") + "\n" +
                 "    Importe Final: " + importeFinal + "\n" +
                 "    Duración (en minutos): " + tiempoDuracion + "\n" +
+                "    Coordenadas de Inicio: " + (coordenadasInicio != null ? coordenadasInicio.toString() : "No disponible") + "\n" +
+                "    Coordenadas de Fin: " + (coordenadasFin != null ? coordenadasFin.toString() : "No disponible") + "\n" +
                 "}";
     }
 }

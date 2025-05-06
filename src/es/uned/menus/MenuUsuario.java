@@ -1,43 +1,42 @@
 package es.uned.menus;
 
 import es.uned.gestores.GestorAlquileres;
-import es.uned.gestores.GestorBases;
 import es.uned.gestores.GestorUsuarios;
-import es.uned.gestores.GestorVehiculos;
 import es.uned.model.Alquiler;
-import es.uned.model.Base;
 import es.uned.model.personas.Usuario;
 import es.uned.model.vehiculos.Vehiculo;
 
 import java.util.Scanner;
+
+import static es.uned.menus.MenuAdministrador.*;
 
 /**
  * Clase que representa el menú de usuario.
  */
 public class MenuUsuario {
 
-    private static final GestorAlquileres ga = new GestorAlquileres();
-    private static final GestorVehiculos gv = GestorVehiculos.getInstancia();
-    private static final GestorUsuarios gu = GestorUsuarios.getInstancia();
-    private static final GestorBases gb = new GestorBases();
+    private static final GestorUsuarios gestorUsuarios = GestorUsuarios.getInstancia();
+    private static final GestorAlquileres gestorAlquiler = GestorAlquileres.getInstancia();
     Usuario usuario;
     Alquiler alquiler;
 
     /**
      * Método para gestionar el usuario autenticado.
-     *
+     * <p>
      * Es decir nosotros nos conectamos con un usuario cualquiera
+     *
      * @param scanner Scanner para leer la entrada del usuario.
      * @return El usuario autenticado.
      */
     public static Usuario gestionarUsuarioAutenticado(Scanner scanner) {
         System.out.println("Listado de usuarios:");
-        gu.listarUsuarios();
-        return gu.obtenerUsuarioIndice(scanner.nextInt());
+        gestorUsuarios.listarUsuarios();
+        return gestorUsuarios.obtenerUsuarioIndice(scanner.nextInt());
     }
 
     /**
      * Método para gestionar las opciones del menú de usuario una vez el usuario ha iniciado sesión.
+     *
      * @param scanner Scanner para leer la entrada del usuario.
      */
     public void gestionarOpcionesUsuario(Scanner scanner) {
@@ -67,11 +66,22 @@ public class MenuUsuario {
                     consultarEstadoBateria(this.alquiler.getVehiculo());
                 }
 
-                case 2 -> gv.consultarVehiculosDisponibles();
-                case 3 -> this.alquiler = alquilarVehiculo(scanner);
-                case 4 -> devolverVehiculo(scanner);
+                case 2 -> gestorVehiculos.consultarVehiculosDisponibles();
+                case 3 -> {
+                    try {
+                        this.alquiler = gestorAlquiler.iniciarAlquiler(usuario, scanner);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+                case 4 -> GestorAlquileres.finalizarAlquiler(usuario, alquiler, scanner);
                 case 5 -> consultarDatosActualesUsuario(usuario);
-                case 6 -> consultarAlquileresUsuario(usuario);
+                case 6 -> gestorAlquiler.consultarAlquileresUsuario(usuario);
+                case 7 -> {
+                    System.out.println("Límites de coordenadas:");
+                    System.out.println("X: " + limiteInferior);
+                    System.out.println("Y: " + limiteSuperior);
+                }
                 case 0 -> System.out.println("Saliendo...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -90,6 +100,7 @@ public class MenuUsuario {
         System.out.println("4. Devolver vehículo");
         System.out.println("5. Consultar mis datos actuales");
         System.out.println("6. Consultar mis alquileres");
+        System.out.println("7. Consultar límites en las coordenadas");
         System.out.println("0. Salir");
     }
 
@@ -98,90 +109,18 @@ public class MenuUsuario {
      */
     private void consultarEstadoBateria(Vehiculo vehiculo) {
         System.out.println("Consultando estado de batería...");
-        gv.consultarBateria(vehiculo, alquiler);
+        gestorVehiculos.consultarBateria(vehiculo, alquiler);
     }
 
-
-    /**
-     * Método para alquilar un vehículo.
-     * @param scanner Scanner para leer la entrada del usuario.
-     */
-    private Alquiler alquilarVehiculo(Scanner scanner) {
-        Vehiculo vehiculo;
-        String matricula;
-
-        do {
-            gv.consultarVehiculosDisponibles();
-            System.out.println("Introduce la matrícula del vehículo que deseas alquilar:");
-            matricula = scanner.nextLine();
-
-            vehiculo = gv.obtenerVehiculo(matricula);
-            if (vehiculo == null) {
-                System.out.println("Vehículo no encontrado.");
-                matricula = "";
-            }
-        } while (matricula.isEmpty());
-
-        Base base;
-        String idBase;
-        do {
-            gb.consultarBasesDisponibles();
-            System.out.println("Introduce el ID de la base donde deseas alquilar el vehículo:");
-            idBase = scanner.nextLine();
-            base = gb.consultarBasePorId(idBase);
-            if (base == null) {
-                System.out.println("Base no encontrada.");
-                idBase = "";
-            }
-        } while (idBase.isEmpty());
-
-        return ga.iniciarAlquiler(usuario, vehiculo, base);
-    }
-
-    /**
-     * Método para devolver un vehículo.
-     * @param scanner Scanner para leer la entrada del usuario.
-     */
-    private void devolverVehiculo(Scanner scanner) {
-
-        Base base;
-        String idBase;
-        do {
-            gb.consultarBasesPorOcupacion();
-            System.out.println("Introduce el ID de la base donde deseas finalizar el alquilar:");
-            idBase = scanner.nextLine();
-            base = gb.consultarBasePorId(idBase);
-            if (base == null) {
-                System.out.println("Base no encontrada.");
-                idBase = "";
-            }
-        } while (idBase.isEmpty());
-
-        GestorAlquileres.finalizarAlquiler(usuario, alquiler, base);
-
-    }
 
     /**
      * Método para consultar los datos actuales del usuario.
+     *
      * @param usuario Usuario a consultar.
      */
     private void consultarDatosActualesUsuario(Usuario usuario) {
         System.out.println(usuario);
     }
 
-    /**
-     * Método para consultar los alquileres del usuario.
-     * @param usuario Usuario a consultar.
-     */
-    private void consultarAlquileresUsuario(Usuario usuario) {
-        if (ga.consultarAlquileres().isEmpty()) {
-            System.out.println("No tienes ningún alquiler.");
-            return;
-        }
 
-        System.out.println("Alquileres del usuario " + usuario.getNombre() + ":");
-        for (Alquiler alquiler : ga.consultarAlquileres()) {
-                System.out.println(alquiler);
-        }
-    }
 }

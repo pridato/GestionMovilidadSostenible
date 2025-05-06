@@ -16,10 +16,10 @@ public class MenuAdministrador {
     public static Coordenadas limiteInferior = LIMITES_COORDENADAS_INFERIOR;
     public static Coordenadas limiteSuperior = LIMITES_COORDENADAS_SUPERIOR;
 
-    private static final GestorVehiculos gv = GestorVehiculos.getInstancia();
-    private static final GestorPersonas gp = GestorPersonas.getInstancia();
-    private static final GestorIncidencias gi = GestorIncidencias.getInstancia();
-    private static final GestorBases gb = GestorBases.getInstancia();
+    public static final GestorVehiculos gestorVehiculos = GestorVehiculos.getInstancia();
+    public static final GestorPersonas gestorPersonas = GestorPersonas.getInstancia();
+    public static final GestorIncidencias gestorIncidencias = GestorIncidencias.getInstancia();
+    public static final GestorBases gestorBases = GestorBases.getInstancia();
 
     /**
      * Gestionar las opciones del menú del administrador.
@@ -79,6 +79,7 @@ public class MenuAdministrador {
             System.out.println("4. Listar personas");
             System.out.println("5. Usuarios que deberían promover a premium");
             System.out.println("6. Visualizar utilización de los vehículos y sus importes");
+            System.out.println("7. Promover a premium");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
 
@@ -88,16 +89,17 @@ public class MenuAdministrador {
             switch (opcion) {
                 case 1 -> {
                     try {
-                        gp.crearPersona(scanner);
+                        gestorPersonas.crearPersona(scanner);
                     } catch (Exception e) {
                         System.out.println("Error al crear la persona: " + e.getMessage());
                     }
                 }
-                case 2 -> gp.eliminarPersona(scanner);
-                case 3 -> gp.modificarPersona(scanner);
-                case 4 -> gp.listarPersonas();
-                case 5 -> gp.usuariosDeberianSerPremium();
-                case 6 -> gp.utilizacionVehiculosPorUsuario();
+                case 2 -> gestorPersonas.eliminarPersona(scanner);
+                case 3 -> gestorPersonas.modificarPersona(scanner);
+                case 4 -> gestorPersonas.listarPersonas();
+                case 5 -> gestorPersonas.usuariosDeberianSerPremium();
+                case 6 -> gestorPersonas.utilizacionVehiculosPorUsuario();
+                case 7 -> gestorPersonas.promoverUsuarioAPremium(scanner);
                 case 0 -> System.out.println("Volviendo...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -132,7 +134,7 @@ public class MenuAdministrador {
 
             switch (opcion) {
                 case 1 -> {
-                    if (gv.añadirVehiculo(scanner)) {
+                    if (gestorVehiculos.añadirVehiculo(scanner)) {
                         System.out.println("Vehículo añadido correctamente.");
                     } else {
                         System.out.println("No se pudo añadir el vehículo.");
@@ -143,7 +145,7 @@ public class MenuAdministrador {
                     System.out.println("Modificando vehículo...");
                     System.out.print("Introduce la matrícula del vehículo a modificar: ");
                     String matricula = scanner.nextLine();
-                    gv.modificarVehiculo(matricula, scanner);
+                    gestorVehiculos.modificarVehiculo(matricula, scanner);
                 }
                 case 3 -> {
                     // Eliminar vehículo
@@ -151,18 +153,18 @@ public class MenuAdministrador {
 
                     System.out.print("Introduce la matrícula del vehículo a eliminar: ");
                     String matricula = scanner.nextLine();
-                    if (gv.eliminarVehiculo(matricula)) {
+                    if (gestorVehiculos.eliminarVehiculo(matricula)) {
                         System.out.println("Vehículo eliminado correctamente.");
                     } else {
                         System.out.println("No se pudo eliminar el vehículo.");
                     }
 
                 }
-                case 4 -> gv.consultarVehiculos();
-                case 5 -> gv.setTarifaMinuto(scanner);
-                case 6 -> gv.consultarBaterias(scanner);
-                case 7 -> gi.visualizarProblemasVehículos(scanner);
-                case 8 -> gi.asignarVehiculoTrabajador(scanner, gp);
+                case 4 -> gestorVehiculos.consultarVehiculos();
+                case 5 -> gestorVehiculos.setTarifaMinuto(scanner);
+                case 6 -> gestorVehiculos.consultarBaterias(scanner);
+                case 7 -> gestorIncidencias.visualizarProblemasVehículos(scanner);
+                case 8 -> gestorIncidencias.asignarVehiculoTrabajador(scanner, gestorPersonas);
                 case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -193,11 +195,11 @@ public class MenuAdministrador {
             scanner.nextLine(); // limpiar buffer
 
             switch (opcion) {
-                case 1 -> gb.consultarEstadoBases(scanner);
-                case 2 -> gi.asignarBaseTrabajador(scanner, gp);
-                case 3 -> gb.consultarBasesDisponibles();
-                case 4 -> gb.consultarBasesPorOcupacion();
-                case 5 -> gb.generarEstadisticasBases();
+                case 1 -> gestorBases.consultarEstadoBases(scanner);
+                case 2 -> gestorIncidencias.asignarBaseTrabajador(scanner, gestorPersonas);
+                case 3 -> gestorBases.consultarBasesDisponibles();
+                case 4 -> gestorBases.consultarBasesPorOcupacion();
+                case 5 -> gestorBases.generarEstadisticasBases();
                 case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -211,20 +213,7 @@ public class MenuAdministrador {
     // Métodos coordenadas
     // ------------------------------
 
-    /**
-     * Lee las coordenadas manualmente desde la entrada del usuario.
-     *
-     * @param scanner Scanner para leer la entrada del usuario.
-     * @return Coordenadas introducidas por el usuario.
-     */
-    public static Coordenadas leerCoordenadasManualmente(Scanner scanner) {
-        System.out.print("Introduce la coordenada X (longitud): ");
-        double x = scanner.nextDouble();
-        System.out.print("Introduce la coordenada Y (latitud): ");
-        double y = scanner.nextDouble();
-        scanner.nextLine(); // limpiar buffer
-        return new Coordenadas(x, y);
-    }
+
 
 
     /**
@@ -234,14 +223,18 @@ public class MenuAdministrador {
      */
     public static void establecerLimitesCoordenadas(Scanner scanner) {
         System.out.println("\n--- Establecer límites de coordenadas ---");
-        System.out.print("Latitud mínima: ");
-        double latMin = scanner.nextDouble();
-        System.out.print("Longitud mínima: ");
+
+        System.out.print("Longitud mínima (min x): ");
         double lonMin = scanner.nextDouble();
-        System.out.print("Latitud máxima: ");
-        double latMax = scanner.nextDouble();
-        System.out.print("Longitud máxima: ");
+
+        System.out.print("Latitud mínima (min y): ");
+        double latMin = scanner.nextDouble();
+
+        System.out.print("Longitud máxima (max x): ");
         double lonMax = scanner.nextDouble();
+
+        System.out.print("Latitud máxima (max y): ");
+        double latMax = scanner.nextDouble();
 
         // comprobar que los límites son válidos
         if (latMin >= latMax || lonMin >= lonMax) {

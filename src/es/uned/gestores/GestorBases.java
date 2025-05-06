@@ -68,7 +68,7 @@ public class GestorBases {
         System.out.println("Bases disponibles:");
         for (Base base : bases) {
             if (!base.isAveriada() && base.getVehiculos().size() < base.getCapacidadMaxima()) {
-                System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas() +
+                System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas().getX() + ", " + base.getCoordenadas().getY() +
                         ", Capacidad máxima: " + base.getCapacidadMaxima());
             }
         }
@@ -108,6 +108,18 @@ public class GestorBases {
     public Base consultarBasePorId(String id) {
         return bases.stream()
                 .filter(base -> Objects.equals(base.getId(), id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Método para obtener una base de un vehículo.
+     * @param matricula Matrícula del vehículo a consultar.
+     * @return Base correspondiente al vehículo, o null si no se encuentra.
+     */
+    public Base obtenerBaseVehiculo(String matricula) {
+        return bases.stream()
+                .filter(base -> base.getVehiculos().stream().anyMatch(vehiculo -> Objects.equals(vehiculo.getMatricula(), matricula)))
                 .findFirst()
                 .orElse(null);
     }
