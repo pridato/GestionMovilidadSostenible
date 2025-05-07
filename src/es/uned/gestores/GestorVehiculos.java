@@ -67,18 +67,10 @@ public class GestorVehiculos {
         Vehiculo vehiculo = null;
 
         switch (opcion) {
-            case 1 -> {
-                vehiculo = crearMoto(scanner);
-            }
-            case 2 -> {
-                vehiculo = crearPatinete(scanner);
-            }
-            case 3 -> {
-                vehiculo = crearBicicleta(scanner);
-            }
-            default -> {
-                System.out.println("Opción no válida.");
-            }
+            case 1 -> vehiculo = crearMoto(scanner);
+            case 2 -> vehiculo = crearPatinete(scanner);
+            case 3 -> vehiculo = crearBicicleta(scanner);
+            default -> System.out.println("Opción no válida.");
         }
 
         if (vehiculo != null && !this.vehiculos.contains(vehiculo)) {

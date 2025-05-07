@@ -57,40 +57,24 @@ public class GestorAlquileres {
      * Método para iniciar un alquiler.
      *
      * @param usuario usuario que alquila el vehículo
+     *
+     * @exception IllegalStateException si el usuario no tiene saldo suficiente
+     * @exception IllegalStateException si el vehículo no está disponible
+     * @exception IllegalStateException si el vehículo no tiene batería suficiente
      */
-    public Alquiler iniciarAlquiler(Usuario usuario, Scanner scanner, Alquiler alquilerExistente) {
+    public Alquiler iniciarAlquiler(Usuario usuario, Scanner scanner, Alquiler alquilerExistente) throws Exception {
 
-        // comprobar que solo han pasado 20 mins
-        if(alquilerExistente != null) {
-            {
+        comprobarTiempoReserva(usuario, alquilerExistente);
 
-
-                long tiempoTranscurrido = (new Date().getTime() - alquilerExistente.getFechaInicio().getTime()) / 60000;
-                if (tiempoTranscurrido >=  20) {
-                    System.out.println("Han pasado más de 20 minutos desde que se realizó la reserva por lo que no puedes alquilar el vehículo.");
-                    return null;
-                } else {
-                    System.out.println("Han pasado " + tiempoTranscurrido + " minutos desde que se realizó la reserva.");
-                    System.out.println("Se alquilará el vehículo con matrícula " + alquilerExistente.getVehiculo().getMatricula() + " en la base " + alquilerExistente.getVehiculo().getMatricula()  + ".");
-
-                    usuario.getHistorialViajes().removeIf(a -> a.getId().equals(alquilerExistente.getId()));
-                }
-            }
-
-        }
-
-        // verificamos si el usuario tiene saldo suficiente
         usuario.verificarSaldo();
 
-
-
-        // luego seleccionamos un vehiculo, o lo creamos o lo sacamos de una reserva
+        // seleccionamos un vehiculo, o lo creamos o lo sacamos de una reserva
         Vehiculo vehiculo = (alquilerExistente != null && alquilerExistente.getEstado() == EstadoAlquiler.RESERVADO)
                 ? alquilerExistente.getVehiculo()
                 : seleccionarVehiculo(usuario, scanner);
 
         // verificamos si el vehiculo tiene bateria suficiente y si está disponible
-        vehiculo.verificarDisponibilidad();
+        vehiculo.verificarDisponibilidad(usuario);
 
         vehiculo.setEstado(EstadoVehiculo.ALQUILADO);
 
@@ -109,9 +93,30 @@ public class GestorAlquileres {
 
         usuario.getHistorialViajes().add(nuevoAlquiler);
 
-
         System.out.println("Alquiler iniciado: " + nuevoAlquiler.getId());
         return nuevoAlquiler;
+    }
+
+    /**
+     * Método para comprobar si han pasado más de 20 minutos desde la reserva. Si es así, se lanza una excepción.
+     * @param usuario usuario que alquila el vehículo
+     * @param alquilerExistente alquiler existente
+     */
+    private static void comprobarTiempoReserva(Usuario usuario, Alquiler alquilerExistente) {
+        if(alquilerExistente != null) {
+            {
+                long tiempoTranscurrido = (new Date().getTime() - alquilerExistente.getFechaInicio().getTime()) / 60000;
+                if (tiempoTranscurrido >=  20) {
+                    throw new IllegalStateException("Han pasado más de 20 minutos desde que se realizó la reserva por lo que no puedes alquilar el vehículo.");
+                } else {
+                    System.out.println("Han pasado " + tiempoTranscurrido + " minutos desde que se realizó la reserva.");
+                    System.out.println("Se alquilará el vehículo con matrícula " + alquilerExistente.getVehiculo().getMatricula() + " en la base " + alquilerExistente.getVehiculo().getMatricula()  + ".");
+
+                    usuario.getHistorialViajes().removeIf(a -> a.getId().equals(alquilerExistente.getId()));
+                }
+            }
+
+        }
     }
 
 

@@ -30,15 +30,10 @@ public class Moto extends Vehiculo{
         }
     }
 
-    public EstadoMoto getEstadoMoto() {
-        return estado;
-    }
 
     public void setEstado(EstadoMoto estado) {
         this.estado = estado;
     }
-
-
 
 
     @Override

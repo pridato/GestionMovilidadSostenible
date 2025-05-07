@@ -2,6 +2,7 @@ package es.uned.model.vehiculos;
 
 import es.uned.enums.EstadoVehiculo;
 import es.uned.model.Coordenadas;
+import es.uned.model.personas.Usuario;
 
 /**
  * Clase abstracta Vehiculo que representa un vehículo con atributos como matrícula, coordenadas, estado, batería, tarifa por minuto y penalización.
@@ -23,6 +24,7 @@ public abstract class Vehiculo {
         this.tarifaMinuto = tarifaMinuto;
         this.penalizacion = penalizacion;
     }
+
 
     public String getMatricula() {
         return matricula;
@@ -76,18 +78,18 @@ public abstract class Vehiculo {
 
     public abstract double calcularImporte(int minutos);
 
-    public void setAveriado() {
-        this.estado = EstadoVehiculo.AVERIADO;
-    }
-
     /**
-     * Verifica si el vehículo está disponible.
+     * Comprueba si el vehículo tiene batería suficiente y si no está reservado o averiado.
      */
-    public void verificarDisponibilidad() {
-        if(!estado.equals(EstadoVehiculo.DISPONIBLE)) {
-            throw new IllegalStateException("El vehículo no está disponible.");
-        } else if (bateria <= 0) {
+    public void verificarDisponibilidad(Usuario usuario) {
+        if (usuario.getEsPremium() && bateria < 10) {
+            throw new IllegalStateException("El vehículo no tiene batería suficiente para usuarios premium.");
+        } else if (bateria < 20) {
             throw new IllegalStateException("El vehículo no tiene batería suficiente.");
+        } else if (usuario.getEsPremium() && estado.equals(EstadoVehiculo.RESERVADO)) {
+            throw new IllegalStateException("El vehículo está reservado.");
+        } else if (estado.equals(EstadoVehiculo.AVERIADO)) {
+            throw new IllegalStateException("El vehículo está averiado.");
         }
     }
 
