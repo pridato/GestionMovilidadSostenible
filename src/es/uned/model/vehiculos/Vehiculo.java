@@ -81,31 +81,32 @@ public abstract class Vehiculo {
     /**
      * Comprueba si el vehículo tiene batería suficiente y si no está reservado o averiado.
      */
-    public void verificarDisponibilidad(Usuario usuario) {
-        if (usuario.getEsPremium() && bateria < 10) {
-            throw new IllegalStateException("El vehículo no tiene batería suficiente para usuarios premium.");
-        } else if (bateria < 20) {
-            throw new IllegalStateException("El vehículo no tiene batería suficiente.");
-        } else if (usuario.getEsPremium() && estado.equals(EstadoVehiculo.RESERVADO)) {
-            throw new IllegalStateException("El vehículo está reservado.");
-        } else if (estado.equals(EstadoVehiculo.AVERIADO)) {
+    public void verificarDisponibilidad(Usuario usuario) throws IllegalArgumentException {
+        int umbralMinimo = usuario.getEsPremium() ? 10 : 20;
+
+        if (bateria < umbralMinimo) {
+            throw new IllegalStateException("El vehículo no tiene batería suficiente"
+                    + (usuario.getEsPremium() ? " para usuarios premium." : "."));
+        }
+
+        if (estado == EstadoVehiculo.AVERIADO) {
             throw new IllegalStateException("El vehículo está averiado.");
+        }
+
+        if (estado == EstadoVehiculo.RESERVADO && usuario.getEsPremium()) {
+            throw new IllegalStateException("El vehículo está reservado.");
         }
     }
 
-
-    @Override
     public String toString() {
         final String INDENT = "    ";
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName()).append(" {\n");  // Nombre de la clase (Bicicleta, Moto, Patinete, etc.)
-        sb.append(INDENT).append("Matrícula: ").append(getMatricula()).append("\n");
-        sb.append(INDENT).append("Coordenadas: ").append(getCoordenadas().toString()).append("\n");
-        sb.append(INDENT).append("Estado: ").append(getEstado().toString()).append("\n");
-        sb.append(INDENT).append("Batería: ").append(getBateria()).append("%\n");
-        sb.append(INDENT).append("Tarifa por minuto: €").append(String.format("%.2f", getTarifaMinuto())).append("\n");
-        sb.append(INDENT).append("Penalización: €").append(String.format("%.2f", getPenalizacion())).append("\n");
-        sb.append("}");
-        return sb.toString();
+        return getClass().getSimpleName() + " {\n" +  // Nombre de la clase (Bicicleta, Moto, Patinete, etc.)
+                INDENT + "Matrícula: " + getMatricula() + "\n" +
+                INDENT + "Coordenadas: " + getCoordenadas().toString() + "\n" +
+                INDENT + "Estado: " + getEstado().toString() + "\n" +
+                INDENT + "Batería: " + getBateria() + "%\n" +
+                INDENT + "Tarifa por minuto: €" + String.format("%.2f", getTarifaMinuto()) + "\n" +
+                INDENT + "Penalización: €" + String.format("%.2f", getPenalizacion()) + "\n" +
+                "}";
     }
 }

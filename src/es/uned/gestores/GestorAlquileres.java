@@ -62,7 +62,7 @@ public class GestorAlquileres {
      * @exception IllegalStateException si el vehículo no está disponible
      * @exception IllegalStateException si el vehículo no tiene batería suficiente
      */
-    public Alquiler iniciarAlquiler(Usuario usuario, Scanner scanner, Alquiler alquilerExistente) throws Exception {
+    public Alquiler iniciarAlquiler(Usuario usuario, Scanner scanner, Alquiler alquilerExistente) throws IllegalArgumentException {
 
         comprobarTiempoReserva(usuario, alquilerExistente);
 
@@ -159,7 +159,8 @@ public class GestorAlquileres {
 
         // aplicamos penalizaciones y recargamos saldo
         aplicarPenalizaciones(usuario, vehiculo, alquiler);
-        usuario.recargarSaldo(-alquiler.getImporteFinal());
+        importeTotal +=  vehiculo.getPenalizacion(); // añadir penalización al importe total
+        usuario.recargarSaldo(-importeTotal);
         System.out.println("Alquiler finalizado con éxito.");
 
         // Actualizar estado del vehículo
@@ -179,7 +180,7 @@ public class GestorAlquileres {
      * @param usuario usuario que reserva el alquiler
      * @param scanner scanner para leer la entrada del usuario
      */
-    public Alquiler reservarVehiculo(Usuario usuario, Scanner scanner) {
+    public Alquiler reservarVehiculo(Usuario usuario, Scanner scanner) throws IllegalArgumentException {
         // si el usuario no es premium abortar...
         if (!usuario.getEsPremium()) {
             throw new IllegalStateException("Solo los usuarios premium pueden reservar vehículos.");

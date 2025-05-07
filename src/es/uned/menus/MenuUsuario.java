@@ -126,8 +126,17 @@ public class MenuUsuario {
                     System.out.println(e.getMessage());
                 }
             }
-            case 3 -> GestorAlquileres.finalizarAlquiler(usuario, alquiler, scanner);
-            case 4 -> this.alquiler = gestorAlquiler.reservarVehiculo(usuario, scanner);
+            case 3 -> {
+                GestorAlquileres.finalizarAlquiler(usuario, alquiler, scanner);
+                this.alquiler = null;
+            }
+            case 4 -> {
+                try {
+                    this.alquiler = gestorAlquiler.reservarVehiculo(usuario, scanner);
+                } catch(Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
             case 5 -> {
                 if (alquiler == null) {
                     System.out.println("No tienes ningún vehículo alquilado.");

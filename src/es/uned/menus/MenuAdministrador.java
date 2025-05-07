@@ -129,7 +129,6 @@ public class MenuAdministrador {
             System.out.println("5. Establecer tarifas de vehículos");
             System.out.println("6. Visualizar estado de la Batería de los Vehículos");
             System.out.println("7. Visualizar problemas mecánicos de los Vehículos");
-            System.out.println("8. Asignar vehículo a un trabajador");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
             opcion = scanner.nextInt();
@@ -166,8 +165,7 @@ public class MenuAdministrador {
                 case 4 -> gestorVehiculos.consultarVehiculos();
                 case 5 -> gestorVehiculos.setTarifaMinuto(scanner);
                 case 6 -> gestorVehiculos.consultarBaterias(scanner);
-                case 7 -> gestorIncidencias.visualizarProblemasVehículos(scanner);
-                case 8 -> gestorIncidencias.asignarVehiculoTrabajador(scanner, gestorPersonas);
+                //case 7 -> gestorIncidencias.visualizarProblemasVehículos(scanner);
                 case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -177,12 +175,12 @@ public class MenuAdministrador {
 
     /**
      * Gestiona las opciones del menú de gestión de bases.
-     * @param scanner
+     * @param scanner Scanner para leer la entrada del usuario.
      */
     private static void gestionarMenuBases(Scanner scanner) {
 
 
-        int opcion = 0;
+        int opcion;
 
         do {
             System.out.println("\n--- Gestión de bases ---");
@@ -199,7 +197,7 @@ public class MenuAdministrador {
 
             switch (opcion) {
                 case 1 -> gestorBases.consultarEstadoBases(scanner);
-                case 2 -> gestorIncidencias.asignarBaseTrabajador(scanner, gestorPersonas);
+                // case 2 -> gestorIncidencias.asignarBaseTrabajador(scanner, gestorPersonas);
                 case 3 -> gestorBases.consultarBasesDisponibles();
                 case 4 -> gestorBases.consultarBasesPorOcupacion();
                 case 5 -> gestorBases.generarEstadisticasBases();
@@ -211,12 +209,41 @@ public class MenuAdministrador {
     }
 
 
+    /**
+     * Gestiona las opciones del menú de gestión de trabajadores.
+     * @param scanner Scanner para leer la entrada del usuario.
+     */
+    private static void gestionarMenuTrabajadores(Scanner scanner) {
+        int opcion;
+
+        do {
+            System.out.println("\n--- Gestión de Trabajadores ---");
+            System.out.println("1. Listar trabajadores");
+            System.out.println("2. Asignar bases a mecánicos");
+            System.out.println("3. Asignar vehículo a un trabajador");
+            System.out.println("4. Ver asignaciones actuales");
+            System.out.println("0. Volver");
+            System.out.println("------------------------------");
+            System.out.print("Seleccione una opción: ");
+            opcion = scanner.nextInt();
+
+            scanner.nextLine(); // limpiar buffer
+
+            switch (opcion) {
+                case 1 -> gestorPersonas.listarTrabajadores();
+                // case 2 -> gestorIncidencias.asignarBaseTrabajador(scanner, gestorPersonas);
+                // case 3 -> gestorIncidencias.asignarVehiculoTrabajador(scanner, gestorPersonas);
+                // case 4 -> gestorIncidencias.verAsignacionesActuales();
+                case 0 -> System.out.println("Volviendo al menú principal...");
+                default -> System.out.println("Opción no válida.");
+            }
+
+        } while(opcion != 0);
+    }
 
     // ------------------------------
     // Métodos coordenadas
     // ------------------------------
-
-
 
 
     /**
@@ -249,9 +276,6 @@ public class MenuAdministrador {
 
         System.out.println("Límites establecidos.");
     }
-
-
-
 
 
     // ------------------------------

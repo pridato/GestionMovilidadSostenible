@@ -214,6 +214,17 @@ public class GestorPersonas {
     }
 
 
+    /**
+     * Método para listar todos los trabajadores del sistema.
+     */
+    public void listarTrabajadores() {
+        System.out.println("Lista de trabajadores:");
+        for (Persona persona : personas) {
+            if (persona instanceof Trabajador trabajador) {
+                System.out.println(trabajador);
+            }
+        }
+    }
 
     /**
      * Método para buscar una persona por su DNI.

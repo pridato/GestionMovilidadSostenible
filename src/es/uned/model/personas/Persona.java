@@ -44,7 +44,7 @@ public class Persona {
         }
 
         // si el dni no es una letra
-        if (!DNI.substring(8, 9).matches("[A-Z]")) {
+        if (!DNI.substring(8, 9).toUpperCase().matches("[A-Z]")) {
             throw new DniInvalidoException("DNI inválido, no tiene 1 letra");
         }
 

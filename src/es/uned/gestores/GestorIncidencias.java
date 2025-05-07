@@ -23,7 +23,7 @@ public class GestorIncidencias {
 
     private static final GestorIncidencias instancia = new GestorIncidencias();
 
-    private List<Incidencia> incidencias = new ArrayList<>();
+    private final List<Incidencia> incidencias;
 
     /* constructor */
     private GestorIncidencias() {
@@ -49,202 +49,80 @@ public class GestorIncidencias {
         int opcion = scanner.nextInt();
         scanner.nextLine();
 
-        Vehiculo vehiculo = null;
-        Base base = null;
+        switch (opcion) {
+            case 1 -> crearIncidenciaVehiculo(usuario, scanner);
+            case 2 -> crearIncidenciaBase(usuario, scanner);
+            case 0 -> System.out.println("Saliendo del menú de incidencias...");
+            default -> System.out.println("Opción no válida.");
+        }
+    }
 
-        if(opcion == 1) {
-            System.out.println("Creando incidencia sobre un vehículo");
+    /**
+     * Método para crear una incidencia sobre un vehículo
+     * @param usuario Usuario que reporta la incidencia
+     * @param scanner Scanner para leer la entrada del usuario
+     */
+    private void crearIncidenciaVehiculo(Usuario usuario, Scanner scanner) {
+        System.out.println("Creando incidencia sobre un vehículo...");
+        gestorVehiculos.consultarVehiculosDisponibles();
 
-            gestorVehiculos.consultarVehiculosDisponibles();
-            System.out.print("Introduce la matrícula del vehículo: ");
-            String matricula = scanner.nextLine();
-            vehiculo = gestorVehiculos.obtenerVehiculo(matricula);
+        System.out.print("Introduce la matrícula del vehículo: ");
+        String matricula = scanner.nextLine();
+        Vehiculo vehiculo = gestorVehiculos.obtenerVehiculo(matricula);
 
-
-            if (vehiculo == null) {
-                System.out.println("No se ha seleccionado ningún vehículo.");
-                return;
-            }
-            vehiculo.setEstado(EstadoVehiculo.AVERIADO);
-            System.out.print("Comente brevemente que ocurrió en el vehículo: ");
-        } else if(opcion == 2) {
-            System.out.println("Creando incidencia sobre una base");
-
-            gestorBases.consultarBasesDisponibles();
-
-            System.out.print("Introduce el ID de la base: ");
-            String idBase = scanner.nextLine();
-            base = gestorBases.consultarBasePorId(idBase);
-
-            if (base == null) {
-                System.out.println("No se ha encontrado la base.");
-                return;
-            }
-            base.setAveriada(true);
-            System.out.print("Comente brevemente que ocurrió en la base: ");
+        if (vehiculo == null) {
+            System.out.println("Vehículo no encontrado.");
+            return;
         }
 
+        vehiculo.setEstado(EstadoVehiculo.AVERIADO);
 
+        System.out.print("Describe brevemente la incidencia: ");
         String descripcion = scanner.nextLine();
 
-        Incidencia incidencia = new Incidencia(usuario, descripcion, new Date(), base, vehiculo);
+        Incidencia incidencia = new Incidencia(usuario, descripcion, new Date(), null, vehiculo);
         incidencias.add(incidencia);
+        mostrarConfirmacion(incidencia);
+    }
 
+    /**
+     * Método para crear una incidencia sobre una base
+     * @param usuario Usuario que reporta la incidencia
+     * @param scanner Scanner para leer la entrada del usuario
+     */
+    private void crearIncidenciaBase(Usuario usuario, Scanner scanner) {
+        System.out.println("Creando incidencia sobre una base...");
+        gestorBases.consultarBasesDisponibles();
 
+        System.out.print("Introduce el ID de la base: ");
+        String idBase = scanner.nextLine();
+        Base base = gestorBases.consultarBasePorId(idBase);
+
+        if (base == null) {
+            System.out.println("Base no encontrada.");
+            return;
+        }
+
+        base.setAveriada(true);
+
+        System.out.print("Describe brevemente la incidencia: ");
+        String descripcion = scanner.nextLine();
+
+        Incidencia incidencia = new Incidencia(usuario, descripcion, new Date(), base, null);
+        incidencias.add(incidencia);
+        mostrarConfirmacion(incidencia);
+    }
+
+    /**
+     * Método para mostrar confirmación de incidencia generada
+     * @param incidencia Incidencia generada
+     */
+    private void mostrarConfirmacion(Incidencia incidencia) {
         System.out.println("Incidencia generada con éxito.");
-        System.out.println("ID de la incidencia: " + incidencia.getId());
+        System.out.println("ID: " + incidencia.getId());
         System.out.println("Descripción: " + incidencia.getDescripcion());
-        System.out.println("Fecha de reporte: " + incidencia.getFechaReporte());
+        System.out.println("Fecha: " + incidencia.getFechaReporte());
     }
 
-    /**
-     * Método para visualizar los problemas de los vehículos
-     */
-    public void visualizarProblemasVehículos(Scanner scanner) {
-        for (Incidencia incidencia : incidencias) {
-            if (incidencia.getVehiculo() != null) {
-                System.out.println("ID: " + incidencia.getId());
-                System.out.println("Vehículo: " + incidencia.getVehiculo().getMatricula());
-                System.out.println("Problema: " + incidencia.getDescripcion());
-                System.out.println("Fecha: " + incidencia.getFechaReporte());
-                if(incidencia.getEncargado() != null) {
-                    System.out.println("Encargado: " + incidencia.getEncargado().getNombre() + " " + incidencia.getEncargado().getApellidos());
-                } else {
-                    System.out.println("Encargado: No asignado");
-                }
-                System.out.println();
-            }
-        }
 
-        System.out.println("Presione ENTER para continuar...");
-        scanner.nextLine();
-    }
-
-    /**
-     * Método para visualizar los problemas de las bases
-     */
-    public void visualizarProblemasBases() {
-        for (Incidencia incidencia : incidencias) {
-            if (incidencia.getBase() != null) {
-                System.out.println("ID: " + incidencia.getId());
-                System.out.println("Base: " + incidencia.getBase().getId());
-                System.out.println("Problema: " + incidencia.getDescripcion());
-                System.out.println("Fecha: " + incidencia.getFechaReporte());
-                System.out.println();
-            }
-        }
-    }
-
-    /**
-     * Método para buscar una incidencia por su ID
-     * @param id ID de la incidencia a buscar
-     * @return Incidencia encontrada o null si no se encuentra
-     */
-    private Incidencia buscarIncidenciaPorId(String id) {
-        return incidencias.stream()
-                .filter(incidencia -> incidencia.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
-    /**
-     * Método para asignar un vehículo a un trabajador
-     *
-     * @param scanner Scanner para leer la entrada del usuario
-     */
-    public void asignarVehiculoTrabajador(Scanner scanner, GestorPersonas gp) {
-
-        System.out.println("Desea consultar los problemas de los vehiculos? (s/n)");
-
-        String respuesta = scanner.nextLine();
-        if (respuesta.equalsIgnoreCase("s")) {
-            visualizarProblemasVehículos(scanner);
-        }
-
-        // pedir id de la incidencia
-        System.out.print("Introduce el ID de la incidencia: ");
-        String idIncidencia = scanner.nextLine();
-
-        Incidencia incidencia = buscarIncidenciaPorId(idIncidencia);
-
-        if (incidencia == null) {
-            System.out.println("Incidencia no encontrada.");
-            return;
-        }
-        incidencia.getVehiculo().setEstado(EstadoVehiculo.AVERIADO);
-
-        String dni = obtenerDniTrabajador(scanner, gp);
-        Trabajador trabajador = (Trabajador) gp.buscarPersonaPorDNI(dni);
-
-        // como la incidencia solo puede ser de un mecanico o de mantenimiento comprobamos
-        if(trabajador instanceof Mantenimiento || trabajador instanceof Mecanico) {
-            incidencia.setEncargado(trabajador);
-                if (trabajador instanceof Mecanico mecanico) {
-                    mecanico.asignarVehiculo(incidencia.getVehiculo());
-                } else {
-                    Mantenimiento mantenimiento = (Mantenimiento) trabajador;
-                    mantenimiento.asignarVehiculo(incidencia.getVehiculo());
-                }
-            System.out.println("Vehículo asignado al trabajador con dni: " + dni + " y nombre " + trabajador.getNombre() + " " + trabajador.getApellidos());
-        } else {
-            System.out.println("El trabajador no es un mecánico o un mantenimiento.");
-        }
-
-    }
-
-    /**
-     * Método para asignar una base a un trabajador
-     *
-     * @param scanner Scanner para leer la entrada del usuario
-     */
-    public void asignarBaseTrabajador(Scanner scanner, GestorPersonas gp) {
-        // primero listar problemas de vehiculos
-        System.out.println("¿Desea consultar los problemas de las bases? (s/n)");
-        String respuesta = scanner.nextLine();
-        if (respuesta.equalsIgnoreCase("s")) {
-            visualizarProblemasBases();
-        }
-
-        // pedir id de la incidencia
-        System.out.print("Introduce el ID de la incidencia: ");
-        String idIncidencia = scanner.nextLine();
-
-        Incidencia incidencia = buscarIncidenciaPorId(idIncidencia);
-        if (incidencia == null) {
-            System.out.println("Incidencia no encontrada.");
-            return;
-        }
-        Base base = incidencia.getBase();
-
-        String dni = obtenerDniTrabajador(scanner, gp);
-        Trabajador trabajador = (Trabajador) gp.buscarPersonaPorDNI(dni);
-        incidencia.setEncargado(trabajador);
-        // como la incidencia solo puede ser de un mecanico o de un mantenimiento comprobamos
-        if(trabajador instanceof Mecanico mecanico) {
-            incidencia.setEncargado(trabajador);
-            ((Mecanico)incidencia.getEncargado()).asignarBase(base);
-            System.out.println("Base asignada al trabajador con dni: " + dni + " y nombre " + trabajador.getNombre() + " " + trabajador.getApellidos());
-        } else {
-            System.out.println("El trabajador no es un mecánico.");
-        }
-
-    }
-
-    /**
-     * Método para obtener el DNI del trabajador
-     * @param scanner Scanner para leer la entrada del usuario
-     * @param gp Gestor de personas
-     * @return DNI del trabajador
-     */
-    private static String obtenerDniTrabajador(Scanner scanner, GestorPersonas gp) {
-        System.out.println("¿Desea consultar los trabajadores? (s/n)");
-        String respuesta2 = scanner.nextLine();
-        if (respuesta2.equalsIgnoreCase("s")) {
-            gp.consultarTrabajadoresDisponibles();
-        }
-
-        System.out.print("Introduce el DNI del trabajador: ");
-        String dni = scanner.nextLine();
-        return dni;
-    }
 }
