@@ -1,27 +1,31 @@
 package es.uned.gestores;
 
 import es.uned.model.Base;
+import es.uned.model.Coordenadas;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 import static es.uned.utils.dto.cargarBases;
 
 /**
  * Clase GestorBases.
  * Esta clase se encarga de gestionar las bases de vehículos.
- *
+ * <p>
  * Métodos:
- *
+ * <p>
  * Alta de bases
- *
+ * <p>
  * Modificar bases
- *
+ * <p>
  * Eliminar bases
- *
+ * <p>
  * Marcar bases averiadas
- *
+ * <p>
  * Consultar bases disponibles
- *
+ * <p>
  * Consultar bases por ocupación
  */
 public class GestorBases {
@@ -37,6 +41,7 @@ public class GestorBases {
 
     /**
      * Método para obtener la instancia del gestor de bases.
+     *
      * @return instancia del gestor de bases.
      */
     public static GestorBases getInstancia() {
@@ -102,6 +107,7 @@ public class GestorBases {
 
     /**
      * Método para obtener una base por su ID.
+     *
      * @param id ID de la base a consultar.
      * @return Base correspondiente al ID proporcionado, o null si no se encuentra.
      */
@@ -114,6 +120,7 @@ public class GestorBases {
 
     /**
      * Método para obtener una base de un vehículo.
+     *
      * @param matricula Matrícula del vehículo a consultar.
      * @return Base correspondiente al vehículo, o null si no se encuentra.
      */
@@ -124,6 +131,30 @@ public class GestorBases {
                 .orElse(null);
     }
 
+    /**
+     * Método para mostrar las bases averiadas.
+     */
+    public void consultarBasesAveriadas() throws IllegalArgumentException {
+        List<Base> basesAveriadas = this.bases.stream().filter(Base::isAveriada).toList();
+        if (basesAveriadas.isEmpty()) {
+            throw new IllegalArgumentException("No hay bases averiadas.");
+        }
+        System.out.println("Bases averiadas:");
+        for (Base base : basesAveriadas) {
+            System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas().getX() + ", " + base.getCoordenadas().getY() +
+                    ", Capacidad máxima: " + base.getCapacidadMaxima());
+        }
+    }
 
-
+    /**
+     * Método para obtener la base más cercana a unas coordenadas.
+     * @param coordenadas Coordenadas a las que se desea encontrar la base más cercana.
+     * @return Coordenadas de la base más cercana, o null si no se encuentra ninguna base disponible.
+     */
+    public Base obtenerBaseCercana(Coordenadas coordenadas) {
+        return bases.stream()
+                .filter(base -> !base.isAveriada() && base.getVehiculos().size() < base.getCapacidadMaxima())
+                .min(Comparator.comparingDouble(base -> base.getCoordenadas().Calculardistancia(coordenadas)))
+                .orElse(null);
+    }
 }

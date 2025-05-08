@@ -1,6 +1,5 @@
 package es.uned.model.personas;
 
-import es.uned.model.Base;
 import es.uned.model.vehiculos.Vehiculo;
 
 import java.util.ArrayList;

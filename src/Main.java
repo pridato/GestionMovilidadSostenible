@@ -3,7 +3,7 @@ import es.uned.menus.MenuUsuario;
 import java.util.Scanner;
 
 import static es.uned.menus.MenuAdministrador.gestionarOpcionesAdminstrador;
-import static es.uned.menus.MenuMantenimiento.gestionarOpcionesMantenimiento;
+import static es.uned.menus.MenuMantenimiento.gestionarOpcionesPersonalMantenimiento;
 import static es.uned.menus.MenuMecanico.gestionarOpcionesMecanico;
 
 public class Main {
@@ -24,7 +24,7 @@ public class Main {
             switch (opcion) {
                 case 1 -> gestionarOpcionesAdminstrador(scanner);
                 case 2 -> menuUsuario.gestionarOpcionesUsuario(scanner);
-                case 3 -> gestionarOpcionesMantenimiento(scanner);
+                case 3 -> gestionarOpcionesPersonalMantenimiento(scanner);
                 case 4 -> gestionarOpcionesMecanico(scanner);
                 case 0 -> System.out.println("Saliendo del programa...");
                 default -> System.out.println("Opción no válida.");

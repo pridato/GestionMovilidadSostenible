@@ -15,6 +15,7 @@ public abstract class Vehiculo {
     protected double bateria;
     private double tarifaMinuto;
     private double penalizacion;
+    private int tiempoInactividad;
 
     public Vehiculo(String matricula, Coordenadas coordenadas, EstadoVehiculo estado, double bateria, double tarifaMinuto, double penalizacion) {
         this.matricula = matricula;
@@ -25,6 +26,13 @@ public abstract class Vehiculo {
         this.penalizacion = penalizacion;
     }
 
+    public int getTiempoInactividad() {
+        return tiempoInactividad;
+    }
+
+    public void setTiempoInactividad(int tiempoInactividad) {
+        this.tiempoInactividad = tiempoInactividad;
+    }
 
     public String getMatricula() {
         return matricula;
@@ -98,15 +106,26 @@ public abstract class Vehiculo {
         }
     }
 
+    @Override
     public String toString() {
         final String INDENT = "    ";
-        return getClass().getSimpleName() + " {\n" +  // Nombre de la clase (Bicicleta, Moto, Patinete, etc.)
-                INDENT + "Matrícula: " + getMatricula() + "\n" +
-                INDENT + "Coordenadas: " + getCoordenadas().toString() + "\n" +
-                INDENT + "Estado: " + getEstado().toString() + "\n" +
-                INDENT + "Batería: " + getBateria() + "%\n" +
-                INDENT + "Tarifa por minuto: €" + String.format("%.2f", getTarifaMinuto()) + "\n" +
-                INDENT + "Penalización: €" + String.format("%.2f", getPenalizacion()) + "\n" +
-                "}";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(getClass().getSimpleName()).append(" {\n")
+                .append(INDENT).append("Matrícula: ").append(getMatricula()).append("\n")
+                .append(INDENT).append("Coordenadas: ").append(getCoordenadas().toString()).append("\n")
+                .append(INDENT).append("Estado: ").append(getEstado().toString()).append("\n")
+                .append(INDENT).append("Batería: ").append(getBateria()).append("%\n")
+                .append(INDENT).append("Tarifa por minuto: €").append(String.format("%.2f", getTarifaMinuto())).append("\n")
+                .append(INDENT).append("Penalización: €").append(String.format("%.2f", getPenalizacion())).append("\n");
+
+        if (getTiempoInactividad() > 0) {
+            sb.append(INDENT).append("Tiempo de inactividad: ")
+                    .append(getTiempoInactividad()).append(" minutos\n");
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
+
 }

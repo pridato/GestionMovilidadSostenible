@@ -10,11 +10,12 @@ import java.util.List;
  */
 public class Base {
 
-    private String id;
+    private final String id;
     private Coordenadas coordenadas;
-    private int capacidadMaxima;
-    private List<Vehiculo> vehiculos;
+    private final int capacidadMaxima;
+    private final List<Vehiculo> vehiculos;
     private boolean averiada = false;
+    private int tiempoInactividad;
 
     public Base(String id, Coordenadas coordenadas, int capacidadMaxima) {
         this.id = id;
@@ -27,9 +28,6 @@ public class Base {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Coordenadas getCoordenadas() {
         return coordenadas;
@@ -43,17 +41,20 @@ public class Base {
         return capacidadMaxima;
     }
 
-    public void setCapacidadMaxima(int capacidadMaxima) {
-        this.capacidadMaxima = capacidadMaxima;
-    }
 
     public List<Vehiculo> getVehiculos() {
         return vehiculos;
     }
 
-    public void setVehiculosAlquilados(List<Vehiculo> vehiculosAlquilados) {
-        this.vehiculos = vehiculosAlquilados;
+
+    public int getTiempoInactividad() {
+        return tiempoInactividad;
     }
+
+    public void setTiempoInactividad(int tiempoInactividad) {
+        this.tiempoInactividad = tiempoInactividad;
+    }
+
 
     /**
      * Añade un vehículo a la base.
@@ -77,11 +78,21 @@ public class Base {
 
     @Override
     public String toString() {
-        return "Base {\n" +
-                "    ID: " + id + "\n" +
-                "    Coordenadas: " + (coordenadas != null ? coordenadas.toString() : "No disponibles") + "\n" +
-                "    Capacidad Máxima: " + capacidadMaxima + "\n" +
-                "    Vehículos Alquilados: " + (vehiculos != null ? vehiculos.toString() : "No disponibles") + "\n" +
-                "}";
+        final String INDENT = "    ";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Base:\n")
+                .append(INDENT).append("ID: ").append(id).append("\n")
+                .append(INDENT).append("Coordenadas: ")
+                .append(coordenadas != null ? coordenadas.toString() : "No disponibles").append("\n")
+                .append(INDENT).append("Capacidad Máxima: ").append(capacidadMaxima).append("\n")
+                .append(INDENT).append("Vehículos Alquilados: ").append(vehiculos.size()).append("\n");
+
+        if (tiempoInactividad > 0) {
+            sb.append(INDENT).append("Tiempo de Inactividad: ").append(tiempoInactividad).append(" minutos\n");
+        }
+
+        return sb.toString();
     }
+
 }

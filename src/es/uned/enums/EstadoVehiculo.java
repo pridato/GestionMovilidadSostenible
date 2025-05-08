@@ -7,5 +7,6 @@ public enum EstadoVehiculo {
     DISPONIBLE,
     ALQUILADO,
     AVERIADO,
+    EN_REPARACION,
     RESERVADO
 }

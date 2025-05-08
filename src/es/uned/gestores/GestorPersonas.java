@@ -105,7 +105,7 @@ public class GestorPersonas {
                 persona = new Usuario(dni, nombre, apellidos, email, telefono, coordenadas);
             }
             case 2 -> persona = new Administrador(dni, nombre, apellidos, email, telefono, fecha);
-            case 3 -> persona = new Mecanico(dni, nombre, apellidos, email, telefono, fecha, null, null);
+            case 3 -> persona = new Mecanico(dni, nombre, apellidos, email, telefono, fecha, null);
             case 4 -> persona = new Mantenimiento(dni, nombre, apellidos, email, telefono, fecha);
             default -> {
             }
@@ -139,6 +139,7 @@ public class GestorPersonas {
 
     /**
      * Método para modificar los datos de una persona.
+     *
      * @param scanner scanner para leer la entrada del usuario
      */
     public void modificarPersona(Scanner scanner) {
@@ -165,7 +166,7 @@ public class GestorPersonas {
             opcion = scanner.nextInt();
             scanner.nextLine();
 
-            switch(opcion) {
+            switch (opcion) {
                 case 1 -> {
                     System.out.println("Introduzca el nuevo nombre: ");
                     String nuevoNombre = scanner.nextLine();
@@ -198,7 +199,7 @@ public class GestorPersonas {
                     System.out.println("Opción no válida.");
                 }
             }
-        } while(opcion != 6);
+        } while (opcion != 6);
 
     }
 
@@ -215,19 +216,8 @@ public class GestorPersonas {
 
 
     /**
-     * Método para listar todos los trabajadores del sistema.
-     */
-    public void listarTrabajadores() {
-        System.out.println("Lista de trabajadores:");
-        for (Persona persona : personas) {
-            if (persona instanceof Trabajador trabajador) {
-                System.out.println(trabajador);
-            }
-        }
-    }
-
-    /**
      * Método para buscar una persona por su DNI.
+     *
      * @param dni DNI de la persona a buscar.
      * @return Persona encontrada o null si no se encuentra.
      */
@@ -252,15 +242,41 @@ public class GestorPersonas {
 
     /**
      * Método para obtener la lista de trabajadores disponibles.
+     *
+     * @throws IllegalArgumentException si no hay trabajadores disponibles.
      */
-    public void consultarTrabajadoresDisponibles() {
+    public void consultarPersonalMantenimientoDisponibles() throws IllegalArgumentException {
+        List<Mantenimiento> mantenimientos = personas.stream()
+                .filter(p -> p instanceof Mantenimiento)
+                .map(p -> (Mantenimiento) p)
+                .toList();
+
+        if (mantenimientos.isEmpty()) {
+            throw new IllegalArgumentException("No hay personal de mantenimiento disponible.");
+        }
         // mostrar solo mecanicos y mantenimiento
-        for (Persona persona : personas) {
-            if (persona instanceof Mecanico mecanico) {
-                System.out.println("El mecánico " + mecanico.getNombre() + " " + mecanico.getApellidos() + "con dni "+ mecanico.getDNI() + " está disponible.");
-            } else if (persona instanceof Mantenimiento mantenimiento) {
-                System.out.println("El mantenimiento " + mantenimiento.getNombre() + " " + mantenimiento.getApellidos()  + "con dni "+ mantenimiento.getDNI() + " está disponible.");
-            }
+        for (Mantenimiento mantenimiento : mantenimientos) {
+            System.out.println("El personal de mentenimiento " + mantenimiento.getNombre() + " " + mantenimiento.getApellidos() + "con dni " + mantenimiento.getDNI() + " está disponible.");
+        }
+    }
+
+    /**
+     * Método para obtener la lista de mecánicos disponibles.
+     *
+     * @throws IllegalArgumentException si no hay mecánicos disponibles.
+     */
+    public void consultarMecanicosDisponibles() throws IllegalArgumentException {
+        List<Mecanico> mecanicos = personas.stream()
+                .filter(p -> p instanceof Mecanico)
+                .map(p -> (Mecanico) p)
+                .toList();
+
+        if (mecanicos.isEmpty()) {
+            throw new IllegalArgumentException("No hay mecánicos disponible.");
+        }
+
+        for (Mecanico mecanico : mecanicos) {
+            System.out.println("El mecánico " + mecanico.getNombre() + " " + mecanico.getApellidos() + "con dni " + mecanico.getDNI() + " está disponible.");
         }
     }
 
@@ -307,13 +323,14 @@ public class GestorPersonas {
     public void consultarUsuarios() {
         for (Persona persona : personas) {
             if (persona instanceof Usuario usuario) {
-                System.out.println("El usuario " + usuario.getNombre() + " " + usuario.getApellidos() + " con dni "+ usuario.getDNI() + " tiene " + usuario.getHistorialViajes().size() + " viajes.");
+                System.out.println("El usuario " + usuario.getNombre() + " " + usuario.getApellidos() + " con dni " + usuario.getDNI() + " tiene " + usuario.getHistorialViajes().size() + " viajes.");
             }
         }
     }
 
     /**
      * Método para modificar el descuento para usuarios premium.
+     *
      * @param scanner scanner para leer la entrada del usuario
      */
     public double modificarDescuentoPremium(Scanner scanner) {
@@ -324,9 +341,8 @@ public class GestorPersonas {
         if (nuevoDescuento < 0 || nuevoDescuento > 1) {
             System.out.println("El descuento debe estar entre 0 y 100.");
             modificarDescuentoPremium(scanner);
-        }
-        else {
-            for(Persona persona : personas) {
+        } else {
+            for (Persona persona : personas) {
                 if (persona instanceof Usuario usuario) {
                     usuario.setDescuento(nuevoDescuento);
                 }
@@ -335,6 +351,24 @@ public class GestorPersonas {
         }
         return nuevoDescuento;
     }
+
+    public Trabajador obtenerTrabajadorPorListado(Scanner scanner, String encargado) throws IllegalArgumentException {
+
+        if(encargado.equals("mantenimiento")){
+            System.out.println("Seleccione un personal de mantenimiento para loguearte: ");
+            consultarPersonalMantenimientoDisponibles();
+        } else if(encargado.equals("mecanico")){
+            consultarMecanicosDisponibles();
+        } else {
+            throw new IllegalArgumentException("El encargado no es correcto.");
+        }
+
+        System.out.println("Indique el DNI del trabajador:");
+        String dni = scanner.nextLine();
+
+        return (Trabajador) buscarPersonaPorDNI(dni);
+    }
+
 }
 
 

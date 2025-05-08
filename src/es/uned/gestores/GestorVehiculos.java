@@ -55,7 +55,7 @@ public class GestorVehiculos {
      *
      * @param scanner Scanner para leer la entrada del usuario
      */
-    public boolean añadirVehiculo(Scanner scanner) {
+    public void añadirVehiculo(Scanner scanner) {
         System.out.println("Seleccione el tipo de vehículo:");
         System.out.println("1. Moto");
         System.out.println("2. Patinete");
@@ -74,7 +74,7 @@ public class GestorVehiculos {
         }
 
         if (vehiculo != null && !this.vehiculos.contains(vehiculo)) {
-            if(! (vehiculo instanceof Moto)) {
+            if (!(vehiculo instanceof Moto)) {
                 gestorBases.consultarBasesDisponibles();
                 System.out.println("Seleccione la base a la que desea añadir el vehículo:");
                 String idBase = scanner.nextLine();
@@ -83,9 +83,10 @@ public class GestorVehiculos {
             }
 
             this.vehiculos.add(vehiculo);
-            return true;
+            System.out.println("Vehículo añadido correctamente.");
+            return;
         }
-        return false;
+        System.out.println("No se pudo añadir el vehículo.");
     }
 
     /**
@@ -187,26 +188,31 @@ public class GestorVehiculos {
 
     /**
      * Método para eliminar un vehículo de la lista de vehículos.
-     *
-     * @param matricula matricula del Vehiculo a eliminar.
-     * @return true si se elimina correctamente, false si no existe o es null.
      */
-    public boolean eliminarVehiculo(String matricula) {
+    public void eliminarVehiculo(Scanner scanner) {
+        System.out.println("Eliminando vehículo...");
+
+        System.out.print("Introduce la matrícula del vehículo a eliminar: ");
+        String matricula = scanner.nextLine();
         Vehiculo vehiculo = obtenerVehiculo(matricula);
         if (vehiculo != null && this.vehiculos.contains(vehiculo)) {
             this.vehiculos.remove(vehiculo);
-            return true;
+            System.out.println("Vehículo eliminado correctamente.");
+            return;
         }
-        return false;
+        System.out.println("No se pudo eliminar el vehículo.");
     }
 
     /**
      * Método para obtener la lista de vehículos.
      *
-     * @param matricula matricula del vehículo a buscar
      * @return Lista de vehículos.
      */
-    public void modificarVehiculo(String matricula, Scanner scanner) {
+    public void modificarVehiculo(Scanner scanner) {
+
+        System.out.println("Modificando vehículo...");
+        System.out.print("Introduce la matrícula del vehículo a modificar: ");
+        String matricula = scanner.nextLine();
         Vehiculo vehiculo = obtenerVehiculo(matricula);
 
         if (vehiculo == null) {
@@ -331,10 +337,10 @@ public class GestorVehiculos {
         StringBuilder mensaje;
 
         for (Vehiculo vehiculo : this.vehiculos) {
-             mensaje = new StringBuilder("Vehículo: " + vehiculo.getMatricula() + ", " +
-                     "Batería: " + vehiculo.getBateria() + "%, " +
-                     "Tarifa por minuto: " + vehiculo.getTarifaMinuto() + "€, penalización: " + vehiculo.getPenalizacion() + "€" +
-                     "Penalización: " + vehiculo.getPenalizacion() + "€");
+            mensaje = new StringBuilder("Vehículo: " + vehiculo.getMatricula() + ", " +
+                    "Batería: " + vehiculo.getBateria() + "%, " +
+                    "Tarifa por minuto: " + vehiculo.getTarifaMinuto() + "€, penalización: " + vehiculo.getPenalizacion() + "€" +
+                    "Penalización: " + vehiculo.getPenalizacion() + "€");
             if (vehiculo.getEstado() == EstadoVehiculo.DISPONIBLE) {
                 if (vehiculo instanceof Moto) {
                     mensaje.append(", Coordenadas: (").append(vehiculo.getCoordenadas().getX()).append(", ").append(vehiculo.getCoordenadas().getY()).append("), ");
@@ -449,6 +455,27 @@ public class GestorVehiculos {
                                 vehiculo instanceof Bicicleta ? "Bicicleta" : "Desconocido";
                 System.out.println(tipoVehiculo + ", Matricula: " + vehiculo.getMatricula() + ", Batería: " + vehiculo.getBateria() + "%, Tarifa por minuto: " + vehiculo.getTarifaMinuto() + "€, penalización: " + vehiculo.getPenalizacion() + "€");
             }
+        }
+    }
+
+    /**
+     * Método para consultar los vehículos averiados.
+     *
+     * @throws IllegalStateException si no hay vehículos disponibles
+     */
+    public void consultarVehiculosAveriados() throws IllegalStateException {
+        List<Vehiculo> vehiculosAveriados = vehiculos.stream().filter(v -> v.getEstado() == EstadoVehiculo.AVERIADO).toList();
+        System.out.println("Vehículos averiados:");
+
+        if (vehiculosAveriados.isEmpty()) {
+            throw new IllegalStateException("No hay vehículos averiados.");
+        }
+
+        for (Vehiculo vehiculo : vehiculosAveriados) {
+            String tipoVehiculo =
+                    vehiculo instanceof Moto ? "Moto" : vehiculo instanceof Patinete ? "Patinete" :
+                            vehiculo instanceof Bicicleta ? "Bicicleta" : "Desconocido";
+            System.out.println(tipoVehiculo + ", Matricula: " + vehiculo.getMatricula() + ", Batería: " + vehiculo.getBateria() + "%, Tarifa por minuto: " + vehiculo.getTarifaMinuto() + "€, penalización: " + vehiculo.getPenalizacion() + "€");
         }
     }
 }

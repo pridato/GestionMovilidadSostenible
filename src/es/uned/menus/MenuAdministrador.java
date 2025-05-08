@@ -5,6 +5,7 @@ import es.uned.gestores.GestorIncidencias;
 import es.uned.gestores.GestorPersonas;
 import es.uned.gestores.GestorVehiculos;
 import es.uned.model.Coordenadas;
+
 import java.util.Scanner;
 
 import static es.uned.utils.consts.*;
@@ -35,8 +36,9 @@ public class MenuAdministrador {
             System.out.println("1. Gestión de Personas");
             System.out.println("2. Gestión de Vehículos");
             System.out.println("3. Gestión de bases");
-            System.out.println("4. Generar Estadísticas");
-            System.out.println("5. Establecer límites de coordenadas");
+            System.out.println("4. Gestión de Trabajadores");
+            System.out.println("5. Generar Estadísticas");
+            System.out.println("6. Establecer límites de coordenadas");
             System.out.println("0. Salir");
             System.out.println();
             System.out.println("------------------------------");
@@ -48,8 +50,9 @@ public class MenuAdministrador {
                 case 1 -> gestionarMenuUsuarios(scanner);
                 case 2 -> gestionarMenuVehiculos(scanner);
                 case 3 -> gestionarMenuBases(scanner);
-                case 4 -> generarEstadisticas();
-                case 5 -> establecerLimitesCoordenadas(scanner);
+                case 4 -> gestionarMenuTrabajadores(scanner);
+                case 5 -> generarEstadisticas();
+                case 6 -> establecerLimitesCoordenadas(scanner);
                 case 0 -> System.out.println("Saliendo del programa...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -118,7 +121,6 @@ public class MenuAdministrador {
     private static void gestionarMenuVehiculos(Scanner scanner) {
         System.out.println("Gestionando Vehículos...");
 
-
         int opcion;
         do {
             System.out.println("\n--- Gestión de Vehículos ---");
@@ -128,44 +130,18 @@ public class MenuAdministrador {
             System.out.println("4. Listar Vehículos");
             System.out.println("5. Establecer tarifas de vehículos");
             System.out.println("6. Visualizar estado de la Batería de los Vehículos");
-            System.out.println("7. Visualizar problemas mecánicos de los Vehículos");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
             opcion = scanner.nextInt();
             scanner.nextLine();  // Limpiar el buffer
 
             switch (opcion) {
-                case 1 -> {
-                    if (gestorVehiculos.añadirVehiculo(scanner)) {
-                        System.out.println("Vehículo añadido correctamente.");
-                    } else {
-                        System.out.println("No se pudo añadir el vehículo.");
-                    }
-                }
-                case 2 -> {
-                    // Modificar vehículo
-                    System.out.println("Modificando vehículo...");
-                    System.out.print("Introduce la matrícula del vehículo a modificar: ");
-                    String matricula = scanner.nextLine();
-                    gestorVehiculos.modificarVehiculo(matricula, scanner);
-                }
-                case 3 -> {
-                    // Eliminar vehículo
-                    System.out.println("Eliminando vehículo...");
-
-                    System.out.print("Introduce la matrícula del vehículo a eliminar: ");
-                    String matricula = scanner.nextLine();
-                    if (gestorVehiculos.eliminarVehiculo(matricula)) {
-                        System.out.println("Vehículo eliminado correctamente.");
-                    } else {
-                        System.out.println("No se pudo eliminar el vehículo.");
-                    }
-
-                }
+                case 1 -> gestorVehiculos.añadirVehiculo(scanner);
+                case 2 -> gestorVehiculos.modificarVehiculo(scanner);
+                case 3 -> gestorVehiculos.eliminarVehiculo(scanner);
                 case 4 -> gestorVehiculos.consultarVehiculos();
                 case 5 -> gestorVehiculos.setTarifaMinuto(scanner);
                 case 6 -> gestorVehiculos.consultarBaterias(scanner);
-                //case 7 -> gestorIncidencias.visualizarProblemasVehículos(scanner);
                 case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -175,20 +151,18 @@ public class MenuAdministrador {
 
     /**
      * Gestiona las opciones del menú de gestión de bases.
+     *
      * @param scanner Scanner para leer la entrada del usuario.
      */
     private static void gestionarMenuBases(Scanner scanner) {
-
-
         int opcion;
 
         do {
             System.out.println("\n--- Gestión de bases ---");
             System.out.println("1. Visualizar estado de las bases");
-            System.out.println("2. Asignar bases a mecánicos");
-            System.out.println("3. Consultar bases disponibles");
-            System.out.println("4. Consultar bases por ocupación");
-            System.out.println("5. Generar estadísticas de bases ordenadas por demanda");
+            System.out.println("2. Consultar bases disponibles");
+            System.out.println("3. Consultar bases por ocupación");
+            System.out.println("4. Generar estadísticas de bases ordenadas por demanda");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
             System.out.print("Seleccione una opción: ");
@@ -197,20 +171,19 @@ public class MenuAdministrador {
 
             switch (opcion) {
                 case 1 -> gestorBases.consultarEstadoBases(scanner);
-                // case 2 -> gestorIncidencias.asignarBaseTrabajador(scanner, gestorPersonas);
-                case 3 -> gestorBases.consultarBasesDisponibles();
-                case 4 -> gestorBases.consultarBasesPorOcupacion();
-                case 5 -> gestorBases.generarEstadisticasBases();
+                case 2 -> gestorBases.consultarBasesDisponibles();
+                case 3 -> gestorBases.consultarBasesPorOcupacion();
+                case 4 -> gestorBases.generarEstadisticasBases();
                 case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
         } while (opcion != 0);
-
     }
 
 
     /**
      * Gestiona las opciones del menú de gestión de trabajadores.
+     *
      * @param scanner Scanner para leer la entrada del usuario.
      */
     private static void gestionarMenuTrabajadores(Scanner scanner) {
@@ -222,6 +195,7 @@ public class MenuAdministrador {
             System.out.println("2. Asignar bases a mecánicos");
             System.out.println("3. Asignar vehículo a un trabajador");
             System.out.println("4. Ver asignaciones actuales");
+            System.out.println("5. Incidencias actuales");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
             System.out.print("Seleccione una opción: ");
@@ -230,15 +204,38 @@ public class MenuAdministrador {
             scanner.nextLine(); // limpiar buffer
 
             switch (opcion) {
-                case 1 -> gestorPersonas.listarTrabajadores();
-                // case 2 -> gestorIncidencias.asignarBaseTrabajador(scanner, gestorPersonas);
-                // case 3 -> gestorIncidencias.asignarVehiculoTrabajador(scanner, gestorPersonas);
-                // case 4 -> gestorIncidencias.verAsignacionesActuales();
+                case 1 -> {
+                    try {
+                        gestorPersonas.consultarPersonalMantenimientoDisponibles();
+                        gestorPersonas.consultarMecanicosDisponibles();
+                    } catch(Exception e) {
+                        System.out.println("Error al listar trabajadores: " + e.getMessage());
+                    }
+
+                    System.out.println("Presione Enter para continuar...");
+                    scanner.nextLine();
+                }
+                case 2 -> {
+                    try {
+                        gestorIncidencias.asignarBaseMecanicos(scanner);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Error al asignar vehículo a trabajador: " + e.getMessage());
+                    }
+                }
+                case 3 -> {
+                    try {
+                        gestorIncidencias.asignarVehiculoTrabajador(scanner);
+                    } catch(Exception e) {
+                        System.out.println("Error al asignar vehículo a trabajador: " + e.getMessage());
+                    }
+                }
+                case 4 -> gestorIncidencias.consultarAsignacionesActuales();
+                case 5 -> gestorIncidencias.consultarIncidenciasActuales();
                 case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
 
-        } while(opcion != 0);
+        } while (opcion != 0);
     }
 
     // ------------------------------
