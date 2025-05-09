@@ -56,7 +56,7 @@ public class GestorUsuarios {
     public void listarUsuarios() {
         List<Usuario> usuarios = getUsuarios();
         for(int i=0; i<usuarios.size(); i++){
-            System.out.println(i +" -> " + usuarios.get(i).getDNI() + " " + usuarios.get(i).getNombre() + " " + usuarios.get(i).getApellidos());
+            System.out.println(i +" -> " + usuarios.get(i).getdni() + " " + usuarios.get(i).getNombre() + " " + usuarios.get(i).getApellidos());
         }
     }
 

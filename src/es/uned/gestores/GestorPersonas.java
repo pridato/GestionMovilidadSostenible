@@ -44,6 +44,8 @@ public class GestorPersonas {
      * @param scanner scanner para leer la entrada del usuario
      */
     public void crearPersona(Scanner scanner) {
+
+        // Formulario de creación de persona
         System.out.print("DNI: ");
         String dni = scanner.nextLine();
 
@@ -60,6 +62,8 @@ public class GestorPersonas {
         int telefono = scanner.nextInt();
         scanner.nextLine();
 
+        // Elección de tipo de persona a crear
+
         System.out.println("Elija el tipo de Persona a crear:");
         System.out.println("1. Usuario");
         System.out.println("2. Administrador");
@@ -69,60 +73,110 @@ public class GestorPersonas {
         int opcionTipo = scanner.nextInt();
         scanner.nextLine();
 
-        Date fecha = new Date();
-
-        if (opcionTipo != 1 && opcionTipo < 5) {
-            System.out.println("Fecha de contratación (dd/MM/yyyy): ");
-            String fechaContratacion = scanner.nextLine();
-            // Parsear la fecha
-            fecha = new Date();
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                fecha = sdf.parse(fechaContratacion);
-            } catch (Exception e) {
-                System.out.println("Error al parsear la fecha. Usando fecha actual.");
-            }
-        }
-        Persona persona = null;
-
-
-        switch (opcionTipo) {
-            case 1 -> {
-                System.out.println("¿Desea usar localización automática por IP? (S/N): ");
-                String opcion = scanner.nextLine().trim().toUpperCase();
-
-                Coordenadas coordenadas;
-                if (opcion.equals("S")) {
-                    coordenadas = GeolocalizacionPorIP.obtenerCoordenadasDesdeIP();
-                    if (coordenadas == null) {
-                        System.out.println("No se pudo obtener la ubicación automáticamente. Introduzca manualmente.");
-                        coordenadas = leerCoordenadasManualmente(scanner);
-                    }
-                } else {
-                    coordenadas = leerCoordenadasManualmente(scanner);
-                }
-
-                persona = new Usuario(dni, nombre, apellidos, email, telefono, coordenadas);
-            }
-            case 2 -> persona = new Administrador(dni, nombre, apellidos, email, telefono, fecha);
-            case 3 -> persona = new Mecanico(dni, nombre, apellidos, email, telefono, fecha, null);
-            case 4 -> persona = new Mantenimiento(dni, nombre, apellidos, email, telefono, fecha);
-            default -> {
-            }
-        }
-
+        Date fecha = obtenerFechaDeContratacion(scanner, opcionTipo);
+        Persona persona = crearPersonaSegunTipo(dni, nombre, apellidos, email, telefono, fecha, opcionTipo, scanner);
 
         if (persona != null) {
-            if (!personas.add(persona)) {
-                throw new IllegalArgumentException("Ya existe una persona con ese DNI.");
-            }
-            System.out.println("Persona creada: " + persona);
+            personas.add(persona);
+            System.out.println("Persona creada: " + persona.getdni() + " " + persona.getNombre() + " " + persona.getApellidos());
         } else {
-            System.out.println("Error al crear la persona. ");
+            System.out.println("Error al crear la persona.");
         }
 
     }
 
+
+    /**
+     * Método para obtener las coordenadas del usuario.
+     * @param scanner scanner para leer la entrada del usuario
+     * @return coordenadas del usuario
+     */
+    private static Coordenadas obtenerCoordenadasUsuario(Scanner scanner) {
+        Coordenadas coordenadas = null;
+
+        while (coordenadas == null) {
+            System.out.println("¿Desea usar localización automática por IP? (S/N): ");
+            String opcion = scanner.nextLine().trim().toUpperCase();
+
+            if (opcion.equals("S")) {
+                // Intentar obtener las coordenadas por IP
+                coordenadas = GeolocalizacionPorIP.obtenerCoordenadasDesdeIP();
+
+                // Si no se pudo obtener las coordenadas por IP, pedir al usuario que ingrese las coordenadas manualmente
+                if (coordenadas == null) {
+                    System.out.println("No se pudo obtener la ubicación automáticamente. Intentando ingresar coordenadas manualmente.");
+                    coordenadas = leerCoordenadasManualmente(scanner);
+                }
+            } else if (opcion.equals("N")) {
+                // Si el usuario no quiere usar la localización automática, se piden las coordenadas manualmente
+                coordenadas = leerCoordenadasManualmente(scanner);
+            } else {
+                // Si la respuesta no es válida, solicitamos la opción nuevamente
+                System.out.println("Opción no válida. Por favor, ingrese 'S' para sí o 'N' para no.");
+            }
+        }
+        return coordenadas;
+    }
+
+
+    /**
+     * Método para obtener la fecha de contratación de un trabajador.
+     * @param scanner scanner para leer la entrada del usuario
+     * @param opcionTipo tipo de persona
+     * @return fecha de contratación
+     */
+    private Date obtenerFechaDeContratacion(Scanner scanner, int opcionTipo) {
+        if (opcionTipo != 1 && opcionTipo < 5) {
+            System.out.println("Fecha de contratación (dd/MM/yyyy): ");
+            String fechaContratacion = scanner.nextLine();
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                return sdf.parse(fechaContratacion);
+            } catch (Exception e) {
+                System.out.println("Error al parsear la fecha. Usando fecha actual.");
+                return new Date();
+            }
+        }
+        return new Date();
+    }
+
+
+    /**
+     * Método para crear una persona según el tipo seleccionado.
+     * @param dni DNI de la persona
+     * @param nombre Nombre de la persona
+     * @param apellidos Apellidos de la persona
+     * @param email Email de la persona
+     * @param telefono Teléfono de la persona
+     * @param fecha Fecha de contratación
+     * @param opcionTipo Tipo de persona
+     * @param scanner Scanner para leer la entrada del usuario
+     * @return Persona creada
+     */
+    private Persona crearPersonaSegunTipo(String dni, String nombre, String apellidos, String email, int telefono, Date fecha, int opcionTipo, Scanner scanner) {
+        return switch (opcionTipo) {
+            case 1 -> crearUsuario(dni, nombre, apellidos, email, telefono, scanner);
+            case 2 -> new Administrador(dni, nombre, apellidos, email, telefono, fecha);
+            case 3 -> new Mecanico(dni, nombre, apellidos, email, telefono, fecha, null);
+            case 4 -> new Mantenimiento(dni, nombre, apellidos, email, telefono, fecha);
+            default -> null;
+        };
+    }
+
+    /**
+     * Método para crear un usuario.
+     * @param dni DNI del usuario
+     * @param nombre Nombre del usuario
+     * @param apellidos Apellidos del usuario
+     * @param email Email del usuario
+     * @param telefono Teléfono del usuario
+     * @param scanner Scanner para leer la entrada del usuario
+     * @return Usuario creado
+     */
+    private Persona crearUsuario(String dni, String nombre, String apellidos, String email, int telefono, Scanner scanner) {
+        Coordenadas coordenadas = obtenerCoordenadasUsuario(scanner);
+        return new Usuario(dni, nombre, apellidos, email, telefono, coordenadas);
+    }
 
     /**
      * Método para eliminar personas del sistema
