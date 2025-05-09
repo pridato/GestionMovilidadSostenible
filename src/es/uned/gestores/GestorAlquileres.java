@@ -90,7 +90,7 @@ public class GestorAlquileres {
         Alquiler nuevoAlquiler = new Alquiler(vehiculo, new Date(), EstadoAlquiler.EN_CURSO, baseInicio, coordenadas);
         alquileres.add(nuevoAlquiler);
 
-        usuario.getHistorialViajes().add(nuevoAlquiler);
+        usuario.añadirAlquiler(nuevoAlquiler);
 
         System.out.println("Alquiler iniciado: " + nuevoAlquiler.getId());
         return nuevoAlquiler;
@@ -133,16 +133,20 @@ public class GestorAlquileres {
 
         Vehiculo vehiculo = alquiler.getVehiculo();
 
+        if(vehiculo == null) {
+            throw new IllegalStateException("El vehículo no está disponible.");
+        }
+
         // obtener coordenadas o base de finalización
         Coordenadas coordenadasFin = (vehiculo instanceof Moto) ? obtenerCoordenadasFin(scanner) : null;
 
         Base baseFin = (vehiculo instanceof Moto) ? null : obtenerBaseParaAlquilar(scanner);
-        if(baseFin == null)  throw new IllegalStateException("No se ha podido obtener la base de finalización.");
 
-        baseFin.añadirVehiculo(vehiculo);
+        if(baseFin != null) {
+            baseFin.añadirVehiculo(vehiculo);
+            alquiler.setBaseFin(baseFin);
+        }
 
-        // seteamos bases, coordenadas y finalizar el alquiler
-        alquiler.setBaseFin(baseFin);
         alquiler.setCoordenadasFin(coordenadasFin);
         alquiler.setEstado(EstadoAlquiler.FINALIZADO);
         alquiler.setFechaFin(new Date());
@@ -150,31 +154,30 @@ public class GestorAlquileres {
         int tiempoDuracion = (int) ((alquiler.getFechaFin().getTime() - alquiler.getFechaInicio().getTime()) / 60000);
         alquiler.setTiempoDuracion(tiempoDuracion);
 
-
         // calculamos el tiempo de duración y el importe final
         double importeTotal = vehiculo.calcularImporte(alquiler.getTiempoDuracion());
-        importeTotal -= importeTotal * descuentoPremium;
+
+        // aplicamos penalizaciones y recargamos saldo
+        importeTotal += aplicarPenalizaciones(vehiculo, alquiler);
 
         if(usuario.getEsPremium()) {
+            importeTotal -= importeTotal * descuentoPremium;
             System.out.println("El usuario es premium, se aplicará un descuento del " + descuentoPremium * 100 + "%");
             alquiler.setImporteFinal(importeTotal);
         }
 
-        // aplicamos penalizaciones y recargamos saldo
-        aplicarPenalizaciones(usuario, vehiculo, alquiler);
-        importeTotal +=  vehiculo.getPenalizacion(); // añadir penalización al importe total
+        alquiler.setImporteFinal(importeTotal);
         usuario.recargarSaldo(-importeTotal);
-        System.out.println("Alquiler finalizado con éxito.");
 
         // Actualizar estado del vehículo
         vehiculo.setEstado(EstadoVehiculo.DISPONIBLE);
 
 
-        System.out.println("Alquiler finalizado: " + alquiler.getId());
+
         System.out.println("Importe final: " + alquiler.getImporteFinal() + "€");
-        System.out.println("Penalización aplicada: " + vehiculo.getPenalizacion() + "€");
         System.out.println("Duración: " + alquiler.getTiempoDuracion() + " minutos");
         System.out.println("Saldo actual del usuario: " + usuario.getsaldo() + "€");
+        System.out.println("Alquiler finalizado: " + alquiler.getId());
     }
 
     /**
@@ -360,22 +363,78 @@ public class GestorAlquileres {
 
     /**
      * Método para aplicar penalizaciones al usuario.
-     * @param usuario usuario que alquila el vehículo
      * @param vehiculo vehículo alquilado
      * @param alquiler alquiler a finalizar
      */
-    private static void aplicarPenalizaciones(Usuario usuario, Vehiculo vehiculo, Alquiler alquiler) {
+    private static double aplicarPenalizaciones(Vehiculo vehiculo, Alquiler alquiler) {
+        double penalizaciones = 0;
         if (vehiculo.getBateria() == 0) {
-            double penalizacion = vehiculo.getPenalizacion();
-            usuario.recargarSaldo(-penalizacion);
-            System.out.println("Penalización por batería: " + penalizacion + "€");
+            penalizaciones += vehiculo.getPenalizacion();
+            System.out.println("Penalización por batería: " + penalizaciones + "€");
         }
 
         if (vehiculo instanceof Moto &&
                 !alquiler.getCoordenadasFin().estaDentroDeLimites(minX, maxX, minY, maxY)) {
-            double penalizacion = vehiculo.getPenalizacion();
-            usuario.recargarSaldo(-penalizacion);
-            System.out.println("Penalización por salir de límites: " + penalizacion + "€");
+            penalizaciones += vehiculo.getPenalizacion();
+            System.out.println("Penalización por salir de límites: " + penalizaciones + "€");
+        }
+
+        return penalizaciones;
+    }
+
+
+    /**
+     * Método para consultar los vehículos ordenados por tiempo de uso.
+     */
+    public void consultarVehiculosOrdenadosTiempoUso() {
+        System.out.println("Vehículos ordenados por tiempo de uso:");
+
+        // filtrar los alquileres finalizados y añadirlos en un mapa
+        Map<Vehiculo, Integer> tiemposUso = new HashMap<>();
+        for (Alquiler alquiler : alquileres) {
+            if (alquiler.getEstado() == EstadoAlquiler.FINALIZADO) {
+                tiemposUso.put(alquiler.getVehiculo(), alquiler.getTiempoDuracion());
+            }
+        }
+
+        // ordenar el mapa por tiempo de uso
+        List<Map.Entry<Vehiculo, Integer>> listaOrdenada = new ArrayList<>(tiemposUso.entrySet());
+        listaOrdenada.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+
+        // imprimir los vehículos ordenados
+        for (Map.Entry<Vehiculo, Integer> entry : listaOrdenada) {
+            System.out.println("Vehículo: " + entry.getKey().getMatricula() + " - Tiempo de uso: " + entry.getValue() + " minutos");
+        }
+    }
+
+
+    /**
+     * Método para consultar los usuarios ordenados por gastos de alquiler.
+     */
+    public void consultarUsuariosOrdenadosGastosAlquiler() {
+        System.out.println("Usuarios ordenados por gastos de alquiler:");
+
+        // filtrar los alquileres finalizados y añadirlos en un mapa
+        Map<Usuario, Double> gastosAlquiler = new HashMap<>();
+
+        for (Usuario usuario : gestorPersonas.obtenerUsuarios()) {
+            double totalGastos = 0;
+            for (Alquiler alquiler : usuario.getHistorialViajes()) {
+                if (alquiler.getEstado() == EstadoAlquiler.FINALIZADO) {
+                    totalGastos += alquiler.getImporteFinal();
+                }
+            }
+            gastosAlquiler.put(usuario, totalGastos);
+        }
+
+        // ordenar el mapa por gastos
+        List<Map.Entry<Usuario, Double>> listaOrdenada = new ArrayList<>(gastosAlquiler.entrySet());
+        listaOrdenada.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+        // imprimir los usuarios ordenados
+        for (Map.Entry<Usuario, Double> entry : listaOrdenada) {
+            System.out.println("Usuario: " + entry.getKey().getNombre() + " - Gastos de alquiler: " + entry.getValue() + "€");
         }
     }
 }

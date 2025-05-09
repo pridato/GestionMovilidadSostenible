@@ -20,6 +20,7 @@ public class MenuAdministrador {
     public static final GestorIncidencias gestorIncidencias = GestorIncidencias.getInstancia();
     public static final GestorBases gestorBases = GestorBases.getInstancia();
     public static final GestorFacturas gestorFacturas = GestorFacturas.getInstancia();
+    public static final GestorAlquileres gestorAlquiler = GestorAlquileres.getInstancia();
 
     /**
      * Gestionar las opciones del menú del administrador.
@@ -49,7 +50,7 @@ public class MenuAdministrador {
                 case 2 -> gestionarMenuVehiculos(scanner);
                 case 3 -> gestionarMenuBases(scanner);
                 case 4 -> gestionarMenuTrabajadores(scanner);
-                case 5 -> generarEstadisticas();
+                case 5 -> gestionarMenuEstadisticas(scanner);
                 case 6 -> establecerLimitesCoordenadas(scanner);
                 case 0 -> System.out.println("Saliendo del programa...");
                 default -> System.out.println("Opción no válida.");
@@ -282,9 +283,32 @@ public class MenuAdministrador {
     /**
      * Genera estadísticas sobre los usuarios y vehículos.
      */
-    private static void generarEstadisticas() {
-        System.out.println("Generando estadísticas...");
-        // Implementar lógica para generar estadísticas
+    private static void gestionarMenuEstadisticas(Scanner scanner) {
+        int opcion;
+
+        do {
+            System.out.println("---------------------");
+            System.out.println("1. Listado de bases ordenadas por ocupación");
+            System.out.println("2. Listado de vehículos ordenados que han requerido más reparaciones");
+            System.out.println("3. Listado de encargados de mantenimiento y mecánicos ordenados por intervenciones");
+            System.out.println("4. Listado de vehículos ordenados por tiempo de uso");
+            System.out.println("5. Listado de usuarios ordenados por sus gastos de alquiler");
+            System.out.println("0. Volver");
+            System.out.println("---------------------");
+            System.out.print("Seleccione una opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // limpiar buffer
+
+            switch (opcion) {
+                case 1 -> gestorBases.consultarBasesPorOcupacion();
+                case 2 -> gestorIncidencias.consultarVehiculosOrdenadosReparacion();
+                case 3 -> gestorIncidencias.consultarTrabajadoresOrdenadosIntervenciones();
+                case 4 -> gestorAlquiler.consultarVehiculosOrdenadosTiempoUso();
+                case 5 -> gestorAlquiler.consultarUsuariosOrdenadosGastosAlquiler();
+                case 0 -> System.out.println("Volviendo al menú principal...");
+                default -> System.out.println("Opción no válida.");
+            }
+        } while(opcion != 0);
     }
 
 

@@ -11,34 +11,18 @@ import java.util.UUID;
  */
 public class Alquiler {
 
-    private String id;
+    private final String id;
     private Vehiculo vehiculo;
-    private Date fechaInicio;
+    private final Date fechaInicio;
     private Date fechaFin;
     private EstadoAlquiler estado;
     private Base baseInicio;
     private Base baseFin;
     private double importeFinal;
     private int tiempoDuracion;
-
-    public Coordenadas getCoordenadasFin() {
-        return coordenadasFin;
-    }
-
-    public void setCoordenadasFin(Coordenadas coordenadasFin) {
-        this.coordenadasFin = coordenadasFin;
-    }
-
-    public Coordenadas getCoordenadasInicio() {
-        return coordenadasInicio;
-    }
-
-    public void setCoordenadasInicio(Coordenadas coordenadasInicio) {
-        this.coordenadasInicio = coordenadasInicio;
-    }
-
     private Coordenadas coordenadasInicio;
     private Coordenadas coordenadasFin;
+
 
     /* Constructor de la clase Alquiler, con todos los datos */
     public Alquiler(Vehiculo vehiculo, Date fechaInicio, Date fechaFin, EstadoAlquiler estado, Base baseInicio, Base baseFin, double importeFinal, int tiempoDuracion) {
@@ -51,15 +35,6 @@ public class Alquiler {
         this.baseFin = baseFin;
         this.importeFinal = importeFinal;
         this.tiempoDuracion = tiempoDuracion;
-    }
-
-    /* constructor por defecto para inicializar cualquier alquiler*/
-    public Alquiler(Vehiculo vehiculo, Date fechaInicio, EstadoAlquiler estado, Base baseInicio) {
-        this.id = UUID.randomUUID().toString();
-        this.vehiculo = vehiculo;
-        this.fechaInicio = fechaInicio;
-        this.estado = estado;
-        this.baseInicio = baseInicio;
     }
 
     public Alquiler(Vehiculo vehiculo, Date fechaInicio, EstadoAlquiler estado, Base baseInicio, Coordenadas coordenadas) {
@@ -89,15 +64,9 @@ public class Alquiler {
         this.estado = estado;
     }
 
-
     public String getId() {
         return id;
     }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
 
     public Vehiculo getVehiculo() {
         return vehiculo;
@@ -109,10 +78,6 @@ public class Alquiler {
 
     public Date getFechaInicio() {
         return fechaInicio;
-    }
-
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
     }
 
     public Date getFechaFin() {
@@ -129,18 +94,6 @@ public class Alquiler {
 
     public void setEstado(EstadoAlquiler estado) {
         this.estado = estado;
-    }
-
-    public Base getBaseInicio() {
-        return baseInicio;
-    }
-
-    public void setBaseInicio(Base baseInicio) {
-        this.baseInicio = baseInicio;
-    }
-
-    public Base getBaseFin() {
-        return baseFin;
     }
 
     public void setBaseFin(Base baseFin) {
@@ -168,6 +121,14 @@ public class Alquiler {
 
     public void setTiempoDuracion(int tiempoDuracion) {
         this.tiempoDuracion = tiempoDuracion;
+    }
+
+    public Coordenadas getCoordenadasFin() {
+        return coordenadasFin;
+    }
+
+    public void setCoordenadasFin(Coordenadas coordenadasFin) {
+        this.coordenadasFin = coordenadasFin;
     }
 
     @Override

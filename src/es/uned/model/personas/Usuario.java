@@ -4,6 +4,7 @@ import es.uned.model.Alquiler;
 import es.uned.model.Coordenadas;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -17,17 +18,9 @@ public class Usuario extends Persona {
     private double saldo;
     private Boolean esPremium;
     private List<Alquiler> historialViajes = new ArrayList<>();
-    private Date fechaCreacion;
+    private final Date fechaCreacion;
     private Coordenadas coordenadas;
     private double descuento;
-
-    public Usuario(String dni, String nombre, String apellidos, String email, int telefono, Date fechaCreacion, Coordenadas coordenadas) {
-        super(nombre, apellidos, dni, email, telefono);
-        this.saldo = 0.0;
-        this.esPremium = false;
-        this.fechaCreacion = fechaCreacion;
-        this.coordenadas = coordenadas;
-    }
 
     public Usuario(String dni, String nombre, String apellidos, String email, int telefono, Coordenadas coordenadas) {
         super(dni, nombre, apellidos, email, telefono);
@@ -54,10 +47,6 @@ public class Usuario extends Persona {
         this.coordenadas = coordenadas;
     }
 
-    public double getDescuento() {
-        return descuento;
-    }
-
     public void setDescuento(double descuento) {
         this.descuento = descuento;
     }
@@ -70,20 +59,18 @@ public class Usuario extends Persona {
         this.coordenadas = coordenadas;
     }
 
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
     public List<Alquiler> getHistorialViajes() {
-        return historialViajes;
+        return Collections.unmodifiableList(historialViajes);
     }
 
-    public void setHistorialViajes(List<Alquiler> historialViajes) {
-        this.historialViajes = historialViajes;
+    /**
+     * Método para añadir un alquiler al historial de viajes del usuario.
+     * @param alquiler Alquiler a añadir.
+     */
+    public void añadirAlquiler(Alquiler alquiler) {
+        if (alquiler != null) {
+            historialViajes.add(alquiler);
+        }
     }
 
     public Boolean getEsPremium() {

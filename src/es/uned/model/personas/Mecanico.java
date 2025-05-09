@@ -19,18 +19,8 @@ public class Mecanico extends Trabajador{
 
     public Mecanico(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion) {
         super(DNI, nombre, apellidos, email, telefono, fechaContratacion);
-        this.facturasEmitidas = facturasEmitidas;
     }
 
-
-
-    public List<Factura> getFacturasEmitidas() {
-        return facturasEmitidas;
-    }
-
-    public void setFacturasEmitidas(List<Factura> facturasEmitidas) {
-        this.facturasEmitidas = facturasEmitidas;
-    }
 
     @Override
     public String toString() {
@@ -48,8 +38,6 @@ public class Mecanico extends Trabajador{
         } else {
             sb.append(INDENT).append(INDENT).append("(Sin facturas emitidas)\n");
         }
-
-
 
         sb.append("}");
         return sb.toString();

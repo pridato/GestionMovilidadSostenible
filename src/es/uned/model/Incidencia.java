@@ -7,36 +7,22 @@ import es.uned.model.vehiculos.Vehiculo;
 import java.util.Date;
 
 /**
- * Clase Incidencia que representa una incidencia reportada por un usuario.
+ * Representa una incidencia registrada por un usuario, relacionada con un vehículo o una base.
  */
 public class Incidencia {
 
-    private String id;
+    private final String id;
     private Usuario usuario;
     private Vehiculo vehiculo;
-    private String descripcion;
-    private Date fechaReporte;
+    private final String descripcion;
+    private final Date fechaReporte;
     private Trabajador encargado;
     private Base base;
 
-    /* constructor con vehiculos */
-    public Incidencia(Usuario usuario, Vehiculo vehiculo, String descripcion, Date fechaReporte) {
-        this.id = String.valueOf(System.currentTimeMillis()); // valor aleatorio
-        this.usuario = usuario;
-        this.vehiculo = vehiculo;
-        this.descripcion = descripcion;
-        this.fechaReporte = fechaReporte;
-    }
 
-    /* constructor con bases */
-    public Incidencia(Usuario usuario, String descripcion, Date fechaReporte, Base base) {
-        this.id = String.valueOf(System.currentTimeMillis()); // valor aleatorio
-        this.usuario = usuario;
-        this.descripcion = descripcion;
-        this.fechaReporte = fechaReporte;
-        this.base = base;
-    }
-
+    /**
+     * Constructor general sin vehículo/base.
+     */
     public Incidencia(Usuario usuario, String descripcion, Date fechaReporte, Base base, Vehiculo vehiculo) {
         this.id = String.valueOf(System.currentTimeMillis()); // valor aleatorio
         this.usuario = usuario;
@@ -46,20 +32,16 @@ public class Incidencia {
         this.vehiculo = vehiculo;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public Vehiculo getVehiculo() {
@@ -74,17 +56,11 @@ public class Incidencia {
         return descripcion;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
 
     public Date getFechaReporte() {
         return fechaReporte;
     }
 
-    public void setFechaReporte(Date fechaReporte) {
-        this.fechaReporte = fechaReporte;
-    }
 
     public Trabajador getEncargado() {
         return encargado;
@@ -92,6 +68,14 @@ public class Incidencia {
 
     public void setEncargado(Trabajador encargado) {
         this.encargado = encargado;
+    }
+
+    public Base getBase() {
+        return base;
+    }
+
+    public void setBase(Base base) {
+        this.base = base;
     }
 
     @Override
@@ -104,13 +88,5 @@ public class Incidencia {
                 ", fechaReporte=" + fechaReporte +
                 ", encargado=" + encargado +
                 '}';
-    }
-
-    public Base getBase() {
-        return base;
-    }
-
-    public void setBase(Base base) {
-        this.base = base;
     }
 }

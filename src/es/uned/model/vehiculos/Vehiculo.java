@@ -4,6 +4,8 @@ import es.uned.enums.EstadoVehiculo;
 import es.uned.model.Coordenadas;
 import es.uned.model.personas.Usuario;
 
+import java.util.Objects;
+
 /**
  * Clase abstracta Vehiculo que representa un vehículo con atributos como matrícula, coordenadas, estado, batería, tarifa por minuto y penalización.
  */
@@ -31,7 +33,7 @@ public abstract class Vehiculo {
     }
 
     public void setTiempoInactividad(int tiempoInactividad) {
-        this.tiempoInactividad = tiempoInactividad;
+        this.tiempoInactividad += tiempoInactividad;
     }
 
     public String getMatricula() {
@@ -85,6 +87,18 @@ public abstract class Vehiculo {
     public abstract void calcularBateriaRestante(int minutos);
 
     public abstract double calcularImporte(int minutos);
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Vehiculo vehiculo = (Vehiculo) o;
+        return Double.compare(bateria, vehiculo.bateria) == 0 && Double.compare(tarifaMinuto, vehiculo.tarifaMinuto) == 0 && Double.compare(penalizacion, vehiculo.penalizacion) == 0 && tiempoInactividad == vehiculo.tiempoInactividad && Objects.equals(matricula, vehiculo.matricula) && Objects.equals(coordenadas, vehiculo.coordenadas) && estado == vehiculo.estado;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(matricula, coordenadas, estado, bateria, tarifaMinuto, penalizacion, tiempoInactividad);
+    }
 
     /**
      * Comprueba si el vehículo tiene batería suficiente y si no está reservado o averiado.

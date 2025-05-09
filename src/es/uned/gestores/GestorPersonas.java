@@ -133,7 +133,7 @@ public class GestorPersonas {
         System.out.println("Introduzca el DNI de la persona a eliminar: ");
         String dni = scanner.nextLine();
 
-        personas.removeIf(persona -> persona.getDNI().equals(dni));
+        personas.removeIf(persona -> persona.getdni().equals(dni));
 
     }
 
@@ -152,7 +152,7 @@ public class GestorPersonas {
             return;
         }
 
-        // hacer un switch case de todos los atributos de la persona a modificar
+        // hacer un "switch case" de todos los atributos de la persona a modificar
         int opcion = 0;
         do {
             System.out.println("¿Qué atributo desea modificar?");
@@ -180,7 +180,7 @@ public class GestorPersonas {
                 case 3 -> {
                     System.out.println("Introduzca el nuevo DNI: ");
                     String nuevoDNI = scanner.nextLine();
-                    persona.setDNI(nuevoDNI);
+                    persona.setdni(nuevoDNI);
                 }
                 case 4 -> {
                     System.out.println("Introduzca el nuevo email: ");
@@ -223,7 +223,7 @@ public class GestorPersonas {
      */
     public Persona buscarPersonaPorDNI(String dni) {
         return personas.stream()
-                .filter(persona -> persona.getDNI().equals(dni))
+                .filter(persona -> persona.getdni().equals(dni))
                 .findFirst()
                 .orElse(null);
     }
@@ -256,7 +256,7 @@ public class GestorPersonas {
         }
         // mostrar solo mecanicos y mantenimiento
         for (Mantenimiento mantenimiento : mantenimientos) {
-            System.out.println("El personal de mentenimiento " + mantenimiento.getNombre() + " " + mantenimiento.getApellidos() + " con dni " + mantenimiento.getDNI() + " está disponible.");
+            System.out.println("El personal de mentenimiento " + mantenimiento.getNombre() + " " + mantenimiento.getApellidos() + " con dni " + mantenimiento.getdni() + " está disponible.");
         }
     }
 
@@ -276,7 +276,7 @@ public class GestorPersonas {
         }
 
         for (Mecanico mecanico : mecanicos) {
-            System.out.println("El mecánico " + mecanico.getNombre() + " " + mecanico.getApellidos() + " con dni " + mecanico.getDNI() + " está disponible.");
+            System.out.println("El mecánico " + mecanico.getNombre() + " " + mecanico.getApellidos() + " con dni " + mecanico.getdni() + " está disponible.");
         }
     }
 
@@ -323,7 +323,7 @@ public class GestorPersonas {
     public void consultarUsuarios() {
         for (Persona persona : personas) {
             if (persona instanceof Usuario usuario) {
-                System.out.println("El usuario " + usuario.getNombre() + " " + usuario.getApellidos() + " con dni " + usuario.getDNI() + " tiene " + usuario.getHistorialViajes().size() + " viajes.");
+                System.out.println("El usuario " + usuario.getNombre() + " " + usuario.getApellidos() + " con dni " + usuario.getdni() + " tiene " + usuario.getHistorialViajes().size() + " viajes.");
             }
         }
     }
@@ -369,6 +369,19 @@ public class GestorPersonas {
         return (Trabajador) buscarPersonaPorDNI(dni);
     }
 
+    /**
+     * Método para obtener la lista de usuarios.
+     * @return Lista de usuarios.
+     */
+    public List<Usuario> obtenerUsuarios() {
+        List<Usuario> usuarios = new ArrayList<>();
+        for (Persona persona : personas) {
+            if (persona instanceof Usuario usuario) {
+                usuarios.add(usuario);
+            }
+        }
+        return usuarios;
+    }
 }
 
 

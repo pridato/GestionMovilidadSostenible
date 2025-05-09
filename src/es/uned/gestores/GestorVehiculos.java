@@ -463,4 +463,6 @@ public class GestorVehiculos {
             System.out.println(tipoVehiculo + ", Matricula: " + vehiculo.getMatricula() + ", Batería: " + vehiculo.getBateria() + "%, Tarifa por minuto: " + vehiculo.getTarifaMinuto() + "€, penalización: " + vehiculo.getPenalizacion() + "€");
         }
     }
+
+
 }

@@ -11,24 +11,12 @@ import java.util.List;
  */
 public class Mantenimiento extends Trabajador{
 
-    private List<Vehiculo> vehiculosAsignados;
+    private final List<Vehiculo> vehiculosAsignados;
 
 
     public Mantenimiento(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion) {
         super(DNI, nombre, apellidos, email, telefono, fechaContratacion);
         this.vehiculosAsignados = new ArrayList<>();
-    }
-
-
-
-    /**
-     * Método para asignar un vehículo al trabajador de mantenimiento.
-     * @param vehiculo vehículo a asignar
-     */
-    public void asignarVehiculo(Vehiculo vehiculo) {
-        if (vehiculo != null) {
-            this.vehiculosAsignados.add(vehiculo);
-        }
     }
 
 
@@ -51,13 +39,5 @@ public class Mantenimiento extends Trabajador{
 
         sb.append("}");
         return sb.toString();
-    }
-
-    public List<Vehiculo> getVehiculosAsignados() {
-        return vehiculosAsignados;
-    }
-
-    public void setVehiculosAsignados(List<Vehiculo> vehiculosAsignados) {
-        this.vehiculosAsignados = vehiculosAsignados;
     }
 }

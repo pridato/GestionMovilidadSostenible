@@ -11,31 +11,13 @@ import java.util.Date;
  */
 public class Factura {
 
-    private String id;
+    private final String id;
     private Vehiculo vehiculo;
     private Base base;
-    private Mecanico mecanico;
-    private double importe;
-    private String descripcion;
-    private Date fecha;
-
-    public Factura(Vehiculo vehiculo, Mecanico mecanico, double importe, String descripcion, Date fecha) {
-        this.id = String.valueOf(System.currentTimeMillis());
-        this.vehiculo = vehiculo;
-        this.mecanico = mecanico;
-        this.importe = importe;
-        this.descripcion = descripcion;
-        this.fecha = fecha;
-    }
-
-    public Factura(Base base, Mecanico mecanico, double importe, String descripcion, Date fecha) {
-        this.id = String.valueOf(System.currentTimeMillis());
-        this.base = base;
-        this.mecanico = mecanico;
-        this.importe = importe;
-        this.descripcion = descripcion;
-        this.fecha = fecha;
-    }
+    private final Mecanico mecanico;
+    private final double importe;
+    private final String descripcion;
+    private final Date fecha;
 
     public Factura(double importe, String descripcion, Mecanico mecanico) {
         this.id = String.valueOf(System.currentTimeMillis());
@@ -57,40 +39,22 @@ public class Factura {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public Mecanico getMecanico() {
         return mecanico;
     }
 
-    public void setMecanico(Mecanico mecanico) {
-        this.mecanico = mecanico;
-    }
 
     public String getDescripcion() {
         return descripcion;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
 
     public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
     public double getImporte() {
         return importe;
-    }
-
-    public void setImporte(double importe) {
-        this.importe = importe;
     }
 
     public Base getBase() {

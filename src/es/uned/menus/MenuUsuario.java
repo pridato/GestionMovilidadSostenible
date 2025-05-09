@@ -16,7 +16,7 @@ import static es.uned.menus.MenuAdministrador.*;
 public class MenuUsuario {
 
     private static final GestorUsuarios gestorUsuarios = GestorUsuarios.getInstancia();
-    public static final GestorAlquileres gestorAlquiler = GestorAlquileres.getInstancia();
+
 
     Usuario usuario;
     Alquiler alquiler;

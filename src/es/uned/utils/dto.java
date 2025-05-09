@@ -206,7 +206,7 @@ public class dto {
         base1.añadirVehiculo(cargarVehiculos().get(1));
 
         Base base2 = new Base("Base2", new Coordenadas(14.5, 8.9), 200);
-        // base2.añadirVehiculo(cargarVehiculos().get(2));
+        base2.añadirVehiculo(cargarVehiculos().get(2));
 
         Base base3 = new Base("Base3", new Coordenadas(12.5, 6.9), 300);
         base3.añadirVehiculo(cargarVehiculos().get(3));

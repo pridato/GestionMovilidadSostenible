@@ -10,10 +10,7 @@ import es.uned.model.vehiculos.Bicicleta;
 import es.uned.model.vehiculos.Patinete;
 import es.uned.model.vehiculos.Vehiculo;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static es.uned.menus.MenuAdministrador.*;
 import static es.uned.utils.GeolocalizacionPorIP.leerCoordenadasManualmente;
@@ -272,7 +269,7 @@ public class GestorIncidencias {
     public void consultarIncidenciasPorEncargado(Trabajador trabajador) {
         for (int i = 0; i < incidencias.size(); i++) {
             Incidencia incidencia = incidencias.get(i);
-            if (incidencia.getEncargado() != null && incidencia.getEncargado().getDNI().equals(trabajador.getDNI())) {
+            if (incidencia.getEncargado() != null && incidencia.getEncargado().getdni().equals(trabajador.getdni())) {
                 System.out.println("Incidencia " + (i + 1) + ": ");
                 mostrarIncidencia(incidencia);
             }
@@ -408,5 +405,58 @@ public class GestorIncidencias {
         Incidencia incidencia = consultarIncidenciaPorVehiculo(vehiculo);
         incidencias.remove(incidencia);
         System.out.println("Incidencia " + incidencia.getId() + " cerrada.");
+    }
+
+
+    /**
+     * Método para consultar los vehículos ordenados por el número de reparaciones
+     */
+    public void consultarVehiculosOrdenadosReparacion() {
+        System.out.println("----- Vehículos ordenados por número de reparaciones -----");
+
+        // creamos un map para contar el número de reparaciones por vehículo
+        Map<Vehiculo, Integer> vehiculosReparaciones = new HashMap<>();
+        for (Incidencia incidencia : incidencias) {
+            if (incidencia.getVehiculo() != null) {
+                vehiculosReparaciones.put(incidencia.getVehiculo(), vehiculosReparaciones.getOrDefault(incidencia.getVehiculo(), 0) + 1);
+            }
+        }
+
+        // ordenamos el map por el número de reparaciones
+        List<Map.Entry<Vehiculo, Integer>> listaOrdenada = new ArrayList<>(vehiculosReparaciones.entrySet());
+        listaOrdenada.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+        // mostramos los vehículos ordenados
+        for (Map.Entry<Vehiculo, Integer> entry : listaOrdenada) {
+            Vehiculo vehiculo = entry.getKey();
+            int numReparaciones = entry.getValue();
+            System.out.println("Vehículo: " + vehiculo.getMatricula() + ", Número de reparaciones: " + numReparaciones);
+        }
+    }
+
+    /**
+     * Método para consultar los trabajadores ordenados por el número de intervenciones
+     */
+    public void consultarTrabajadoresOrdenadosIntervenciones() {
+        System.out.println("----- Trabajadores ordenados por número de intervenciones -----");
+
+        // creamos un map para contar el número de intervenciones por trabajador
+        Map<Trabajador, Integer> trabajadoresIntervenciones = new HashMap<>();
+        for (Incidencia incidencia : incidencias) {
+            if (incidencia.getEncargado() != null) {
+                trabajadoresIntervenciones.put(incidencia.getEncargado(), trabajadoresIntervenciones.getOrDefault(incidencia.getEncargado(), 0) + 1);
+            }
+        }
+
+        // ordenamos el map por el número de intervenciones
+        List<Map.Entry<Trabajador, Integer>> listaOrdenada = new ArrayList<>(trabajadoresIntervenciones.entrySet());
+        listaOrdenada.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+        // mostramos los trabajadores ordenados
+        for (Map.Entry<Trabajador, Integer> entry : listaOrdenada) {
+            Trabajador trabajador = entry.getKey();
+            int numIntervenciones = entry.getValue();
+            System.out.println("Trabajador: " + trabajador.getNombre() + " " + trabajador.getApellidos() + ", Número de intervenciones: " + numIntervenciones);
+        }
     }
 }

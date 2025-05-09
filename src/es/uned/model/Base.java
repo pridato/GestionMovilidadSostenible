@@ -3,6 +3,7 @@ package es.uned.model;
 import es.uned.model.vehiculos.Vehiculo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,11 +42,10 @@ public class Base {
         return capacidadMaxima;
     }
 
-
     public List<Vehiculo> getVehiculos() {
-        return vehiculos;
+        // evitar modificaciones externas
+        return Collections.unmodifiableList(vehiculos);
     }
-
 
     public int getTiempoInactividad() {
         return tiempoInactividad;
