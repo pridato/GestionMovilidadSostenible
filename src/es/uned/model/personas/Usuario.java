@@ -46,6 +46,14 @@ public class Usuario extends Persona {
         this.historialViajes = historialViajes;
     }
 
+    public Usuario(String dni, String nombre, String apellidos, String email, int telefono,Date fechaCreacion, Coordenadas coordenadas, double saldo) {
+        super(dni, nombre, apellidos, email, telefono);
+        this.saldo = saldo;
+        this.esPremium = false;
+        this.fechaCreacion = fechaCreacion;
+        this.coordenadas = coordenadas;
+    }
+
     public double getDescuento() {
         return descuento;
     }

@@ -106,47 +106,42 @@ public class MenuUsuario {
      * @param scanner Scanner para leer la entrada del usuario.
      */
     private void gestionarOpcionesVehiculos(Scanner scanner) {
-        System.out.println("----- Gestión de Vehículos -----");
-        System.out.println("1. Consultar vehículos disponibles");
-        System.out.println("2. Alquilar un vehículo");
-        System.out.println("3. Devolver vehículo");
-        System.out.println("4. Reservar vehículo");
-        System.out.println("5. Consultar estado de batería");
-        System.out.println("0. Salir");
+        try {
 
-        System.out.print("Seleccione una opción: ");
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
-        switch (opcion) {
-            case 1 -> gestorVehiculos.consultarVehiculosDisponibles();
-            case 2 -> {
-                try {
-                    this.alquiler = gestorAlquiler.iniciarAlquiler(usuario, scanner, alquiler);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
+            System.out.println("----- Gestión de Vehículos -----");
+            System.out.println("1. Consultar vehículos disponibles");
+            System.out.println("2. Alquilar un vehículo");
+            System.out.println("3. Devolver vehículo");
+            System.out.println("4. Reservar vehículo");
+            System.out.println("5. Consultar estado de batería");
+            System.out.println("0. Salir");
+
+            System.out.print("Seleccione una opción: ");
+            int opcion = scanner.nextInt();
+            scanner.nextLine();
+            switch (opcion) {
+                case 1 -> gestorVehiculos.consultarVehiculosDisponibles();
+                case 2 -> this.alquiler = gestorAlquiler.iniciarAlquiler(usuario, scanner, alquiler);
+                case 3 -> {
+                    GestorAlquileres.finalizarAlquiler(usuario, alquiler, scanner);
+                    this.alquiler = null;
                 }
-            }
-            case 3 -> {
-                GestorAlquileres.finalizarAlquiler(usuario, alquiler, scanner);
-                this.alquiler = null;
-            }
-            case 4 -> {
-                try {
-                    this.alquiler = gestorAlquiler.reservarVehiculo(usuario, scanner);
-                } catch(Exception e) {
-                    System.out.println(e.getMessage());
+                case 4 -> this.alquiler = gestorAlquiler.reservarVehiculo(usuario, scanner);
+                case 5 -> {
+                    if (alquiler == null) {
+                        System.out.println("No tienes ningún vehículo alquilado.");
+                        break;
+                    }
+                    consultarEstadoBateria(this.alquiler.getVehiculo());
                 }
+                case 0 -> System.out.println("Saliendo...");
+                default -> System.out.println("Opción no válida.");
             }
-            case 5 -> {
-                if (alquiler == null) {
-                    System.out.println("No tienes ningún vehículo alquilado.");
-                    break;
-                }
-                consultarEstadoBateria(this.alquiler.getVehiculo());
-            }
-            case 0 -> System.out.println("Saliendo...");
-            default -> System.out.println("Opción no válida.");
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+
     }
 
     /**
@@ -199,8 +194,10 @@ public class MenuUsuario {
 
     /**
      * Método para consultar el estado de batería del vehículo.
+     * @throws IllegalArgumentException si el vehículo es nulo.
      */
-    private void consultarEstadoBateria(Vehiculo vehiculo) {
+    private void consultarEstadoBateria(Vehiculo vehiculo) throws IllegalArgumentException {
+        if(vehiculo == null) throw new IllegalArgumentException("El vehículo no puede ser nulo");
         System.out.println("Consultando estado de batería...");
         gestorVehiculos.consultarBateria(vehiculo, alquiler);
     }

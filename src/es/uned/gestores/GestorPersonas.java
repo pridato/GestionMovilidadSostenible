@@ -256,7 +256,7 @@ public class GestorPersonas {
         }
         // mostrar solo mecanicos y mantenimiento
         for (Mantenimiento mantenimiento : mantenimientos) {
-            System.out.println("El personal de mentenimiento " + mantenimiento.getNombre() + " " + mantenimiento.getApellidos() + "con dni " + mantenimiento.getDNI() + " está disponible.");
+            System.out.println("El personal de mentenimiento " + mantenimiento.getNombre() + " " + mantenimiento.getApellidos() + " con dni " + mantenimiento.getDNI() + " está disponible.");
         }
     }
 
@@ -276,7 +276,7 @@ public class GestorPersonas {
         }
 
         for (Mecanico mecanico : mecanicos) {
-            System.out.println("El mecánico " + mecanico.getNombre() + " " + mecanico.getApellidos() + "con dni " + mecanico.getDNI() + " está disponible.");
+            System.out.println("El mecánico " + mecanico.getNombre() + " " + mecanico.getApellidos() + " con dni " + mecanico.getDNI() + " está disponible.");
         }
     }
 

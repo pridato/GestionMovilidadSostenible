@@ -250,6 +250,7 @@ public class GestorIncidencias {
         }
     }
 
+
     /**
      * Método para consultar las asignaciones actuales de incidencias
      */
@@ -304,7 +305,7 @@ public class GestorIncidencias {
      * @throws IllegalArgumentException si el vehículo no se encuentra
      */
     public Vehiculo recogerVehiculoParaReparar() throws IllegalArgumentException {
-        consultarIncidenciasActuales();
+        gestorVehiculos.consultarVehiculosAveriados();
 
         System.out.println("Indique la matrícula del vehículo a recoger:");
         Scanner scanner = new Scanner(System.in);
@@ -324,10 +325,35 @@ public class GestorIncidencias {
     }
 
     /**
+     * Método para desplazamiento a una base para su reparación
+     * @param scanner Scanner para leer la entrada del usuario
+     */
+    public Base desplazamientoBaseReparacion(Scanner scanner) throws IllegalArgumentException {
+        gestorBases.consultarBasesAveriadas();
+        System.out.print("Introduce el ID de la base: ");
+        String idBase = scanner.nextLine();
+        Base base = gestorBases.consultarBasePorId(idBase);
+
+        if(base == null) {
+            throw new IllegalArgumentException("Base no encontrada.");
+        }
+
+        System.out.println("Se ha desplazado a la base " + base.getId() + " para su reparación.");
+        System.out.println("Incidencias reportadas: ");
+        consultarIncidenciaPorBase(base);
+
+        return base;
+    }
+
+    /**
      * Método para definir un tiempo de inactividad para un vehículo
      * @param vehiculo Vehículo al que se le define el tiempo de inactividad
+     * @throws IllegalArgumentException Excepción si el vehículo no se encuentra
      */
-    public int definirTiempoInactividad(Vehiculo vehiculo, Scanner scanner) {
+    public int definirTiempoInactividadVehiculo(Vehiculo vehiculo, Scanner scanner) throws IllegalArgumentException {
+        if(vehiculo == null) {
+            throw new IllegalArgumentException("Vehículo no encontrado.");
+        }
         System.out.println("Definiendo tiempo de inactividad para el vehículo " + vehiculo.getMatricula());
         System.out.print("Introduce el tiempo de inactividad (en horas): ");
         int tiempoInactividad = scanner.nextInt();
@@ -338,14 +364,35 @@ public class GestorIncidencias {
     }
 
     /**
+     * Método para definir un tiempo de inactividad para una base
+     *
+     * @param base    Base a la que se le define el tiempo de inactividad
+     * @param scanner Scanner para leer la entrada del usuario
+     */
+    public void definirTiempoInactividadBase(Base base, Scanner scanner) throws IllegalArgumentException {
+        if(base == null) {
+            throw new IllegalArgumentException("Base no encontrada.");
+        }
+        System.out.println("Definiendo tiempo de inactividad para la base " + base.getId());
+        System.out.print("Introduce el tiempo de inactividad (en horas): ");
+        int tiempoInactividad = scanner.nextInt();
+
+        base.setTiempoInactividad(tiempoInactividad);
+        System.out.println("Tiempo de inactividad definido para la base " + base.getId() + ": " + tiempoInactividad + " horas.");
+    }
+
+    /**
      * Método para devolver un vehículo reparado
      * @param vehiculo Vehículo a devolver
      * @param scanner Scanner para leer la entrada del usuario
      */
-    public void devolverVehiculoReparado(Vehiculo vehiculo, Scanner scanner) {
+    public void devolverVehiculoReparado(Vehiculo vehiculo, Scanner scanner) throws IllegalArgumentException {
+        if(vehiculo == null) {
+            throw new IllegalArgumentException("Vehiculo no encontrado.");
+        }
         if(vehiculo instanceof Patinete || vehiculo instanceof Bicicleta) {
             // devolvemos el vehículo a la base más cercana
-            Base base= gestorBases.obtenerBaseCercana(vehiculo.getCoordenadas());
+            Base base= gestorBases.obtenerBaseMasCercana(vehiculo.getCoordenadas());
             System.out.println("El vehículo se trasladará a la base " + base.getId() + " para su reparación (más cercana a su ubicación)");
             base.añadirVehiculo(vehiculo);
         } else {

@@ -24,8 +24,7 @@ public class MenuMantenimiento {
             mantenimiento =  (Mantenimiento) gestorPersonas.obtenerTrabajadorPorListado(scanner, "mantenimiento");
 
             if(mantenimiento == null) {
-                System.out.println("No se ha encontrado el trabajador de mantenimiento.");
-                return;
+                throw new Exception("No se ha encontrado el trabajador de mantenimiento.");
             }
             if(vehiculo != null) {
                 System.out.println("Reparación en curso del vehículo: " + vehiculo.getMatricula());
@@ -51,14 +50,8 @@ public class MenuMantenimiento {
 
                 switch (opcion) {
                     case 1 -> gestorIncidencias.consultarIncidenciasPorEncargado(mantenimiento);
-                    case 2 -> {
-                        try {
-                            vehiculo = gestorIncidencias.recogerVehiculoParaReparar();
-                        } catch (Exception e) {
-                            System.out.println("Error al recoger el vehículo para su reparación: " + e.getMessage());
-                        }
-                    }
-                    case 3 -> tiempoInactividad = gestorIncidencias.definirTiempoInactividad(vehiculo, scanner);
+                    case 2 -> vehiculo = gestorIncidencias.recogerVehiculoParaReparar();
+                    case 3 -> tiempoInactividad = gestorIncidencias.definirTiempoInactividadVehiculo(vehiculo, scanner);
                     case 4 -> gestorIncidencias.devolverVehiculoReparado(vehiculo, scanner);
                     case 0 -> System.out.println("Saliendo del menú de mantenimiento...");
                     default -> System.out.println("Opción no válida. Intente de nuevo.");
@@ -66,7 +59,7 @@ public class MenuMantenimiento {
 
             } while (opcion != 0);
         } catch (Exception e) {
-            System.out.println("Error al autenticar al trabajador: " + e.getMessage());
+            System.out.println("Error al gestionar opciones: " + e.getMessage());
         }
     }
 

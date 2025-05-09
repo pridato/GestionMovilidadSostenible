@@ -2,12 +2,15 @@ package es.uned.gestores;
 
 import es.uned.model.Base;
 import es.uned.model.Coordenadas;
+import es.uned.model.vehiculos.Vehiculo;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+import static es.uned.gestores.GestorAlquileres.obtenerBaseParaAlquilar;
+import static es.uned.menus.MenuAdministrador.gestorBases;
 import static es.uned.utils.dto.cargarBases;
 
 /**
@@ -151,10 +154,29 @@ public class GestorBases {
      * @param coordenadas Coordenadas a las que se desea encontrar la base más cercana.
      * @return Coordenadas de la base más cercana, o null si no se encuentra ninguna base disponible.
      */
-    public Base obtenerBaseCercana(Coordenadas coordenadas) {
+    public Base obtenerBaseMasCercana(Coordenadas coordenadas) {
         return bases.stream()
                 .filter(base -> !base.isAveriada() && base.getVehiculos().size() < base.getCapacidadMaxima())
                 .min(Comparator.comparingDouble(base -> base.getCoordenadas().Calculardistancia(coordenadas)))
                 .orElse(null);
+    }
+
+    /**
+     * Método para obtener la base con un vehículo disponible, si existe, de lo contrario selecciona una base nueva.
+     */
+    public Base obtenerBaseConVehiculoDisponible(Vehiculo vehiculo, Scanner scanner) {
+
+        for (Base base : bases) {
+            if (!base.isAveriada()) {
+                for (Vehiculo vehiculoBase : base.getVehiculos()) {
+                    if (vehiculoBase.getMatricula().equals(vehiculo.getMatricula())) {
+                        System.out.println("Vehículo encontrado en base: " + base.getId());
+                        return base;
+                    }
+                }
+            }
+        }
+        // Si no encontramos una base con el vehículo, pedimos al usuario que seleccione una base
+        return obtenerBaseParaAlquilar(scanner);
     }
 }

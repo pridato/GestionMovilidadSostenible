@@ -81,8 +81,7 @@ public class GestorAlquileres {
         // si el vehiculo es una moto, no requiere base en caso contrario, si el vehículo está en una base cogerlo automáticamente sino elegirlo
         Base baseInicio = (vehiculo instanceof Moto)
                 ? null
-                : Optional.ofNullable(gestorBases.obtenerBaseVehiculo(vehiculo.getMatricula()))
-                .orElse(obtenerBaseParaAlquilar(scanner));
+                : gestorBases.obtenerBaseConVehiculoDisponible(vehiculo, scanner);
 
         Coordenadas coordenadas = (vehiculo instanceof Moto && alquilerExistente == null)
                 ? vehiculo.getCoordenadas()
@@ -127,7 +126,7 @@ public class GestorAlquileres {
      * @param alquiler alquiler a finalizar
      * @param scanner  scanner para leer la entrada del usuario
      */
-    public static void finalizarAlquiler(Usuario usuario, Alquiler alquiler, Scanner scanner) {
+    public static void finalizarAlquiler(Usuario usuario, Alquiler alquiler, Scanner scanner) throws IllegalStateException {
 
         // comprobar si el alquiler está en curso
         alquiler.comprobarAlquilerCurso();
@@ -136,7 +135,11 @@ public class GestorAlquileres {
 
         // obtener coordenadas o base de finalización
         Coordenadas coordenadasFin = (vehiculo instanceof Moto) ? obtenerCoordenadasFin(scanner) : null;
+
         Base baseFin = (vehiculo instanceof Moto) ? null : obtenerBaseParaAlquilar(scanner);
+        if(baseFin == null)  throw new IllegalStateException("No se ha podido obtener la base de finalización.");
+
+        baseFin.añadirVehiculo(vehiculo);
 
         // seteamos bases, coordenadas y finalizar el alquiler
         alquiler.setBaseFin(baseFin);
@@ -261,7 +264,7 @@ public class GestorAlquileres {
         Vehiculo vehiculo;
         String matricula;
         do {
-            gestorVehiculos.consultarVehiculosParaAlquilar();
+            gestorVehiculos.consultarVehiculosDisponibles();
             System.out.println("Introduce la matrícula del vehículo que deseas alquilar:");
             matricula = scanner.nextLine();
 

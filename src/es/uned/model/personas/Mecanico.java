@@ -17,6 +17,11 @@ public class Mecanico extends Trabajador{
         this.facturasEmitidas = facturasEmitidas;
     }
 
+    public Mecanico(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion) {
+        super(DNI, nombre, apellidos, email, telefono, fechaContratacion);
+        this.facturasEmitidas = facturasEmitidas;
+    }
+
 
 
     public List<Factura> getFacturasEmitidas() {

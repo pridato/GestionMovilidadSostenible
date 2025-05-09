@@ -1,13 +1,10 @@
 package es.uned.gestores;
 
-import es.uned.model.Alquiler;
 import es.uned.model.personas.Usuario;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static es.uned.menus.MenuAdministrador.gestorPersonas;
-import static es.uned.utils.dto.cargarUsuarios;
 
 /**
  * Clase GestorUsuarios.

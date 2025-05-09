@@ -357,6 +357,7 @@ public class GestorVehiculos {
         }
     }
 
+
     /**
      * Método para consultar el estado de batería de un vehículo.
      *
@@ -440,22 +441,6 @@ public class GestorVehiculos {
 
         System.out.println("Presione ENTER para continuar...");
         scanner.nextLine();
-    }
-
-    /**
-     * Método para consultar los vehículos disponibles para alquilar.
-     */
-    public void consultarVehiculosParaAlquilar() {
-        System.out.println("Vehículos disponibles para alquilar:");
-        for (Vehiculo vehiculo : this.vehiculos) {
-            if (vehiculo.getEstado() == EstadoVehiculo.DISPONIBLE) {
-                // mostrar tipo de vehiculo
-                String tipoVehiculo =
-                        vehiculo instanceof Moto ? "Moto" : vehiculo instanceof Patinete ? "Patinete" :
-                                vehiculo instanceof Bicicleta ? "Bicicleta" : "Desconocido";
-                System.out.println(tipoVehiculo + ", Matricula: " + vehiculo.getMatricula() + ", Batería: " + vehiculo.getBateria() + "%, Tarifa por minuto: " + vehiculo.getTarifaMinuto() + "€, penalización: " + vehiculo.getPenalizacion() + "€");
-            }
-        }
     }
 
     /**

@@ -13,18 +13,36 @@ public class Factura {
 
     private String id;
     private Vehiculo vehiculo;
+    private Base base;
     private Mecanico mecanico;
     private double importe;
     private String descripcion;
     private Date fecha;
 
-    public Factura(String id, Vehiculo vehiculo, Mecanico mecanico, double importe, String descripcion, Date fecha) {
-        this.id = id;
+    public Factura(Vehiculo vehiculo, Mecanico mecanico, double importe, String descripcion, Date fecha) {
+        this.id = String.valueOf(System.currentTimeMillis());
         this.vehiculo = vehiculo;
         this.mecanico = mecanico;
         this.importe = importe;
         this.descripcion = descripcion;
         this.fecha = fecha;
+    }
+
+    public Factura(Base base, Mecanico mecanico, double importe, String descripcion, Date fecha) {
+        this.id = String.valueOf(System.currentTimeMillis());
+        this.base = base;
+        this.mecanico = mecanico;
+        this.importe = importe;
+        this.descripcion = descripcion;
+        this.fecha = fecha;
+    }
+
+    public Factura(double importe, String descripcion, Mecanico mecanico) {
+        this.id = String.valueOf(System.currentTimeMillis());
+        this.importe = importe;
+        this.descripcion = descripcion;
+        this.fecha = new Date();
+        this.mecanico = mecanico;
     }
 
     public Vehiculo getVehiculo() {
@@ -74,6 +92,15 @@ public class Factura {
     public void setImporte(double importe) {
         this.importe = importe;
     }
+
+    public Base getBase() {
+        return base;
+    }
+
+    public void setBase(Base base) {
+        this.base = base;
+    }
+
 
     @Override
     public String toString() {

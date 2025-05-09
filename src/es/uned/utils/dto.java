@@ -121,6 +121,18 @@ public class dto {
                 )
         );
 
+        personas.add(new Usuario(
+                        "09248632X",
+                        "David",
+                        "Arroyo Esquinas",
+                        "david@gmail.com",
+                        637604644,
+                        new Date(),
+                        new Coordenadas(10, 12.9),
+                        10000.00
+                )
+        );
+
         personas.add(
                 new Trabajador(
                         "06428542X",
@@ -142,6 +154,17 @@ public class dto {
                         575324644,
                         new Date()
 
+                )
+        );
+
+        personas.add(
+                new Mecanico(
+                        "09247521X",
+                        "David",
+                        "Mecanico",
+                        "mecanico@gmail.com",
+                        575324644,
+                        new Date()
                 )
         );
 
@@ -170,16 +193,6 @@ public class dto {
                 .toList();
     }
 
-    /**
-     * Método para crear una lista de usuarios filtrada de cargarPersonas
-     * @return Lista de usuarios.
-     */
-    public static List<Usuario> cargarUsuarios() {
-        return cargarPersonas().stream().filter(persona -> persona instanceof Usuario)
-                .map(persona -> (Usuario) persona)
-                .toList();
-    }
-
 
 
     /**
@@ -189,10 +202,18 @@ public class dto {
      */
     public static List<Base> cargarBases() {
         List<Base> bases = new ArrayList<>();
+        Base base1 = new Base("Base1", new Coordenadas(9.5, 7.9), 100);
+        base1.añadirVehiculo(cargarVehiculos().get(1));
 
-        bases.add(new Base("Base1", new Coordenadas(9.5, 7.9), 100));
-        bases.add(new Base("Base2", new Coordenadas(14.5, 8.9), 200));
-        bases.add(new Base("Base3", new Coordenadas(12.5, 6.9), 300));
+        Base base2 = new Base("Base2", new Coordenadas(14.5, 8.9), 200);
+        // base2.añadirVehiculo(cargarVehiculos().get(2));
+
+        Base base3 = new Base("Base3", new Coordenadas(12.5, 6.9), 300);
+        base3.añadirVehiculo(cargarVehiculos().get(3));
+
+        bases.add(base1);
+        bases.add(base2);
+        bases.add(base3);
 
         return bases;
     }

@@ -1,9 +1,6 @@
 package es.uned.menus;
 
-import es.uned.gestores.GestorBases;
-import es.uned.gestores.GestorIncidencias;
-import es.uned.gestores.GestorPersonas;
-import es.uned.gestores.GestorVehiculos;
+import es.uned.gestores.*;
 import es.uned.model.Coordenadas;
 
 import java.util.Scanner;
@@ -22,6 +19,7 @@ public class MenuAdministrador {
     public static final GestorPersonas gestorPersonas = GestorPersonas.getInstancia();
     public static final GestorIncidencias gestorIncidencias = GestorIncidencias.getInstancia();
     public static final GestorBases gestorBases = GestorBases.getInstancia();
+    public static final GestorFacturas gestorFacturas = GestorFacturas.getInstancia();
 
     /**
      * Gestionar las opciones del menú del administrador.
@@ -196,6 +194,7 @@ public class MenuAdministrador {
             System.out.println("3. Asignar vehículo a un trabajador");
             System.out.println("4. Ver asignaciones actuales");
             System.out.println("5. Incidencias actuales");
+            System.out.println("6. Facturas generadas por mecánicos");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
             System.out.print("Seleccione una opción: ");
@@ -231,6 +230,7 @@ public class MenuAdministrador {
                 }
                 case 4 -> gestorIncidencias.consultarAsignacionesActuales();
                 case 5 -> gestorIncidencias.consultarIncidenciasActuales();
+                case 6 -> gestorFacturas.consultarFacturas();
                 case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
