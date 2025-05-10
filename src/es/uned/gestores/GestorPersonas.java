@@ -11,6 +11,7 @@ import java.util.*;
 import static es.uned.utils.GeolocalizacionPorIP.leerCoordenadasManualmente;
 import static es.uned.utils.dto.cargarPersonas;
 import static es.uned.utils.dto.cargarTrabajadores;
+import static es.uned.utils.utils.leerOpcion;
 
 public class GestorPersonas {
 
@@ -70,8 +71,7 @@ public class GestorPersonas {
         System.out.println("3. Mecanico");
         System.out.println("4. Mantenimiento");
 
-        int opcionTipo = scanner.nextInt();
-        scanner.nextLine();
+        int opcionTipo = leerOpcion(scanner);
 
         Date fecha = obtenerFechaDeContratacion(scanner, opcionTipo);
         Persona persona = crearPersonaSegunTipo(dni, nombre, apellidos, email, telefono, fecha, opcionTipo, scanner);
@@ -201,13 +201,8 @@ public class GestorPersonas {
         String dni = scanner.nextLine();
         Persona persona = buscarPersonaPorDNI(dni);
 
-        if (persona == null) {
-            System.out.println("Persona no encontrada.");
-            return;
-        }
-
         // hacer un "switch case" de todos los atributos de la persona a modificar
-        int opcion = 0;
+        int opcion;
         do {
             System.out.println("¿Qué atributo desea modificar?");
             System.out.println("1. Nombre");
@@ -217,8 +212,7 @@ public class GestorPersonas {
             System.out.println("5. Telefono");
             System.out.println("6. Salir");
 
-            opcion = scanner.nextInt();
-            scanner.nextLine();
+            opcion = leerOpcion(scanner);
 
             switch (opcion) {
                 case 1 -> {
@@ -274,12 +268,14 @@ public class GestorPersonas {
      *
      * @param dni DNI de la persona a buscar.
      * @return Persona encontrada o null si no se encuentra.
+     *
+     * @throws IllegalArgumentException si no se encuentra la persona.
      */
-    public Persona buscarPersonaPorDNI(String dni) {
+    public Persona buscarPersonaPorDNI(String dni) throws IllegalArgumentException{
         return personas.stream()
-                .filter(persona -> persona.getdni().equals(dni))
+                .filter(persona -> persona.getdni().equalsIgnoreCase(dni.trim()))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("Persona no encontrada."));
     }
 
 
@@ -300,6 +296,7 @@ public class GestorPersonas {
      * @throws IllegalArgumentException si no hay trabajadores disponibles.
      */
     public void consultarPersonalMantenimientoDisponibles() throws IllegalArgumentException {
+        System.out.println("Personal de mantenimiento disponibles:");
         List<Mantenimiento> mantenimientos = personas.stream()
                 .filter(p -> p instanceof Mantenimiento)
                 .map(p -> (Mantenimiento) p)
@@ -320,6 +317,7 @@ public class GestorPersonas {
      * @throws IllegalArgumentException si no hay mecánicos disponibles.
      */
     public void consultarMecanicosDisponibles() throws IllegalArgumentException {
+        System.out.println("Mecánicos disponibles:");
         List<Mecanico> mecanicos = personas.stream()
                 .filter(p -> p instanceof Mecanico)
                 .map(p -> (Mecanico) p)
@@ -351,19 +349,16 @@ public class GestorPersonas {
 
     /**
      * Método para promover a un usuario a premium.
+     *
+     * @throws IllegalArgumentException si el usuario no es válido.
      */
-    public void promoverUsuarioAPremium(Scanner scanner) {
+    public void promoverUsuarioAPremium(Scanner scanner) throws IllegalArgumentException {
 
         System.out.println("Lista de usuarios:");
         consultarUsuarios();
         System.out.println("Introduzca el DNI del usuario a promover: ");
         String dni = scanner.nextLine();
         Persona persona = buscarPersonaPorDNI(dni);
-
-        if (persona == null) {
-            System.out.println("Usuario no encontrado.");
-            return;
-        }
 
         if (persona instanceof Usuario usuario) {
             usuario.setEsPremium(true);

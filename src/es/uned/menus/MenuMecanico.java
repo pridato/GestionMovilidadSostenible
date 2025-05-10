@@ -1,6 +1,5 @@
 package es.uned.menus;
 
-import es.uned.gestores.GestorFacturas;
 import es.uned.model.Base;
 import es.uned.model.personas.Mecanico;
 import es.uned.model.vehiculos.Vehiculo;
@@ -8,6 +7,7 @@ import es.uned.model.vehiculos.Vehiculo;
 import java.util.Scanner;
 
 import static es.uned.menus.MenuAdministrador.*;
+import static es.uned.utils.utils.leerOpcion;
 
 public class MenuMecanico {
 
@@ -41,21 +41,18 @@ public class MenuMecanico {
                 System.out.println("0. Salir");
                 System.out.println("-------------------------");
 
-                System.out.print("Seleccione una opción: ");
-                opcion = scanner.nextInt();
-                scanner.nextLine();
+                opcion = leerOpcion(scanner);
 
                 switch (opcion) {
                     case 1 -> gestorIncidencias.consultarIncidenciasPorEncargado(mecanico);
-                    case 2 -> vehiculo = gestorIncidencias.recogerVehiculoParaReparar();
+                    case 2 -> vehiculo = gestorIncidencias.recogerVehiculoParaReparar(scanner);
                     case 3 -> base = gestorIncidencias.desplazamientoBaseReparacion(scanner);
                     case 4 -> {
                         System.out.println("¿Desea definir el tiempo de inactividad de un vehículo o de una base?");
                         System.out.println("1. Vehículo");
                         System.out.println("2. Base");
-                        System.out.print("Seleccione una opción: ");
-                        int opcionTiempo = scanner.nextInt();
-                        scanner.nextLine();
+                        opcion = leerOpcion(scanner);
+                        int opcionTiempo= leerOpcion(scanner);
                         if (opcionTiempo == 1) {
                             gestorIncidencias.definirTiempoInactividadVehiculo(vehiculo, scanner);
                         } else if (opcionTiempo == 2) {
@@ -66,8 +63,7 @@ public class MenuMecanico {
                         System.out.println("Desea generar una factura de vehículo o de base?");
                         System.out.println("1. Vehículo");
                         System.out.println("2. Base");
-                        System.out.print("Seleccione una opción: ");
-                        int opcionFactura = scanner.nextInt();
+                        int opcionFactura = leerOpcion(scanner);
 
                         scanner.nextLine();
                         switch (opcionFactura) {

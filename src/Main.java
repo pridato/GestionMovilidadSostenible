@@ -5,6 +5,7 @@ import java.util.Scanner;
 import static es.uned.menus.MenuAdministrador.gestionarOpcionesAdminstrador;
 import static es.uned.menus.MenuMantenimiento.gestionarOpcionesPersonalMantenimiento;
 import static es.uned.menus.MenuMecanico.gestionarOpcionesMecanico;
+import static es.uned.utils.utils.leerOpcion;
 
 public class Main {
 
@@ -13,14 +14,11 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         MenuUsuario menuUsuario = new MenuUsuario();
-        int opcion;
 
+        int opcion;
         do {
             mostrarMenuRol();
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
-
+            opcion = leerOpcion(scanner);
             switch (opcion) {
                 case 1 -> gestionarOpcionesAdminstrador(scanner);
                 case 2 -> menuUsuario.gestionarOpcionesUsuario(scanner);

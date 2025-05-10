@@ -14,11 +14,12 @@ import java.util.*;
 
 import static es.uned.menus.MenuAdministrador.*;
 import static es.uned.utils.GeolocalizacionPorIP.leerCoordenadasManualmente;
+import static es.uned.utils.utils.leerOpcion;
+import static es.uned.utils.utils.obtenerDato;
 
 public class GestorIncidencias {
 
     private static final GestorIncidencias instancia = new GestorIncidencias();
-
     private final List<Incidencia> incidencias;
 
     /* constructor */
@@ -32,6 +33,7 @@ public class GestorIncidencias {
 
     /**
      * Método para generar una incidencia sobre un vehículo o una base
+     *
      * @param usuario Usuario que reporta la incidencia
      * @param scanner Scanner para leer la entrada del usuario
      */
@@ -41,9 +43,7 @@ public class GestorIncidencias {
         System.out.println("2. Crear incidencia sobre una base");
         System.out.println("0. Salir");
 
-        System.out.print("Seleccione una opción: ");
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
+        int opcion = leerOpcion(scanner);
 
         switch (opcion) {
             case 1 -> crearIncidenciaVehiculo(usuario, scanner);
@@ -51,104 +51,101 @@ public class GestorIncidencias {
             case 0 -> System.out.println("Saliendo del menú de incidencias...");
             default -> System.out.println("Opción no válida.");
         }
-
-
     }
 
     /**
      * Método para crear una incidencia sobre un vehículo
+     *
      * @param usuario Usuario que reporta la incidencia
      * @param scanner Scanner para leer la entrada del usuario
      */
     private void crearIncidenciaVehiculo(Usuario usuario, Scanner scanner) {
+        // consultamos los vehículos disponibles
         System.out.println("Creando incidencia sobre un vehículo...");
         gestorVehiculos.consultarVehiculosDisponibles();
 
-        System.out.print("Introduce la matrícula del vehículo: ");
-        String matricula = scanner.nextLine();
+        // pedimos al usuario que introduzca la matrícula del vehículo para obtener el objeto Vehiculo
+        String matricula = obtenerDato(scanner, "Introduce la matrícula del vehículo: ");
         Vehiculo vehiculo = gestorVehiculos.obtenerVehiculo(matricula);
 
-        if (vehiculo == null) {
-            System.out.println("Vehículo no encontrado.");
-            return;
-        }
+        // para trabajar sobre el objeto Vehiculo, usamos un Optional para evitar NullPointerException
+        // si existe, procesamos el vehículo averiado sino seguir...
+        Optional.ofNullable(vehiculo)
+                .ifPresentOrElse(
+                        v -> procesarVehiculoAveriado(usuario, scanner, v),
+                        () -> System.out.println("Vehículo no encontrado.")
+                );
+    }
 
+    /**
+     * Método auxiliar de `crearIncidenciaVehiculo` para procesar un vehículo averiado
+     *
+     * @param usuario  Usuario que reporta la incidencia
+     * @param scanner  Scanner para leer la entrada del usuario
+     * @param vehiculo Vehículo averiado
+     */
+    private void procesarVehiculoAveriado(Usuario usuario, Scanner scanner, Vehiculo vehiculo) {
         vehiculo.setEstado(EstadoVehiculo.AVERIADO);
-
-        System.out.print("Describe brevemente la incidencia: ");
-        String descripcion = scanner.nextLine();
+        String descripcion = obtenerDato(scanner, "Describe brevemente la incidencia: ");
 
         Incidencia incidencia = new Incidencia(usuario, descripcion, new Date(), null, vehiculo);
         incidencias.add(incidencia);
-        mostrarConfirmacion(incidencia);
+        incidencia.mostrarConfirmacion();
     }
 
     /**
      * Método para crear una incidencia sobre una base
+     *
      * @param usuario Usuario que reporta la incidencia
      * @param scanner Scanner para leer la entrada del usuario
      */
     private void crearIncidenciaBase(Usuario usuario, Scanner scanner) {
+        // mismo proceso que crear incidencia sobre un vehículo
         System.out.println("Creando incidencia sobre una base...");
         gestorBases.consultarBasesDisponibles();
 
-        System.out.print("Introduce el ID de la base: ");
-        String idBase = scanner.nextLine();
+        String idBase = obtenerDato(scanner, "Introduce el ID de la base: ");
         Base base = gestorBases.consultarBasePorId(idBase);
 
-        if (base == null) {
-            System.out.println("Base no encontrada.");
-            return;
-        }
-
-        base.setAveriada(true);
-
-        System.out.print("Describe brevemente la incidencia: ");
-        String descripcion = scanner.nextLine();
-
-        Incidencia incidencia = new Incidencia(usuario, descripcion, new Date(), base, null);
-        incidencias.add(incidencia);
-        mostrarConfirmacion(incidencia);
+        Optional.ofNullable(base)
+                .ifPresentOrElse(
+                        b -> procesarBaseAveriada(usuario, scanner, b),
+                        () -> System.out.println("Base no encontrada.")
+                );
     }
 
     /**
-     * Método para mostrar confirmación de incidencia generada
-     * @param incidencia Incidencia generada
+     * Método auxiliar de `crearIncidenciaBase` para procesar una base averiada
+     *
+     * @param usuario Usuario que reporta la incidencia
+     * @param scanner Scanner para leer la entrada del usuario
+     * @param base    Base averiada
      */
-    private void mostrarConfirmacion(Incidencia incidencia) {
-        System.out.println("Incidencia generada con éxito.");
-        System.out.println("ID: " + incidencia.getId());
-        System.out.println("Descripción: " + incidencia.getDescripcion());
-        System.out.println("Fecha: " + incidencia.getFechaReporte());
+    private void procesarBaseAveriada(Usuario usuario, Scanner scanner, Base base) {
+        base.setAveriada(true);
+        String descripcion = obtenerDato(scanner, "Describe brevemente la incidencia: ");
+
+        Incidencia incidencia = new Incidencia(usuario, descripcion, new Date(), base, null);
+        incidencias.add(incidencia);
+        incidencia.mostrarConfirmacion();
     }
-
-
 
 
     /**
      * Método para asignar una incidencia de una base a un mecánico
+     *
      * @param scanner Scanner para leer la entrada del usuario
      * @throws IllegalArgumentException si el trabajador o la base no se encuentran
      */
     public void asignarBaseMecanicos(Scanner scanner) throws IllegalArgumentException {
+        // consultamos los mecánicos disponibles y obtenemos el trabajador
         gestorPersonas.consultarMecanicosDisponibles();
+        Trabajador trabajador = (Trabajador) gestorPersonas.
+                buscarPersonaPorDNI(obtenerDato(scanner, "Introduce el DNI del trabajador: "));
 
-        System.out.print("Introduce el DNI del trabajador: ");
-        String idTrabajador = scanner.nextLine();
-        Trabajador trabajador = (Trabajador) gestorPersonas.buscarPersonaPorDNI(idTrabajador);
-
-        if(trabajador == null) {
-            throw new IllegalArgumentException("Trabajador no encontrado.");
-        }
-
+        // consultamos las bases averiadas y obtenemos la base
         gestorBases.consultarBasesAveriadas();
-        System.out.print("Introduce el ID de la base: ");
-        String idBase = scanner.nextLine();
-        Base base = gestorBases.consultarBasePorId(idBase);
-
-        if(base == null) {
-            throw new IllegalArgumentException("Base no encontrada.");
-        }
+        Base base = gestorBases.consultarBasePorId(obtenerDato(scanner, "Introduce el ID de la base: "));
 
         Incidencia incidencia = consultarIncidenciaPorBase(base);
         incidencia.setEncargado(trabajador);
@@ -159,82 +156,60 @@ public class GestorIncidencias {
 
     /**
      * Método para asignar una incidencia de un vehículo a un mecánico
+     *
      * @param scanner Scanner para leer la entrada del usuario
      */
     public void asignarVehiculoTrabajador(Scanner scanner) throws IllegalArgumentException {
-
         System.out.println("----- Asignación de Incidencias -----");
         System.out.println("1. Asignar incidencia de un vehículo a un mecánico");
         System.out.println("2. Asignar incidencia de un vehículo a personal de mantenimiento");
 
-        System.out.print("Seleccione una opción: ");
-        int opcion = scanner.nextInt();
+        int opcion = leerOpcion(scanner);
 
-        scanner.nextLine();
         switch (opcion) {
-            case 1 -> {
-                System.out.println("Mecánicos disponibles:");
-                gestorPersonas.consultarMecanicosDisponibles();
-            }
-            case 2 -> {
-                System.out.println("Personal de mantenimiento disponibles:");
-                gestorPersonas.consultarPersonalMantenimientoDisponibles();
-            }
+            case 1 -> gestorPersonas.consultarMecanicosDisponibles();
+            case 2 -> gestorPersonas.consultarPersonalMantenimientoDisponibles();
             default -> throw new IllegalArgumentException("Opción no válida.");
         }
 
-        System.out.print("Introduce el DNI del trabajador: ");
-        String idTrabajador = scanner.nextLine();
-        Trabajador trabajador = (Trabajador) gestorPersonas.buscarPersonaPorDNI(idTrabajador);
-
-        if(trabajador == null) {
-            throw new IllegalArgumentException("Trabajador no encontrado.");
-        }
+        Trabajador trabajador = (Trabajador) gestorPersonas.buscarPersonaPorDNI(obtenerDato(scanner, "Introduce el DNI: "));
 
         gestorVehiculos.consultarVehiculosAveriados();
-        System.out.print("Introduce la matrícula del vehículo: ");
-        String matricula = scanner.nextLine();
-        Vehiculo vehiculo = gestorVehiculos.obtenerVehiculo(matricula);
-
-        if(vehiculo == null) {
-            throw new IllegalArgumentException("Vehículo no encontrado.");
-        }
+        Vehiculo vehiculo = gestorVehiculos.obtenerVehiculo(obtenerDato(scanner, "Introduce la matrícula del vehículo: "));
 
         Incidencia incidencia = consultarIncidenciaPorVehiculo(vehiculo);
         incidencia.setEncargado(trabajador);
+
         System.out.println("Asignando la incidencia " + incidencia.getId() + " a " + trabajador.getNombre() + " " + trabajador.getApellidos());
     }
 
     /**
      * Método para consultar una incidencia a través de una base
+     *
      * @param base Base sobre la que se quiere consultar la incidencia
      * @return Incidencia asociada a la base, o null si no existe
      * @throws IllegalArgumentException si no se encuentra la incidencia
      */
     private Incidencia consultarIncidenciaPorBase(Base base) throws IllegalArgumentException {
-        for (Incidencia incidencia : incidencias) {
-            if (incidencia.getBase() != null && incidencia.getBase().getId().equals(base.getId())) {
-                return incidencia;
-            }
-        }
-        throw new IllegalArgumentException("No se ha encontrado ninguna incidencia asociada a la base " + base.getId());
+        return incidencias.stream()
+                .filter(i -> i.getBase() != null && i.getBase().equals(base))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No hay incidencias para la base " + base.getId()));
     }
 
     /**
      * Método para consultar una incidencia a través de un vehículo
+     *
      * @param vehiculo Vehículo sobre el que se quiere consultar la incidencia
      * @return Incidencia asociada al vehículo, o null si no existe
      * @throws IllegalArgumentException si no se encuentra la incidencia
      */
     private Incidencia consultarIncidenciaPorVehiculo(Vehiculo vehiculo) throws IllegalArgumentException {
-        for (Incidencia incidencia : incidencias) {
-            if (incidencia.getVehiculo() != null && incidencia.getVehiculo().getMatricula().equals(vehiculo.getMatricula())) {
-                return incidencia;
-            }
-        }
-        throw new IllegalArgumentException("No se ha encontrado ninguna incidencia asociada al vehículo " + vehiculo.getMatricula());
+        return incidencias.stream()
+                .filter(i -> i.getVehiculo() != null && i.getVehiculo().equals(vehiculo))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No hay incidencias para el vehículo " + vehiculo.getMatricula()));
     }
-
 
 
     /**
@@ -242,9 +217,16 @@ public class GestorIncidencias {
      */
     public void consultarIncidenciasActuales() {
         System.out.println("----- Incidencias actuales -----");
-        for (Incidencia incidencia : incidencias) {
-            mostrarIncidencia(incidencia);
-        }
+
+        // usamos un optional para evitar NullPointerException
+        // primero filtramos las incidencias que no están cerradas
+        // si existen mostramos la información detallada de cada incidencia
+        Optional.of(incidencias)
+                .filter(list -> !list.isEmpty())
+                .ifPresentOrElse(
+                        list -> list.forEach(Incidencia::mostrarInformacionDetalladaIncidencia),
+                        () -> System.out.println("No hay incidencias registradas.")
+                );
     }
 
 
@@ -253,76 +235,58 @@ public class GestorIncidencias {
      */
     public void consultarAsignacionesActuales() {
         System.out.println("----- Asignaciones actuales -----");
-        for (Incidencia incidencia : incidencias) {
-            if (incidencia.getEncargado() != null) {
-                System.out.println("Incidencia " + incidencia.getId() + " asignada a " + incidencia.getEncargado().getNombre() + " " + incidencia.getEncargado().getApellidos());
-            }
+        boolean hayAsignaciones = incidencias.stream().anyMatch(Incidencia::mostrarAsignacionEncargado);
+
+        if (!hayAsignaciones) {
+            System.out.println("No hay incidencias asignadas actualmente.");
         }
     }
-
 
 
     /**
      * Método para consultar las incidencias asignadas a un trabajador
+     *
      * @param trabajador Trabajador al que se le quieren consultar las incidencias
      */
     public void consultarIncidenciasPorEncargado(Trabajador trabajador) {
-        for (int i = 0; i < incidencias.size(); i++) {
-            Incidencia incidencia = incidencias.get(i);
-            if (incidencia.getEncargado() != null && incidencia.getEncargado().getdni().equals(trabajador.getdni())) {
-                System.out.println("Incidencia " + (i + 1) + ": ");
-                mostrarIncidencia(incidencia);
-            }
-        }
+        incidencias.stream()
+                .filter(incidencia -> incidencia.getEncargado() != null &&
+                        incidencia.getEncargado().getdni().equals(trabajador.getdni()))  // Filtra por encargado
+                .forEach(incidencia -> {
+                    System.out.println("Incidencia " + (incidencias.indexOf(incidencia) + 1) + ": ");
+                    incidencia.mostrarInformacionDetalladaIncidencia();
+                });
     }
 
-    /**
-     * Método auxiliar para mostrar la información de una incidencia
-     * @param incidencia Incidencia a mostrar
-     */
-    private void mostrarIncidencia(Incidencia incidencia) {
-        System.out.println("ID: " + incidencia.getId());
-        System.out.println("Descripción: " + incidencia.getDescripcion());
-        System.out.println("Fecha de reporte: " + incidencia.getFechaReporte());
-        if (incidencia.getBase() != null) {
-            System.out.println("Base afectada: " + incidencia.getBase().getId());
-            System.out.println("Tiempo de inactividad " + incidencia.getBase().getTiempoInactividad() + " horas");
-        }
-        if (incidencia.getVehiculo() != null) {
-            System.out.println("Vehículo afectado: " + incidencia.getVehiculo().getMatricula());
-            System.out.println("Tiempo de inactividad " + incidencia.getVehiculo().getTiempoInactividad() + " horas");
-
-        }
-        System.out.println("-------------------------------");
-    }
 
     /**
      * Método para recoger un vehículo para su reparación
+     *
      * @return Vehículo recogido
      * @throws IllegalArgumentException si el vehículo no se encuentra
      */
-    public Vehiculo recogerVehiculoParaReparar() throws IllegalArgumentException {
+    public Vehiculo recogerVehiculoParaReparar(Scanner scanner) throws IllegalArgumentException {
+        // consultamos los vehículos averiados
         gestorVehiculos.consultarVehiculosAveriados();
 
+        // pedimos al usuario que introduzca la matrícula del vehículo a recoger
         System.out.println("Indique la matrícula del vehículo a recoger:");
-        Scanner scanner = new Scanner(System.in);
         String matricula = scanner.nextLine();
 
-        Vehiculo vehiculo = gestorVehiculos.obtenerVehiculo(matricula);
+        // buscamos el vehículo en la lista de vehículos y usamos un Optional para evitar NullPointerException
+        Optional<Vehiculo> vehiculoOptional = Optional.ofNullable(gestorVehiculos.obtenerVehiculo(matricula));
 
-        if(vehiculo == null) {
-           throw new IllegalArgumentException("Vehículo no encontrado.");
-        } else {
-            vehiculo.setEstado(EstadoVehiculo.EN_REPARACION);
+        // si el vehículo no se encuentra, lanzamos una excepción y usamos un map para devolver el vehículo modif.
+        return vehiculoOptional.map(vehiculo -> {
+            vehiculo.setEstado(EstadoVehiculo.EN_REPARACION); // Establece el estado
             System.out.println("Se procederá a la recogida del vehículo " + vehiculo.getMatricula() + " para su desplazamiento");
             return vehiculo;
-        }
-
-
+        }).orElseThrow(() -> new IllegalArgumentException("Vehículo no encontrado."));
     }
 
     /**
      * Método para desplazamiento a una base para su reparación
+     *
      * @param scanner Scanner para leer la entrada del usuario
      */
     public Base desplazamientoBaseReparacion(Scanner scanner) throws IllegalArgumentException {
@@ -331,7 +295,7 @@ public class GestorIncidencias {
         String idBase = scanner.nextLine();
         Base base = gestorBases.consultarBasePorId(idBase);
 
-        if(base == null) {
+        if (base == null) {
             throw new IllegalArgumentException("Base no encontrada.");
         }
 
@@ -344,11 +308,12 @@ public class GestorIncidencias {
 
     /**
      * Método para definir un tiempo de inactividad para un vehículo
+     *
      * @param vehiculo Vehículo al que se le define el tiempo de inactividad
      * @throws IllegalArgumentException Excepción si el vehículo no se encuentra
      */
     public int definirTiempoInactividadVehiculo(Vehiculo vehiculo, Scanner scanner) throws IllegalArgumentException {
-        if(vehiculo == null) {
+        if (vehiculo == null) {
             throw new IllegalArgumentException("Vehículo no encontrado.");
         }
         System.out.println("Definiendo tiempo de inactividad para el vehículo " + vehiculo.getMatricula());
@@ -367,7 +332,7 @@ public class GestorIncidencias {
      * @param scanner Scanner para leer la entrada del usuario
      */
     public void definirTiempoInactividadBase(Base base, Scanner scanner) throws IllegalArgumentException {
-        if(base == null) {
+        if (base == null) {
             throw new IllegalArgumentException("Base no encontrada.");
         }
         System.out.println("Definiendo tiempo de inactividad para la base " + base.getId());
@@ -380,16 +345,17 @@ public class GestorIncidencias {
 
     /**
      * Método para devolver un vehículo reparado
+     *
      * @param vehiculo Vehículo a devolver
-     * @param scanner Scanner para leer la entrada del usuario
+     * @param scanner  Scanner para leer la entrada del usuario
      */
     public void devolverVehiculoReparado(Vehiculo vehiculo, Scanner scanner) throws IllegalArgumentException {
-        if(vehiculo == null) {
+        if (vehiculo == null) {
             throw new IllegalArgumentException("Vehiculo no encontrado.");
         }
-        if(vehiculo instanceof Patinete || vehiculo instanceof Bicicleta) {
+        if (vehiculo instanceof Patinete || vehiculo instanceof Bicicleta) {
             // devolvemos el vehículo a la base más cercana
-            Base base= gestorBases.obtenerBaseMasCercana(vehiculo.getCoordenadas());
+            Base base = gestorBases.obtenerBaseMasCercana(vehiculo.getCoordenadas());
             System.out.println("El vehículo se trasladará a la base " + base.getId() + " para su reparación (más cercana a su ubicación)");
             base.añadirVehiculo(vehiculo);
         } else {

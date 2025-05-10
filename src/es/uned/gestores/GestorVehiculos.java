@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 import static es.uned.menus.MenuAdministrador.gestorBases;
 import static es.uned.utils.dto.cargarVehiculos;
+import static es.uned.utils.utils.leerOpcion;
 
 /**
  * Clase GestorVehiculos que gestiona la lista de vehículos.
@@ -61,8 +62,7 @@ public class GestorVehiculos {
         System.out.println("2. Patinete");
         System.out.println("3. Bicicleta");
         System.out.print("Opción: ");
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
+        int opcion = leerOpcion(scanner);
 
         Vehiculo vehiculo = null;
 
@@ -188,8 +188,10 @@ public class GestorVehiculos {
 
     /**
      * Método para eliminar un vehículo de la lista de vehículos.
+     *
+     * @throws IllegalArgumentException si el vehículo no se encuentra
      */
-    public void eliminarVehiculo(Scanner scanner) {
+    public void eliminarVehiculo(Scanner scanner) throws IllegalArgumentException {
         System.out.println("Eliminando vehículo...");
 
         System.out.print("Introduce la matrícula del vehículo a eliminar: ");
@@ -207,18 +209,15 @@ public class GestorVehiculos {
      * Método para obtener la lista de vehículos.
      *
      * @return Lista de vehículos.
+     *
+     * @throws IllegalArgumentException si no hay vehículos disponibles
      */
-    public void modificarVehiculo(Scanner scanner) {
+    public void modificarVehiculo(Scanner scanner) throws IllegalArgumentException {
 
         System.out.println("Modificando vehículo...");
         System.out.print("Introduce la matrícula del vehículo a modificar: ");
         String matricula = scanner.nextLine();
         Vehiculo vehiculo = obtenerVehiculo(matricula);
-
-        if (vehiculo == null) {
-            System.out.println("Vehículo no encontrado.");
-            return;
-        }
 
         int opcion;
         do {
@@ -311,12 +310,14 @@ public class GestorVehiculos {
      *
      * @param matricula matricula del vehículo a buscar
      * @return El vehículo encontrado o null si no se encuentra.
+     *
+     * @throws IllegalArgumentException si el vehículo no se encuentra
      */
     public Vehiculo obtenerVehiculo(String matricula) {
         return this.vehiculos.stream()
                 .filter(vehiculo -> vehiculo.getMatricula().equals(matricula))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("Vehículo no encontrado."));
     }
 
     /**

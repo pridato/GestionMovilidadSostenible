@@ -10,26 +10,11 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import static es.uned.gestores.GestorAlquileres.obtenerBaseParaAlquilar;
-import static es.uned.menus.MenuAdministrador.gestorBases;
 import static es.uned.utils.dto.cargarBases;
 
 /**
  * Clase GestorBases.
  * Esta clase se encarga de gestionar las bases de vehículos.
- * <p>
- * Métodos:
- * <p>
- * Alta de bases
- * <p>
- * Modificar bases
- * <p>
- * Eliminar bases
- * <p>
- * Marcar bases averiadas
- * <p>
- * Consultar bases disponibles
- * <p>
- * Consultar bases por ocupación
  */
 public class GestorBases {
 
@@ -55,18 +40,9 @@ public class GestorBases {
     /**
      * Método para consultar el estado de las bases.
      */
-    public void consultarEstadoBases(Scanner scanner) {
+    public void consultarEstadoBases() {
         System.out.println("Estado de las bases:");
-        for (Base base : bases) {
-            System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas().getX() + ", " + base.getCoordenadas().getY() +
-                    ", Capacidad máxima: " + base.getCapacidadMaxima() +
-                    ", Vehículos alquilados: " + base.getVehiculos().size() +
-                    ", Huecos disponibles: " + (base.getCapacidadMaxima() - base.getVehiculos().size()) +
-                    ", Averiada: " + (base.isAveriada() ? "Sí" : "No"));
-        }
-
-        System.out.println("Presione una tecla para continuar...");
-        scanner.nextLine();
+        bases.forEach(Base::mostrarInfoBaseDetallada);
     }
 
     /**
@@ -74,23 +50,18 @@ public class GestorBases {
      */
     public void consultarBasesDisponibles() {
         System.out.println("Bases disponibles:");
-        for (Base base : bases) {
-            if (!base.isAveriada() && base.getVehiculos().size() < base.getCapacidadMaxima()) {
-                System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas().getX() + ", " + base.getCoordenadas().getY() +
-                        ", Capacidad máxima: " + base.getCapacidadMaxima());
-            }
-        }
+        bases.stream().filter(base -> !base.isAveriada() && base.getVehiculos().size() < base.getCapacidadMaxima())
+                .forEach(Base::mostrarInfoBaseDetallada);
     }
 
     /**
      * Método para consultar bases por ocupación.
      */
     public void consultarBasesPorOcupacion() {
-        // consultar bases ordenadas por ocupacion
-        this.bases.stream().
-                filter(base -> !base.isAveriada()).
-                sorted(Comparator.comparingInt(base -> base.getVehiculos().size())).
-                forEach(base -> System.out.println("ID: " + base.getId() + ", Ocupación: " + base.getVehiculos().size() + "/" + base.getCapacidadMaxima()));
+        bases.stream()
+                .filter(base -> !base.isAveriada())
+                .sorted(Comparator.comparingInt(base -> base.getVehiculos().size()))
+                .forEach(base -> System.out.println("ID: " + base.getId() + ", Ocupación: " + base.getVehiculos().size() + "/" + base.getCapacidadMaxima()));
     }
 
     /**
@@ -98,14 +69,10 @@ public class GestorBases {
      */
     public void generarEstadisticasBases() {
         System.out.println("Estadísticas de las bases:");
-        this.bases.stream()
+        bases.stream()
                 .filter(base -> !base.isAveriada())
-                .sorted(Comparator.comparing((Base base) -> base.getVehiculos().size()).reversed())
-                .forEach(base -> System.out.println(
-                        "ID: " + base.getId() +
-                                ", Ocupación: " + base.getVehiculos().size() +
-                                "/" + base.getCapacidadMaxima()
-                ));
+                .sorted(Comparator.comparingInt((Base b) -> b.getVehiculos().size()).reversed())
+                .forEach(base -> System.out.println("ID: " + base.getId() + ", Ocupación: " + base.getVehiculos().size() + "/" + base.getCapacidadMaxima()));
     }
 
     /**
@@ -113,12 +80,14 @@ public class GestorBases {
      *
      * @param id ID de la base a consultar.
      * @return Base correspondiente al ID proporcionado, o null si no se encuentra.
+     *
+     * @throws IllegalArgumentException si no se encuentra la base con el ID proporcionado.
      */
-    public Base consultarBasePorId(String id) {
+    public Base consultarBasePorId(String id) throws IllegalArgumentException {
         return bases.stream()
                 .filter(base -> Objects.equals(base.getId(), id))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("No se ha encontrado la base con ID: " + id));
     }
 
     /**
@@ -138,15 +107,15 @@ public class GestorBases {
      * Método para mostrar las bases averiadas.
      */
     public void consultarBasesAveriadas() throws IllegalArgumentException {
-        List<Base> basesAveriadas = this.bases.stream().filter(Base::isAveriada).toList();
-        if (basesAveriadas.isEmpty()) {
-            throw new IllegalArgumentException("No hay bases averiadas.");
+        List<Base> averiadas = bases.stream().filter(Base::isAveriada).toList();
+
+        if (averiadas.isEmpty()) {
+            System.out.println("No hay bases averiadas.");
+            return;
         }
+
         System.out.println("Bases averiadas:");
-        for (Base base : basesAveriadas) {
-            System.out.println("ID: " + base.getId() + ", Coordenadas: " + base.getCoordenadas().getX() + ", " + base.getCoordenadas().getY() +
-                    ", Capacidad máxima: " + base.getCapacidadMaxima());
-        }
+        averiadas.forEach(Base::mostrarInfoBaseDetallada);
     }
 
     /**
@@ -165,18 +134,11 @@ public class GestorBases {
      * Método para obtener la base con un vehículo disponible, si existe, de lo contrario selecciona una base nueva.
      */
     public Base obtenerBaseConVehiculoDisponible(Vehiculo vehiculo, Scanner scanner) {
-
-        for (Base base : bases) {
-            if (!base.isAveriada()) {
-                for (Vehiculo vehiculoBase : base.getVehiculos()) {
-                    if (vehiculoBase.getMatricula().equals(vehiculo.getMatricula())) {
-                        System.out.println("Vehículo encontrado en base: " + base.getId());
-                        return base;
-                    }
-                }
-            }
+        Base base = obtenerBaseVehiculo(vehiculo.getMatricula());
+        if (base != null && !base.isAveriada()) {
+            System.out.println("Vehículo encontrado en base: " + base.getId());
+            return base;
         }
-        // Si no encontramos una base con el vehículo, pedimos al usuario que seleccione una base
         return obtenerBaseParaAlquilar(scanner);
     }
 }

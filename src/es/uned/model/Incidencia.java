@@ -78,6 +78,51 @@ public class Incidencia {
         this.base = base;
     }
 
+
+    /**
+     * Método para mostrar la información de la incidencia en la consola.
+     */
+    public void mostrarInformacionDetalladaIncidencia() {
+        System.out.println("ID: " + id);
+        System.out.println("Descripción: " + descripcion);
+        System.out.println("Fecha de reporte: " + fechaReporte);
+        if (base != null) {
+            System.out.println("Base afectada: " + base.getId());
+            System.out.println("Tiempo de inactividad " + base.getTiempoInactividad() + " horas");
+        }
+        if (vehiculo != null) {
+            System.out.println("Vehículo afectado: " + vehiculo.getMatricula());
+            System.out.println("Tiempo de inactividad " + vehiculo.getTiempoInactividad() + " horas");
+
+        }
+        System.out.println("-------------------------------");
+    }
+
+
+    /**
+     * Método para mostrar la información de la incidencia en la consola.
+     * @return true si se ha asignado un encargado, false en caso contrario.
+     */
+    public Boolean mostrarAsignacionEncargado() {
+        if (encargado != null) {
+            System.out.println("ID Incidencia: " + id);
+            System.out.println("Asignada a: " + encargado.getNombre() + " " + encargado.getApellidos());
+            System.out.println("----------------------------------");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Método para mostrar la información de la incidencia en la consola.
+     */
+    public void mostrarConfirmacion() {
+        System.out.println("Incidencia generada con éxito.");
+        System.out.println("ID: " + id);
+        System.out.println("Descripción: " + descripcion);
+        System.out.println("Fecha: " + fechaReporte);
+    }
+
     @Override
     public String toString() {
         return "Incidencia{" +

@@ -65,6 +65,14 @@ public class Factura {
         this.base = base;
     }
 
+    /**
+     * Método para mostrar la factura en la consola.
+     */
+    public void mostrarFactura() {
+        System.out.println("ID: " + id + ", Importe: " + importe +
+                "€ , Descripción: " + descripcion + ", Fecha: " + fecha);
+    }
+
 
     @Override
     public String toString() {

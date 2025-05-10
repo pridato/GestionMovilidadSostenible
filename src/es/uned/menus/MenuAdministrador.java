@@ -6,6 +6,7 @@ import es.uned.model.Coordenadas;
 import java.util.Scanner;
 
 import static es.uned.utils.consts.*;
+import static es.uned.utils.utils.leerOpcion;
 
 public class MenuAdministrador {
 
@@ -41,9 +42,7 @@ public class MenuAdministrador {
             System.out.println("0. Salir");
             System.out.println();
             System.out.println("------------------------------");
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
+            opcion = leerOpcion(scanner);
 
             switch (opcion) {
                 case 1 -> gestionarMenuUsuarios(scanner);
@@ -86,9 +85,7 @@ public class MenuAdministrador {
             System.out.println("8. Modificar descuento de usuarios premium");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
-
-            opcion = scanner.nextInt();
-            scanner.nextLine(); // limpiar buffer
+            opcion = leerOpcion(scanner);
 
             switch (opcion) {
                 case 1 -> {
@@ -131,8 +128,7 @@ public class MenuAdministrador {
             System.out.println("6. Visualizar estado de la Batería de los Vehículos");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
-            opcion = scanner.nextInt();
-            scanner.nextLine();  // Limpiar el buffer
+            opcion = leerOpcion(scanner);
 
             switch (opcion) {
                 case 1 -> gestorVehiculos.añadirVehiculo(scanner);
@@ -164,12 +160,10 @@ public class MenuAdministrador {
             System.out.println("4. Generar estadísticas de bases ordenadas por demanda");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine(); // limpiar buffer
+            opcion = leerOpcion(scanner);
 
             switch (opcion) {
-                case 1 -> gestorBases.consultarEstadoBases(scanner);
+                case 1 -> gestorBases.consultarEstadoBases();
                 case 2 -> gestorBases.consultarBasesDisponibles();
                 case 3 -> gestorBases.consultarBasesPorOcupacion();
                 case 4 -> gestorBases.generarEstadisticasBases();
@@ -198,10 +192,7 @@ public class MenuAdministrador {
             System.out.println("6. Facturas generadas por mecánicos");
             System.out.println("0. Volver");
             System.out.println("------------------------------");
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-
-            scanner.nextLine(); // limpiar buffer
+            opcion = leerOpcion(scanner);
 
             switch (opcion) {
                 case 1 -> {
@@ -295,9 +286,7 @@ public class MenuAdministrador {
             System.out.println("5. Listado de usuarios ordenados por sus gastos de alquiler");
             System.out.println("0. Volver");
             System.out.println("---------------------");
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine(); // limpiar buffer
+            opcion = leerOpcion(scanner);
 
             switch (opcion) {
                 case 1 -> gestorBases.consultarBasesPorOcupacion();

@@ -76,6 +76,17 @@ public class Base {
         this.averiada = averiada;
     }
 
+    /**
+     * Método para mostrar información básica de la base.
+     */
+    public void mostrarInfoBaseDetallada() {
+        System.out.println("ID: " + id + ", Coordenadas: " + coordenadas.getX() + ", " + coordenadas.getY() +
+                ", Capacidad máxima: " + capacidadMaxima +
+                ", Vehículos alquilados: " + vehiculos.size() +
+                ", Huecos disponibles: " + (capacidadMaxima - vehiculos.size()) +
+                ", Averiada: " + (averiada ? "Sí" : "No"));
+    }
+
     @Override
     public String toString() {
         final String INDENT = "    ";

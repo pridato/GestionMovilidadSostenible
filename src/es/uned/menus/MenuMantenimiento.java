@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import static es.uned.menus.MenuAdministrador.gestorIncidencias;
 import static es.uned.menus.MenuAdministrador.gestorPersonas;
+import static es.uned.utils.utils.leerOpcion;
 
 public class MenuMantenimiento {
 
@@ -43,14 +44,11 @@ public class MenuMantenimiento {
                 System.out.println("0. Salir");
 
                 System.out.println("-------------------------");
-                System.out.print("Seleccione una opción: ");
-                opcion = scanner.nextInt();
-
-                scanner.nextLine();
+                opcion = leerOpcion(scanner);
 
                 switch (opcion) {
                     case 1 -> gestorIncidencias.consultarIncidenciasPorEncargado(mantenimiento);
-                    case 2 -> vehiculo = gestorIncidencias.recogerVehiculoParaReparar();
+                    case 2 -> vehiculo = gestorIncidencias.recogerVehiculoParaReparar(scanner);
                     case 3 -> tiempoInactividad = gestorIncidencias.definirTiempoInactividadVehiculo(vehiculo, scanner);
                     case 4 -> gestorIncidencias.devolverVehiculoReparado(vehiculo, scanner);
                     case 0 -> System.out.println("Saliendo del menú de mantenimiento...");

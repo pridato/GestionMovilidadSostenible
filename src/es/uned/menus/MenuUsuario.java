@@ -9,6 +9,7 @@ import es.uned.model.vehiculos.Vehiculo;
 import java.util.Scanner;
 
 import static es.uned.menus.MenuAdministrador.*;
+import static es.uned.utils.utils.leerOpcion;
 
 /**
  * Clase que representa el menú de usuario.
@@ -29,10 +30,10 @@ public class MenuUsuario {
      * @param scanner Scanner para leer la entrada del usuario.
      * @return El usuario autenticado.
      */
-    public static Usuario gestionarUsuarioAutenticado(Scanner scanner) {
+    private static Usuario gestionarUsuarioAutenticado(Scanner scanner) {
         System.out.println("Listado de usuarios:");
         gestorUsuarios.listarUsuarios();
-        return gestorUsuarios.obtenerUsuarioIndice(scanner.nextInt());
+        return gestorUsuarios.obtenerUsuarioIndice(leerOpcion(scanner));
     }
 
     /**
@@ -41,7 +42,6 @@ public class MenuUsuario {
      * @param scanner Scanner para leer la entrada del usuario.
      */
     public void gestionarOpcionesUsuario(Scanner scanner) {
-        int opcion;
 
         // usamos un usuario para gestionar los alquileres en su relacion
         this.usuario = gestionarUsuarioAutenticado(scanner);
@@ -52,6 +52,7 @@ public class MenuUsuario {
         }
 
         System.out.println("Bienvenido " + usuario.getNombre() + " " + usuario.getApellidos());
+        int opcion;
         do {
             System.out.println("-------------------------");
             System.out.println("1. Gestión Personal");
@@ -60,9 +61,8 @@ public class MenuUsuario {
             System.out.println("4. Incidencias");
             System.out.println("0. Salir");
             System.out.println("-------------------------");
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
+
+            opcion = leerOpcion(scanner);
 
             switch (opcion) {
                 case 1 -> gestionarOpcionesUsuarioPersonal(scanner);
@@ -88,9 +88,7 @@ public class MenuUsuario {
         System.out.println("4. Recargar saldo");
         System.out.println("0. Salir");
 
-        System.out.print("Seleccione una opción: ");
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
+        int opcion = leerOpcion(scanner);
         switch (opcion) {
             case 1 -> consultarDatosActualesUsuario(usuario);
             case 2 -> gestorAlquiler.consultarAlquileresUsuario(usuario);
@@ -103,11 +101,9 @@ public class MenuUsuario {
 
     /**
      * Método para gestionar las opciones de vehiculos
-     * @param scanner Scanner para leer la entrada del usuario.
      */
     private void gestionarOpcionesVehiculos(Scanner scanner) {
         try {
-
             System.out.println("----- Gestión de Vehículos -----");
             System.out.println("1. Consultar vehículos disponibles");
             System.out.println("2. Alquilar un vehículo");
@@ -116,9 +112,7 @@ public class MenuUsuario {
             System.out.println("5. Consultar estado de batería");
             System.out.println("0. Salir");
 
-            System.out.print("Seleccione una opción: ");
-            int opcion = scanner.nextInt();
-            scanner.nextLine();
+            int opcion = leerOpcion(scanner);
             switch (opcion) {
                 case 1 -> gestorVehiculos.consultarVehiculosDisponibles();
                 case 2 -> this.alquiler = gestorAlquiler.iniciarAlquiler(usuario, scanner, alquiler);
@@ -154,10 +148,8 @@ public class MenuUsuario {
         System.out.println("2. Consultar tarifas");
         System.out.println("3. Consultar descuento de usuarios premium");
         System.out.println("0. Salir");
+        int opcion = leerOpcion(scanner);
 
-        System.out.print("Seleccione una opción: ");
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
         if (opcion == 1) {
             System.out.println("Límites de coordenadas:");
             System.out.println("X: " + limiteInferior);
@@ -211,6 +203,4 @@ public class MenuUsuario {
     private void consultarDatosActualesUsuario(Usuario usuario) {
         System.out.println(usuario);
     }
-
-
 }
