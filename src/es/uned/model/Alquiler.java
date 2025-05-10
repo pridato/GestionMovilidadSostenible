@@ -1,6 +1,7 @@
 package es.uned.model;
 
 import es.uned.enums.EstadoAlquiler;
+import es.uned.model.personas.Usuario;
 import es.uned.model.vehiculos.Vehiculo;
 
 import java.util.Date;
@@ -129,6 +130,17 @@ public class Alquiler {
 
     public void setCoordenadasFin(Coordenadas coordenadasFin) {
         this.coordenadasFin = coordenadasFin;
+    }
+
+    /**
+     * Método para mostrar el precio del alquiler.
+     * @param usuario El usuario que realiza el alquiler.
+     */
+    public void mostrarPrecio(Usuario usuario) {
+        System.out.println("Importe final: " + importeFinal + "€");
+        System.out.println("Duración: " + tiempoDuracion + " minutos");
+        System.out.println("Saldo actual del usuario: " + usuario.getsaldo() + "€");
+        System.out.println("Alquiler finalizado: " + id);
     }
 
     @Override

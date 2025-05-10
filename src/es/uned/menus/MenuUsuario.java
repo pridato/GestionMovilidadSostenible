@@ -91,7 +91,7 @@ public class MenuUsuario {
         int opcion = leerOpcion(scanner);
         switch (opcion) {
             case 1 -> consultarDatosActualesUsuario(usuario);
-            case 2 -> gestorAlquiler.consultarAlquileresUsuario(usuario);
+            case 2 -> usuario.consultarAlquileresUsuario();
             case 3 -> System.out.println("Saldo actual: " + usuario.getsaldo());
             case 4 -> recargarSaldo(scanner);
             case 0 -> System.out.println("Saliendo...");

@@ -98,6 +98,22 @@ public class Usuario extends Persona {
         }
     }
 
+    /**
+     * Método para consultar los alquileres del usuario.
+     */
+    public void consultarAlquileresUsuario() {
+        if (historialViajes.isEmpty()) {
+            System.out.println("No tienes ningún alquiler.");
+            return;
+        }
+
+        System.out.println("Alquileres del usuario " + getNombre() + ":");
+        for (Alquiler alquiler : historialViajes) {
+            System.out.println(alquiler.getId() + " - " + alquiler.getVehiculo().getMatricula() + " - " + alquiler.getEstado() +
+                    " - " + alquiler.getFechaInicio() + " - " + alquiler.getFechaFin() + " - " + alquiler.getImporteFinal());
+        }
+    }
+
     @Override
     public String toString() {
         final String INDENT = "    ";

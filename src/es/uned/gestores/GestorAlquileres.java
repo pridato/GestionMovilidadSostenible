@@ -14,6 +14,7 @@ import java.util.*;
 
 import static es.uned.menus.MenuAdministrador.*;
 import static es.uned.utils.GeolocalizacionPorIP.leerCoordenadasManualmente;
+import static es.uned.utils.utils.obtenerDato;
 
 /**
  * Clase GestorAlquileres.
@@ -63,8 +64,8 @@ public class GestorAlquileres {
      */
     public Alquiler iniciarAlquiler(Usuario usuario, Scanner scanner, Alquiler alquilerExistente) throws IllegalArgumentException {
 
+        // verificamos si el usuario tiene saldo suficiente
         comprobarTiempoReserva(usuario, alquilerExistente);
-
         usuario.verificarSaldo();
 
         // seleccionamos un vehiculo, o lo creamos o lo sacamos de una reserva
@@ -80,6 +81,7 @@ public class GestorAlquileres {
         Base baseInicio = (vehiculo instanceof Moto) ? null : gestorBases.obtenerBaseConVehiculoDisponible(vehiculo, scanner);
         Coordenadas coordenadas = (vehiculo instanceof Moto && alquilerExistente == null) ? vehiculo.getCoordenadas() : null;
 
+        // creamos el alquiler y lo añadimos a la lista de alquileres
         Alquiler nuevoAlquiler = new Alquiler(vehiculo, new Date(), EstadoAlquiler.EN_CURSO, baseInicio, coordenadas);
         alquileres.add(nuevoAlquiler);
         usuario.añadirAlquiler(nuevoAlquiler);
@@ -89,12 +91,14 @@ public class GestorAlquileres {
     }
 
     /**
-     * Método para comprobar si han pasado más de 20 minutos desde la reserva. Si es así, se lanza una excepción.
+     * Verifica si han transcurrido más de 20 minutos desde la reserva.
+     * Si excede el tiempo, lanza excepción. Si no, procede con el alquiler.
      *
-     * @param usuario           usuario que alquila el vehículo
+     * @param usuario usuario que alquila el vehículo
      * @param alquilerExistente alquiler existente
+     * Si excede el tiempo, lanza excepción. Si no, procede con el alquiler.
      */
-    private static void comprobarTiempoReserva(Usuario usuario, Alquiler alquilerExistente) {
+    private static void comprobarTiempoReserva(Usuario usuario, Alquiler alquilerExistente) throws IllegalStateException {
         if (alquilerExistente != null) {
             long tiempoTranscurrido = (new Date().getTime() - alquilerExistente.getFechaInicio().getTime()) / 60000;
             if (tiempoTranscurrido >= 20) {
@@ -104,7 +108,6 @@ public class GestorAlquileres {
                 System.out.println("Se alquilará el vehículo con matrícula " + alquilerExistente.getVehiculo().getMatricula() + " en la base " + alquilerExistente.getVehiculo().getMatricula() + ".");
                 usuario.getHistorialViajes().removeIf(a -> a.getId().equals(alquilerExistente.getId()));
             }
-
         }
     }
 
@@ -135,10 +138,6 @@ public class GestorAlquileres {
             alquiler.setBaseFin(baseFin);
         }
 
-        alquiler.setCoordenadasFin(coordenadasFin);
-        alquiler.setEstado(EstadoAlquiler.FINALIZADO);
-        alquiler.setFechaFin(new Date());
-
         // calculamos el tiempo de duración del alquiler en minutos
         int tiempoDuracion = (int) ((alquiler.getFechaFin().getTime() - alquiler.getFechaInicio().getTime()) / 60000);
         alquiler.setTiempoDuracion(tiempoDuracion);
@@ -153,14 +152,26 @@ public class GestorAlquileres {
             System.out.println("El usuario es premium, se aplicará un descuento del " + descuentoPremium * 100 + "%");
         }
 
+        modificarEstadosAlquiler(usuario, alquiler, coordenadasFin, importeTotal, vehiculo);
+
+        alquiler.mostrarPrecio(usuario);
+    }
+
+    /**
+     * Modifica los estados del alquiler, usuario y vehículo al finalizar el alquiler.
+     * @param usuario usuario que finaliza el alquiler
+     * @param alquiler alquiler a finalizar
+     * @param coordenadasFin coordenadas de finalización
+     * @param importeTotal importe total del alquiler
+     * @param vehiculo vehículo alquilado
+     */
+    private static void modificarEstadosAlquiler(Usuario usuario, Alquiler alquiler, Coordenadas coordenadasFin, double importeTotal, Vehiculo vehiculo) {
+        alquiler.setCoordenadasFin(coordenadasFin);
+        alquiler.setEstado(EstadoAlquiler.FINALIZADO);
+        alquiler.setFechaFin(new Date());
         alquiler.setImporteFinal(importeTotal);
         usuario.recargarSaldo(-importeTotal);
         vehiculo.setEstado(EstadoVehiculo.DISPONIBLE);
-
-        System.out.println("Importe final: " + alquiler.getImporteFinal() + "€");
-        System.out.println("Duración: " + alquiler.getTiempoDuracion() + " minutos");
-        System.out.println("Saldo actual del usuario: " + usuario.getsaldo() + "€");
-        System.out.println("Alquiler finalizado: " + alquiler.getId());
     }
 
     /**
@@ -207,13 +218,10 @@ public class GestorAlquileres {
      */
     public static Base obtenerBaseParaAlquilar(Scanner scanner) {
         Base base;
-        String idBase;
         while (true) {
             System.out.println("Al ser una bicicleta o patinete, debes alquilarlo en una base.");
             gestorBases.consultarBasesDisponibles();
-            System.out.println("Porfavor introduce la base de inicio donde deseas alquilar el vehículo:");
-            idBase = scanner.nextLine();
-            base = gestorBases.consultarBasePorId(idBase);
+            base = gestorBases.consultarBasePorId(obtenerDato(scanner, "Porfavor introduce la base de inicio donde deseas alquilar el vehículo:"));
             if (base != null) {
                 return base;
             } else {
@@ -229,40 +237,17 @@ public class GestorAlquileres {
      * @return Vehiculo a alquilar
      */
     private static Vehiculo obtenerVehiculoParaAlquilar(Scanner scanner) throws IllegalArgumentException {
-        Vehiculo vehiculo = null;
-        String matricula;
         do {
             try {
                 gestorVehiculos.consultarVehiculosDisponibles();
-                System.out.println("Introduce la matrícula del vehículo que deseas alquilar:");
-                matricula = scanner.nextLine();
-                vehiculo = gestorVehiculos.obtenerVehiculo(matricula);
+                return gestorVehiculos.obtenerVehiculo(obtenerDato(scanner, "Introduce la matrícula del vehículo que deseas alquilar:"));
             } catch (IllegalArgumentException e) {
                 System.out.println("Vehículo no encontrado.");
-                matricula = "";
             }
-        } while (matricula.isEmpty());
-        return vehiculo;
+        } while (true);
     }
 
 
-    /**
-     * Método para consultar los alquileres del usuario.
-     *
-     * @param usuario Usuario a consultar.
-     */
-    public void consultarAlquileresUsuario(Usuario usuario) {
-        if (usuario.getHistorialViajes().isEmpty()) {
-            System.out.println("No tienes ningún alquiler.");
-            return;
-        }
-
-        System.out.println("Alquileres del usuario " + usuario.getNombre() + ":");
-        for (Alquiler alquiler : usuario.getHistorialViajes()) {
-            System.out.println(alquiler.getId() + " - " + alquiler.getVehiculo().getMatricula() + " - " + alquiler.getEstado() +
-                    " - " + alquiler.getFechaInicio() + " - " + alquiler.getFechaFin() + " - " + alquiler.getImporteFinal());
-        }
-    }
 
     /**
      * Método para consultar la moto más cercana del usuario.
