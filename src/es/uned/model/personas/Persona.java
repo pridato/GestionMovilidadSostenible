@@ -125,6 +125,18 @@ public class Persona {
         return Objects.hash(dni);
     }
 
+    /**
+     * Muestra la información detallada de la persona.
+     */
+    public void mostrarInformacionDetallada() {
+        System.out.println("Nombre completo: " + getNombre() + " " + getApellidos());
+        System.out.println("DNI: " + getdni());
+        System.out.println("Email: " + getEmail());
+        System.out.println("Teléfono: " + getTelefono());
+    }
+
+
+
 
     @Override
     public String toString() {

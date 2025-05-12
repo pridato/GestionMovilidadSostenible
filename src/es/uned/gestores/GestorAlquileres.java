@@ -17,17 +17,7 @@ import static es.uned.utils.GeolocalizacionPorIP.leerCoordenadasManualmente;
 import static es.uned.utils.utils.obtenerDato;
 
 /**
- * Clase GestorAlquileres.
- * <p>
- * Métodos:
- * <p>
- * Iniciar alquiler
- * <p>
- * Finalizar alquiler
- * <p>
- * Reservar vehículo (alquiler)
- * <p>
- * Consultar alquileres
+ * Clase GestorAlquileres que gestiona los alquileres de vehículos.
  */
 public class GestorAlquileres {
 
@@ -45,7 +35,7 @@ public class GestorAlquileres {
     }
 
     /**
-     * Método para obtener la instancia del gestor de alquileres.
+     * Devuelve la instancia del gestor de alquileres.
      *
      * @return instancia del gestor de alquileres.
      */
@@ -55,7 +45,7 @@ public class GestorAlquileres {
 
 
     /**
-     * Método para iniciar un alquiler.
+     * Inicializa el alquiler de un vehículo.
      *
      * @param usuario usuario que alquila el vehículo
      * @throws IllegalStateException si el usuario no tiene saldo suficiente
@@ -113,7 +103,7 @@ public class GestorAlquileres {
 
 
     /**
-     * Método para finalizar un alquiler.
+     * Finaliza un alquiler de un vehículo que ha sido alquilado.
      *
      * @param usuario  usuario que finaliza el alquiler
      * @param alquiler alquiler a finalizar
@@ -175,7 +165,7 @@ public class GestorAlquileres {
     }
 
     /**
-     * Método para reservar un vehículo
+     * Reserva un vehículo para un usuario premium.
      *
      * @param usuario usuario que reserva el alquiler
      * @param scanner scanner para leer la entrada del usuario
@@ -211,7 +201,7 @@ public class GestorAlquileres {
 
 
     /**
-     * Método para obtener una base para alquilar.
+     * Devuelve una base para alquilar un vehículo.
      *
      * @param scanner Scanner para leer la entrada del usuario.
      * @return Base a alquilar
@@ -231,7 +221,7 @@ public class GestorAlquileres {
     }
 
     /**
-     * Método para obtener un vehículo para alquilar.
+     * Devuelve un vehículo para alquilar.
      *
      * @param scanner Scanner para leer la entrada del usuario.
      * @return Vehiculo a alquilar
@@ -248,33 +238,23 @@ public class GestorAlquileres {
     }
 
 
-
     /**
-     * Método para consultar la moto más cercana del usuario.
+     * Devuelve la moto más cercana al usuario.
      *
      * @param usuario Usuario a consultar.
-     * @return Vehículo más cercano.
+     * @return Optional con la moto más cercana, o empty si no hay disponibles
      */
-    private Vehiculo motoMasCercana(Usuario usuario) {
-        List<Vehiculo> vehiculos = gestorVehiculos.getVehiculos();
-        Vehiculo vehiculoMasCercano = null;
-        double distanciaMinima = Double.MAX_VALUE;
-
-        for (Vehiculo vehiculo : vehiculos) {
-            if (vehiculo instanceof Moto && vehiculo.getEstado() == EstadoVehiculo.DISPONIBLE) {
-                double distancia = vehiculo.getCoordenadas().Calculardistancia(usuario.getCoordenadas());
-                if (distancia < distanciaMinima) {
-                    distanciaMinima = distancia;
-                    vehiculoMasCercano = vehiculo;
-                }
-            }
-        }
-
-        return vehiculoMasCercano;
+    private Optional<Vehiculo> motoMasCercana(Usuario usuario) {
+        // primero se filtra por moto y disponible y luego se obtiene el mínimo de comparar la distancia
+        return gestorVehiculos.getVehiculos().stream()
+                .filter(vehiculo -> vehiculo instanceof Moto && vehiculo.getEstado() == EstadoVehiculo.DISPONIBLE)
+                .min(Comparator.comparingDouble(vehiculo ->
+                        vehiculo.getCoordenadas().Calculardistancia(usuario.getCoordenadas())
+                ));
     }
 
     /**
-     * Método para seleccionar un vehículo para alquilar.
+     * Devuelve un vehículo seleccionado por el usuario.
      *
      * @param usuario usuario que alquila el vehículo
      * @param scanner Scanner para leer la entrada del usuario
@@ -283,19 +263,17 @@ public class GestorAlquileres {
     public Vehiculo seleccionarVehiculo(Usuario usuario, Scanner scanner) {
         System.out.println("¿Deseas alquilar la moto más cercana? (s/n)");
         String respuesta = scanner.nextLine();
+
         if (respuesta.equalsIgnoreCase("s")) {
-            Vehiculo moto = motoMasCercana(usuario);
-            if (moto == null) {
-                throw new IllegalStateException("No hay motos disponibles.");
-            }
-            return moto;
+            return motoMasCercana(usuario) 
+                    .orElseThrow(() -> new IllegalStateException("No hay motos disponibles cerca de tu ubicación"));
         } else {
             return obtenerVehiculoParaAlquilar(scanner);
         }
     }
 
     /**
-     * Método para obtener las coordenadas de finalización del alquiler.
+     * Obtenemos las coordenadas de finalización del alquiler.
      *
      * @param scanner Scanner para leer la entrada del usuario
      * @return Coordenadas de finalización
@@ -311,7 +289,7 @@ public class GestorAlquileres {
     }
 
     /**
-     * Método para aplicar penalizaciones al usuario.
+     * Aplicar penalizaciones al alquiler.
      *
      * @param vehiculo vehículo alquilado
      * @param alquiler alquiler a finalizar
@@ -334,7 +312,7 @@ public class GestorAlquileres {
 
 
     /**
-     * Método para consultar los vehículos ordenados por tiempo de uso.
+     * Listar los vehículos ordenados por tiempo de uso.
      */
     public void consultarVehiculosOrdenadosTiempoUso() {
         System.out.println("Vehículos ordenados por tiempo de uso:");
@@ -360,7 +338,7 @@ public class GestorAlquileres {
 
 
     /**
-     * Método para consultar los usuarios ordenados por gastos de alquiler.
+     * Listar los usuarios ordenados por gastos de alquiler.
      */
     public void consultarUsuariosOrdenadosGastosAlquiler() {
         System.out.println("Usuarios ordenados por gastos de alquiler:");

@@ -9,13 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static es.uned.utils.utils.obtenerDato;
+
 public class GestorFacturas {
 
     private static final GestorFacturas instancia = new GestorFacturas();
     private static final List<Factura> facturas = new ArrayList<>();
 
     /**
-     * Método para obtener la instancia del gestor de facturas.
+     * Devuelve la instancia del gestor de facturas.
      *
      * @return instancia del gestor de facturas.
      */
@@ -24,7 +26,7 @@ public class GestorFacturas {
     }
 
     /**
-     * Método para crear una factura de un vehículo.
+     * Crea una factura asociada a un mecánico y una base
      * @param mecanico mecanico que genera la factura
      * @param base base asociada a la factura
      * @param scanner Scanner para leer la entrada del usuario.
@@ -37,7 +39,7 @@ public class GestorFacturas {
     }
 
     /**
-     * Método para crear una factura de un vehículo.
+     * Crea una factura asociada a un mecánico y un vehículo
      * @param mecanico mecanico que genera la factura
      * @param vehiculo vehículo asociado a la factura
      * @param scanner Scanner para leer la entrada del usuario.
@@ -58,22 +60,25 @@ public class GestorFacturas {
     }
 
     /**
-     * Método para generar una factura común solo con importe y descripción.
+     * Creamos una factura solicitando importe y descripción al usuario.
      * @param scanner Scanner para leer la entrada del usuario.
      */
     private Factura solicitarDatosFactura(Scanner scanner, Mecanico mecanico) {
-        System.out.println("Introduce el importe de la factura:");
-        double importe = scanner.nextDouble();
-        scanner.nextLine(); // Limpiar el buffer
+        try {
+            // solicitamos importe y descripción para crear factura
+            double importe = Double.parseDouble(obtenerDato(scanner, "Introduce la descripción de la factura:"));
+            String descripcion = obtenerDato(scanner, "Introduce el importe de la factura:");
 
-        System.out.println("Introduce la descripción de la factura:");
-        String descripcion = scanner.nextLine();
+            return new Factura(importe, descripcion, mecanico);
+        } catch(Exception e) {
+            System.out.println("ERROR: Debes introducir un número. Inténtalo de nuevo.");
+            return solicitarDatosFactura(scanner, mecanico); // Llamada recursiva para volver a solicitar los datos
 
-        return new Factura(importe, descripcion, mecanico);
+        }
     }
 
     /**
-     * Método para consultar todas las facturas registradas.
+     * Consulta las facturas registradas
      */
     public void consultarFacturas() {
         if (facturas.isEmpty()) {
@@ -88,7 +93,7 @@ public class GestorFacturas {
     }
 
     /**
-     * Método para consultar las facturas asociadas a un mecánico específico.
+     * Consulta las facturas filtrando por mecánico.
      * @param mecanico mecánico del que se quieren consultar las facturas.
      */
     public void consultarFacturasPorMecanico(Mecanico mecanico) {

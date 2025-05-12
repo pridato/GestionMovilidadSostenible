@@ -12,6 +12,7 @@ import static es.uned.utils.GeolocalizacionPorIP.leerCoordenadasManualmente;
 import static es.uned.utils.dto.cargarPersonas;
 import static es.uned.utils.dto.cargarTrabajadores;
 import static es.uned.utils.utils.leerOpcion;
+import static es.uned.utils.utils.obtenerDato;
 
 public class GestorPersonas {
 
@@ -31,7 +32,7 @@ public class GestorPersonas {
     }
 
     /**
-     * Método para obtener la instancia del gestor de personas.
+     * Devuelve la instancia del gestor de personas.
      *
      * @return instancia del gestor de personas.
      */
@@ -40,87 +41,83 @@ public class GestorPersonas {
     }
 
     /**
-     * Método para crear nuevas personas (Usuarios, Administradores, Mecánicos y Mantenimiento).
+     * Permite la creación de una nueva persona en el sistema.
+     *
+     * Las personas pueden ser de diferentes tipos: Usuario, Administrador, Mecanico o Mantenimiento.
      *
      * @param scanner scanner para leer la entrada del usuario
      */
     public void crearPersona(Scanner scanner) {
 
-        // Formulario de creación de persona
-        System.out.print("DNI: ");
-        String dni = scanner.nextLine();
+        String dni = obtenerDato(scanner, "DNI: ");
+        String nombre = obtenerDato(scanner, "Nombre: ");
+        String apellidos = obtenerDato(scanner, "Apellidos: ");
+        String email = obtenerDato(scanner, "Correo electrónico: ");
+        try {
+            int telefono = Integer.parseInt(obtenerDato(scanner, "Telefono: "));
 
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
+            // tipo de persona a crear
+            System.out.println("Elija el tipo de Persona a crear:");
+            System.out.println("1. Usuario");
+            System.out.println("2. Administrador");
+            System.out.println("3. Mecanico");
+            System.out.println("4. Mantenimiento");
 
-        System.out.print("Apellidos: ");
-        String apellidos = scanner.nextLine();
+            int opcionTipo = leerOpcion(scanner);
 
-        System.out.print("Correo electrónico: ");
-        String email = scanner.nextLine();
+            Date fecha = obtenerFechaDeContratacion(scanner, opcionTipo);
 
-        System.out.print("Telefono: ");
-        int telefono = scanner.nextInt();
-        scanner.nextLine();
+            // con el formulario relleno, creamos la persona segun el tipo (1-4)
+            Persona persona = crearPersonaSegunTipo(dni, nombre, apellidos, email, telefono, fecha, opcionTipo, scanner);
 
-        // Elección de tipo de persona a crear
+            // mensajes de confirmación
+            if (persona != null) {
+                personas.add(persona);
+                System.out.println("Persona creada: " + persona.getdni() + " " + persona.getNombre() + " " + persona.getApellidos());
+            } else {
+                System.out.println("Error al crear la persona.");
+            }
 
-        System.out.println("Elija el tipo de Persona a crear:");
-        System.out.println("1. Usuario");
-        System.out.println("2. Administrador");
-        System.out.println("3. Mecanico");
-        System.out.println("4. Mantenimiento");
 
-        int opcionTipo = leerOpcion(scanner);
 
-        Date fecha = obtenerFechaDeContratacion(scanner, opcionTipo);
-        Persona persona = crearPersonaSegunTipo(dni, nombre, apellidos, email, telefono, fecha, opcionTipo, scanner);
-
-        if (persona != null) {
-            personas.add(persona);
-            System.out.println("Persona creada: " + persona.getdni() + " " + persona.getNombre() + " " + persona.getApellidos());
-        } else {
-            System.out.println("Error al crear la persona.");
+        } catch (NumberFormatException e) {
+            System.out.println("El teléfono debe ser un número.");
+            crearPersona(scanner); // recursividad para volver a pedir el teléfono
         }
-
     }
 
 
     /**
-     * Método para obtener las coordenadas del usuario.
+     * Devuelve las coordenadas del usuario.
      * @param scanner scanner para leer la entrada del usuario
      * @return coordenadas del usuario
      */
     private static Coordenadas obtenerCoordenadasUsuario(Scanner scanner) {
-        Coordenadas coordenadas = null;
+        while (true) {
+            // pedimos las coordenadas al usuario por autómatica o de manera manual
+            String opcion = obtenerDato(scanner, "¿Desea usar localización automática por IP? (S/N): ").trim().toUpperCase();
 
-        while (coordenadas == null) {
-            System.out.println("¿Desea usar localización automática por IP? (S/N): ");
-            String opcion = scanner.nextLine().trim().toUpperCase();
-
-            if (opcion.equals("S")) {
-                // Intentar obtener las coordenadas por IP
-                coordenadas = GeolocalizacionPorIP.obtenerCoordenadasDesdeIP();
-
-                // Si no se pudo obtener las coordenadas por IP, pedir al usuario que ingrese las coordenadas manualmente
-                if (coordenadas == null) {
-                    System.out.println("No se pudo obtener la ubicación automáticamente. Intentando ingresar coordenadas manualmente.");
-                    coordenadas = leerCoordenadasManualmente(scanner);
+            switch (opcion) {
+                case "S" -> {
+                    // Obtenemos las coorrdenadas desde la ip, si existen devolvemos si no case N
+                    Coordenadas coordenadasIP = GeolocalizacionPorIP.obtenerCoordenadasDesdeIP();
+                    if (coordenadasIP != null) {
+                        return coordenadasIP;
+                    }
+                    System.out.println("No se pudo obtener la ubicación automáticamente. Introduzca las coordenadas manualmente.");
+                    return leerCoordenadasManualmente(scanner);
                 }
-            } else if (opcion.equals("N")) {
-                // Si el usuario no quiere usar la localización automática, se piden las coordenadas manualmente
-                coordenadas = leerCoordenadasManualmente(scanner);
-            } else {
-                // Si la respuesta no es válida, solicitamos la opción nuevamente
-                System.out.println("Opción no válida. Por favor, ingrese 'S' para sí o 'N' para no.");
+                case "N" -> {
+                    return leerCoordenadasManualmente(scanner);
+                }
+                default -> System.out.println("Opción no válida. Por favor, ingrese 'S' para sí o 'N' para no.");
             }
         }
-        return coordenadas;
     }
 
 
     /**
-     * Método para obtener la fecha de contratación de un trabajador.
+     * Devuelve la fecha de contratación de la persona.
      * @param scanner scanner para leer la entrada del usuario
      * @param opcionTipo tipo de persona
      * @return fecha de contratación
@@ -142,7 +139,8 @@ public class GestorPersonas {
 
 
     /**
-     * Método para crear una persona según el tipo seleccionado.
+     * Función auxiliar de crear persona, en esta a través de todos los datos se crea una persona
+     * según su tipo
      * @param dni DNI de la persona
      * @param nombre Nombre de la persona
      * @param apellidos Apellidos de la persona
@@ -157,14 +155,14 @@ public class GestorPersonas {
         return switch (opcionTipo) {
             case 1 -> crearUsuario(dni, nombre, apellidos, email, telefono, scanner);
             case 2 -> new Administrador(dni, nombre, apellidos, email, telefono, fecha);
-            case 3 -> new Mecanico(dni, nombre, apellidos, email, telefono, fecha, null);
+            case 3 -> new Mecanico(dni, nombre, apellidos, email, telefono, fecha);
             case 4 -> new Mantenimiento(dni, nombre, apellidos, email, telefono, fecha);
             default -> null;
         };
     }
 
     /**
-     * Método para crear un usuario.
+     * Creación de usuarios añadiendo coordenadas
      * @param dni DNI del usuario
      * @param nombre Nombre del usuario
      * @param apellidos Apellidos del usuario
@@ -179,29 +177,27 @@ public class GestorPersonas {
     }
 
     /**
-     * Método para eliminar personas del sistema
+     * Elimina a una persona de cualquier tipo del sistema
      *
      * @param scanner scanner para leer la entrada del usuario
      */
     public void eliminarPersona(Scanner scanner) {
-        System.out.println("Introduzca el DNI de la persona a eliminar: ");
-        String dni = scanner.nextLine();
-
+        String dni = obtenerDato(scanner, "Introduzca el DNI de la persona a eliminar: ");
         personas.removeIf(persona -> persona.getdni().equals(dni));
 
     }
 
     /**
-     * Método para modificar los datos de una persona.
+     * Permite la modificación de cualquier atributo de una persona en el sistema.
      *
      * @param scanner scanner para leer la entrada del usuario
      */
     public void modificarPersona(Scanner scanner) {
-        System.out.println("Introduzca el DNI de la persona a modificar: ");
-        String dni = scanner.nextLine();
+        // primero a través del dni buscamos la persona
+        String dni = obtenerDato(scanner, "Introduzca el DNI de la persona a modificar: ");
         Persona persona = buscarPersonaPorDNI(dni);
 
-        // hacer un "switch case" de todos los atributos de la persona a modificar
+        // opciones de modificación
         int opcion;
         do {
             System.out.println("¿Qué atributo desea modificar?");
@@ -215,56 +211,41 @@ public class GestorPersonas {
             opcion = leerOpcion(scanner);
 
             switch (opcion) {
-                case 1 -> {
-                    System.out.println("Introduzca el nuevo nombre: ");
-                    String nuevoNombre = scanner.nextLine();
-                    persona.setNombre(nuevoNombre);
-                }
-                case 2 -> {
-                    System.out.println("Introduzca los nuevos apellidos: ");
-                    String nuevosApellidos = scanner.nextLine();
-                    persona.setApellidos(nuevosApellidos);
-                }
-                case 3 -> {
-                    System.out.println("Introduzca el nuevo DNI: ");
-                    String nuevoDNI = scanner.nextLine();
-                    persona.setdni(nuevoDNI);
-                }
-                case 4 -> {
-                    System.out.println("Introduzca el nuevo email: ");
-                    String nuevoEmail = scanner.nextLine();
-                    persona.setEmail(nuevoEmail);
-                }
+                case 1 -> persona.setNombre(obtenerDato(scanner, "Introduzca el nuevo nombre: "));
+                case 2 -> persona.setApellidos(obtenerDato(scanner, "Introduzca los nuevos apellidos: "));
+                case 3 -> persona.setdni(obtenerDato(scanner, "Introduzca el nuevo DNI: "));
+                case 4 -> persona.setEmail(obtenerDato(scanner, "Introduzca el nuevo email: "));
                 case 5 -> {
-                    System.out.println("Introduzca el nuevo telefono: ");
-                    int nuevoTelefono = scanner.nextInt();
-                    persona.setTelefono(nuevoTelefono);
+                    try {
+                        persona.setTelefono(Integer.parseInt(obtenerDato(scanner, "El teléfono debe ser un número.")));
+                    } catch (InputMismatchException e) {
+                        System.out.println("El teléfono debe ser un número. No se puede modificar.");
+                    }
                 }
-                case 6 -> {
-                    System.out.println("Saliendo...");
-                }
-                default -> {
-                    System.out.println("Opción no válida.");
-                }
+                case 6 -> System.out.println("Saliendo...");
+                default -> System.out.println("Opción no válida.");
             }
         } while (opcion != 6);
-
     }
 
 
     /**
-     * Método para listar todas las personas del sistema.
+     * Lista todas las personas del sistema.
      */
     public void listarPersonas() {
         System.out.println("Lista de personas:");
         for (Persona persona : personas) {
-            System.out.println(persona);
+            persona.mostrarInformacionDetallada();
+            if(persona instanceof Usuario usuario) {
+                System.out.println("Coordenadas: " + usuario.getCoordenadas());
+                usuario.consultarAlquileresUsuario();
+            }
         }
     }
 
 
     /**
-     * Método para buscar una persona por su DNI.
+     * Devuelve una persona a partir de su DNI.
      *
      * @param dni DNI de la persona a buscar.
      * @return Persona encontrada o null si no se encuentra.
@@ -280,7 +261,7 @@ public class GestorPersonas {
 
 
     /**
-     * Método para obtener la lista de usuarios que deben ser premium.
+     * muestra los usuarios que deberían ser promovidos a premium
      */
     public void usuariosDeberianSerPremium() {
         for (Persona persona : personas) {
@@ -291,7 +272,7 @@ public class GestorPersonas {
     }
 
     /**
-     * Método para obtener la lista de trabajadores disponibles.
+     * Consulta y muestra el personal de mantenimiento disponibles.
      *
      * @throws IllegalArgumentException si no hay trabajadores disponibles.
      */
@@ -312,7 +293,7 @@ public class GestorPersonas {
     }
 
     /**
-     * Método para obtener la lista de mecánicos disponibles.
+     * Consulta y muestra los mecánicos disponibles.
      *
      * @throws IllegalArgumentException si no hay mecánicos disponibles.
      */
@@ -333,7 +314,7 @@ public class GestorPersonas {
     }
 
     /**
-     * Método para obtener la lista de usuarios que han utilizado vehículos.
+     * Consulta la utilización de vehículos por parte de los usuarios.
      */
     public void utilizacionVehiculosPorUsuario() {
         for (Persona persona : personas) {
@@ -348,7 +329,7 @@ public class GestorPersonas {
     }
 
     /**
-     * Método para promover a un usuario a premium.
+     * Permite la promoción de un usuario a premium.
      *
      * @throws IllegalArgumentException si el usuario no es válido.
      */
@@ -369,16 +350,20 @@ public class GestorPersonas {
 
     }
 
+    /**
+     * Consulta y muestra los usuarios del sistema.
+     */
     public void consultarUsuarios() {
         for (Persona persona : personas) {
             if (persona instanceof Usuario usuario) {
-                System.out.println("El usuario " + usuario.getNombre() + " " + usuario.getApellidos() + " con dni " + usuario.getdni() + " tiene " + usuario.getHistorialViajes().size() + " viajes.");
+                System.out.println("Coordenadas: " + usuario.getCoordenadas());
+                usuario.consultarAlquileresUsuario();
             }
         }
     }
 
     /**
-     * Método para modificar el descuento para usuarios premium.
+     * Modifica el descuento global para usuarios premium.
      *
      * @param scanner scanner para leer la entrada del usuario
      */
@@ -401,8 +386,15 @@ public class GestorPersonas {
         return nuevoDescuento;
     }
 
-    public Trabajador obtenerTrabajadorPorListado(Scanner scanner, String encargado) throws IllegalArgumentException {
 
+    /**
+     * Devuelve un trabajador a partir de un listado de trabajadores.
+     * @param scanner scanner para leer la entrada del usuario
+     * @param encargado tipo de trabajador a buscar (mantenimiento o mecánico)
+     * @return Trabajador encontrado o null si no se encuentra.
+     * @throws IllegalArgumentException si el encargado no es correcto.
+     */
+    public Trabajador obtenerTrabajadorPorListado(Scanner scanner, String encargado) throws IllegalArgumentException {
         if(encargado.equals("mantenimiento")){
             System.out.println("Seleccione un personal de mantenimiento para loguearte: ");
             consultarPersonalMantenimientoDisponibles();
@@ -419,17 +411,14 @@ public class GestorPersonas {
     }
 
     /**
-     * Método para obtener la lista de usuarios.
+     * Obtiene una lista de usuarios del sistema.
      * @return Lista de usuarios.
      */
     public List<Usuario> obtenerUsuarios() {
-        List<Usuario> usuarios = new ArrayList<>();
-        for (Persona persona : personas) {
-            if (persona instanceof Usuario usuario) {
-                usuarios.add(usuario);
-            }
-        }
-        return usuarios;
+        return personas.stream()
+                .filter(persona -> persona instanceof Usuario)
+                .map(persona -> (Usuario) persona)
+                .toList();
     }
 }
 

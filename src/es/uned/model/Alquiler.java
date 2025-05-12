@@ -143,6 +143,23 @@ public class Alquiler {
         System.out.println("Alquiler finalizado: " + id);
     }
 
+    /**
+     * Método para mostrar los detalles del alquiler.
+     */
+    public void mostrarAlquiler() {
+        System.out.println("Alquiler ID: " + id);
+        System.out.println("Vehículo: " + vehiculo);
+        System.out.println("Fecha de inicio: " + fechaInicio);
+        System.out.println("Fecha de fin: " + fechaFin);
+        System.out.println("Estado: " + estado);
+        System.out.println("Base de inicio: " + baseInicio);
+        System.out.println("Base de fin: " + baseFin);
+        System.out.println("Importe final: " + importeFinal);
+        System.out.println("Duración (en minutos): " + tiempoDuracion);
+        System.out.println("Coordenadas de inicio: " + coordenadasInicio);
+        System.out.println("Coordenadas de fin: " + coordenadasFin);
+    }
+
     @Override
     public String toString() {
         return "Alquiler {\n" +

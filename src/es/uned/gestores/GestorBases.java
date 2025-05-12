@@ -28,7 +28,7 @@ public class GestorBases {
     }
 
     /**
-     * Método para obtener la instancia del gestor de bases.
+     * Devuelve la instancia única de la clase GestorBases.
      *
      * @return instancia del gestor de bases.
      */
@@ -38,7 +38,7 @@ public class GestorBases {
 
 
     /**
-     * Método para consultar el estado de las bases.
+     * Consulta el estado actual de las bases
      */
     public void consultarEstadoBases() {
         System.out.println("Estado de las bases:");
@@ -46,7 +46,7 @@ public class GestorBases {
     }
 
     /**
-     * Método para consultar bases por disponibilidad.
+     * Consulta las bases disponibles (sin averías y con espacio).
      */
     public void consultarBasesDisponibles() {
         System.out.println("Bases disponibles:");
@@ -55,7 +55,7 @@ public class GestorBases {
     }
 
     /**
-     * Método para consultar bases por ocupación.
+     * Consulta las bases ordenadas por ocupación (de menor a mayor).
      */
     public void consultarBasesPorOcupacion() {
         bases.stream()
@@ -65,7 +65,9 @@ public class GestorBases {
     }
 
     /**
-     * Generar estadisticas de las bases
+     * Genera estadísticas de las bases, mostrando la ocupación de cada una.
+     *
+     * Realmente es consultarBasesPorOcupacion() pero ordenando de mayor a menor.
      */
     public void generarEstadisticasBases() {
         System.out.println("Estadísticas de las bases:");
@@ -76,9 +78,9 @@ public class GestorBases {
     }
 
     /**
-     * Método para obtener una base por su ID.
+     * Devuelve una base específica por su ID.
      *
-     * @param id ID de la base a consultar.
+     * @param id  string id de la base a consultar.
      * @return Base correspondiente al ID proporcionado, o null si no se encuentra.
      *
      * @throws IllegalArgumentException si no se encuentra la base con el ID proporcionado.
@@ -91,7 +93,7 @@ public class GestorBases {
     }
 
     /**
-     * Método para obtener una base de un vehículo.
+     * Devuelve una base específica por un vehículo asociado a ella.
      *
      * @param matricula Matrícula del vehículo a consultar.
      * @return Base correspondiente al vehículo, o null si no se encuentra.
@@ -104,9 +106,10 @@ public class GestorBases {
     }
 
     /**
-     * Método para mostrar las bases averiadas.
+     * Consultar todas las bases averiadas.
      */
     public void consultarBasesAveriadas() throws IllegalArgumentException {
+        // Filtrar las bases averiadas para poder avisar al usuario si no hay ninguna.
         List<Base> averiadas = bases.stream().filter(Base::isAveriada).toList();
 
         if (averiadas.isEmpty()) {
@@ -114,12 +117,13 @@ public class GestorBases {
             return;
         }
 
+        // mostramos las bases averiadas
         System.out.println("Bases averiadas:");
         averiadas.forEach(Base::mostrarInfoBaseDetallada);
     }
 
     /**
-     * Método para obtener la base más cercana a unas coordenadas.
+     * Devuelve la base más cercana a unas coordenadas dadas.
      * @param coordenadas Coordenadas a las que se desea encontrar la base más cercana.
      * @return Coordenadas de la base más cercana, o null si no se encuentra ninguna base disponible.
      */
@@ -131,7 +135,7 @@ public class GestorBases {
     }
 
     /**
-     * Método para obtener la base con un vehículo disponible, si existe, de lo contrario selecciona una base nueva.
+     * Devuelve la base asociada a un vehículo específico. Sino se encuentra, hacemos formulario
      */
     public Base obtenerBaseConVehiculoDisponible(Vehiculo vehiculo, Scanner scanner) {
         Base base = obtenerBaseVehiculo(vehiculo.getMatricula());
