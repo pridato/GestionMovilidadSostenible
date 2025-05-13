@@ -68,7 +68,7 @@ public class MenuUsuario {
                 case 1 -> gestionarOpcionesUsuarioPersonal(scanner);
                 case 2 -> gestionarOpcionesVehiculos(scanner);
                 case 3 -> gestionarOpcionesInformacionGeneral(scanner);
-                case 4 -> gestorIncidencias.generarIncidencia(usuario, scanner);
+                case 4 -> gestorIncidencias.generarIncidencia(usuario,alquiler, scanner);
                 case 0 -> System.out.println("Saliendo...");
                 default -> System.out.println("Opción no válida.");
             }

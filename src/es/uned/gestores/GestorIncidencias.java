@@ -1,6 +1,7 @@
 package es.uned.gestores;
 
 import es.uned.enums.EstadoVehiculo;
+import es.uned.model.Alquiler;
 import es.uned.model.Base;
 import es.uned.model.Coordenadas;
 import es.uned.model.Incidencia;
@@ -32,12 +33,12 @@ public class GestorIncidencias {
     }
 
     /**
-     * Método para generar una incidencia sobre un vehículo o una base
+     * Genera una incidencia sobre un vehículo o una base
      *
      * @param usuario Usuario que reporta la incidencia
      * @param scanner Scanner para leer la entrada del usuario
      */
-    public void generarIncidencia(Usuario usuario, Scanner scanner) {
+    public void generarIncidencia(Usuario usuario, Alquiler alquiler, Scanner scanner) {
         System.out.println("----- Gestión de Incidencias -----");
         System.out.println("1. Crear incidencia sobre un vehículo");
         System.out.println("2. Crear incidencia sobre una base");
@@ -46,7 +47,7 @@ public class GestorIncidencias {
         int opcion = leerOpcion(scanner);
 
         switch (opcion) {
-            case 1 -> crearIncidenciaVehiculo(usuario, scanner);
+            case 1 -> crearIncidenciaVehiculo(usuario,alquiler, scanner);
             case 2 -> crearIncidenciaBase(usuario, scanner);
             case 0 -> System.out.println("Saliendo del menú de incidencias...");
             default -> System.out.println("Opción no válida.");
@@ -54,15 +55,15 @@ public class GestorIncidencias {
     }
 
     /**
-     * Método para crear una incidencia sobre un vehículo
+     * Crea una incidencia sobre un vehículo
      *
      * @param usuario Usuario que reporta la incidencia
      * @param scanner Scanner para leer la entrada del usuario
      */
-    private void crearIncidenciaVehiculo(Usuario usuario, Scanner scanner) {
+    private void crearIncidenciaVehiculo(Usuario usuario,Alquiler alquiler, Scanner scanner) {
         // consultamos los vehículos disponibles
         System.out.println("Creando incidencia sobre un vehículo...");
-        gestorVehiculos.consultarVehiculosDisponibles();
+        gestorVehiculos.consultarVehiculos();
 
         // pedimos al usuario que introduzca la matrícula del vehículo para obtener el objeto Vehiculo
         String matricula = obtenerDato(scanner, "Introduce la matrícula del vehículo: ");
@@ -72,7 +73,7 @@ public class GestorIncidencias {
         // si existe, procesamos el vehículo averiado sino seguir...
         Optional.ofNullable(vehiculo)
                 .ifPresentOrElse(
-                        v -> procesarVehiculoAveriado(usuario, scanner, v),
+                        v -> procesarVehiculoAveriado(usuario,alquiler, scanner, v),
                         () -> System.out.println("Vehículo no encontrado.")
                 );
     }
@@ -84,7 +85,7 @@ public class GestorIncidencias {
      * @param scanner  Scanner para leer la entrada del usuario
      * @param vehiculo Vehículo averiado
      */
-    private void procesarVehiculoAveriado(Usuario usuario, Scanner scanner, Vehiculo vehiculo) {
+    private void procesarVehiculoAveriado(Usuario usuario,Alquiler alquiler, Scanner scanner, Vehiculo vehiculo) {
         vehiculo.setEstado(EstadoVehiculo.AVERIADO);
         String descripcion = obtenerDato(scanner, "Describe brevemente la incidencia: ");
 

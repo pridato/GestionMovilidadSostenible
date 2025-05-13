@@ -5,6 +5,7 @@ import es.uned.enums.EstadoVehiculo;
 import es.uned.model.Alquiler;
 import es.uned.model.Base;
 import es.uned.model.Coordenadas;
+import es.uned.model.personas.Usuario;
 import es.uned.model.vehiculos.Bicicleta;
 import es.uned.model.vehiculos.Moto;
 import es.uned.model.vehiculos.Patinete;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import static es.uned.menus.MenuAdministrador.gestorBases;
+import static es.uned.menus.MenuAdministrador.gestorPersonas;
 import static es.uned.utils.dto.cargarVehiculos;
 import static es.uned.utils.utils.leerOpcion;
 
@@ -209,7 +211,6 @@ public class GestorVehiculos {
      * Método para obtener la lista de vehículos.
      *
      * @return Lista de vehículos.
-     *
      * @throws IllegalArgumentException si no hay vehículos disponibles
      */
     public void modificarVehiculo(Scanner scanner) throws IllegalArgumentException {
@@ -310,7 +311,6 @@ public class GestorVehiculos {
      *
      * @param matricula matricula del vehículo a buscar
      * @return El vehículo encontrado o null si no se encuentra.
-     *
      * @throws IllegalArgumentException si el vehículo no se encuentra
      */
     public Vehiculo obtenerVehiculo(String matricula) {
@@ -321,13 +321,47 @@ public class GestorVehiculos {
     }
 
     /**
-     * Método para consultar todos los vehículos.
-     *
-     * @return Lista de vehículos.
+     * Consulta todos los vehículos y su relación con los usuarios.
      */
     public void consultarVehiculos() {
-        this.vehiculos.forEach(System.out::println);
+        // sacamos todos los usuarios de nuestro sistema
+        List<Usuario> usuarios = gestorPersonas.getPersonas().stream()
+                .filter(p -> p instanceof Usuario)
+                .map(p -> (Usuario) p)
+                .toList();
+
+        // Recorremos cada vehículo registrado en el sistema
+        for (Vehiculo vehiculo : vehiculos) {
+            boolean asignado = false; // comprobar si el vehículo está asignado a un usuario
+
+            // Recorremos cada usuario del sistema
+            for (Usuario usuario : usuarios) {
+                // Recorremos el historial de alquileres de ese usuario
+                for (Alquiler alquiler : usuario.getHistorialViajes()) {
+                    Vehiculo vAlquiler = alquiler.getVehiculo();
+
+                    // si el vehículo del alquiler coincide con el actual imprimimos el vehículo
+                    if (vAlquiler != null && vAlquiler.getMatricula().equals(vehiculo.getMatricula())) {
+                        System.out.println("Vehículo: " + vehiculo.getMatricula() +
+                                ", Batería: " + vehiculo.getBateria() + "%" +
+                                ", Usuario: " + usuario.getNombre() + " " + usuario.getApellidos() +
+                                " (DNI: " + usuario.getdni() + ")");
+                        asignado = true;
+                        break;
+                    }
+                }
+                if (asignado) break;
+            }
+
+            // mostramos no asignados
+            if (!asignado) {
+                System.out.println("Vehículo: " + vehiculo.getMatricula() +
+                        ", Batería: " + vehiculo.getBateria() + "%" +
+                        ", Sin alquiler");
+            }
+        }
     }
+
 
     /**
      * Método para consultar el estado de batería de un vehículo.

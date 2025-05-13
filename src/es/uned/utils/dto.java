@@ -33,62 +33,8 @@ public class dto {
                         612345678,
                         new Date(),
                         new Coordenadas(9.5, 7.9),
-                        2000.0,
-                        false,
-                        new ArrayList<>(List.of(
-                                new Alquiler(
-                                        new Moto("MOT123", new Coordenadas(9.5, 7.9), EstadoVehiculo.DISPONIBLE, 80, 10000, 50.0, EstadoMoto.PEQUEÑA),
-                                        null,
-                                        new Date(),
-                                        null,
-                                        null,
-                                        null,
-                                        0.0,
-                                        0
-                                ),
-                                new Alquiler(
-                                        new Bicicleta("BIC456", new Coordenadas(10.0, 8.5), EstadoVehiculo.DISPONIBLE, 70, 2000, 50.0),
-                                        null,
-                                        new Date(),
-                                        null,
-                                        null,
-                                        null,
-                                        1.5,
-                                        25
-                                ),
-                                new Alquiler(
-                                        new Patinete("PAT789", new Coordenadas(9.7, 7.2), EstadoVehiculo.DISPONIBLE, 90, 1500, 30.0),
-                                        null,
-                                        new Date(),
-                                        null,
-                                        null,
-                                        null,
-                                        2.0,
-                                        30
-                                ),
-                                new Alquiler(
-                                        new Moto("MOT987", new Coordenadas(10.5, 9.1), EstadoVehiculo.DISPONIBLE, 60, 8000, 60.0, EstadoMoto.PEQUEÑA),
-                                        null,
-                                        new Date(),
-                                        null,
-                                        null,
-                                        null,
-                                        3.0,
-                                        40
-                                ),
-                                new Alquiler(
-                                        new Bicicleta("BIC321", new Coordenadas(11.2, 6.8), EstadoVehiculo.AVERIADO, 50, 2500, 10),
-                                        null,
-                                        new Date(),
-                                        null,
-                                        null,
-                                        null,
-                                        0.0,
-                                        0
-                                )
-                        ))
-                )
-        );
+                        2000.0
+        ));
 
         personas.add(new Usuario(
                         "06428545X",
@@ -98,26 +44,7 @@ public class dto {
                         575324644,
                         new Date(),
                         new Coordenadas(14.5, 8.9),
-                        7500.00,
-                        true,
-                        new ArrayList<>(List.of(new Alquiler(
-                                new Moto(
-                                        "MOT123",
-                                        new Coordenadas(9.5, 7.9),
-                                        EstadoVehiculo.DISPONIBLE,
-                                        80,
-                                        10000,
-                                        50.0,
-                                        EstadoMoto.PEQUEÑA
-                                ),
-                                null,
-                                new Date(),
-                                null,
-                                null,
-                                null,
-                                0.0,
-                                0
-                        )))
+                        7500.00
                 )
         );
 

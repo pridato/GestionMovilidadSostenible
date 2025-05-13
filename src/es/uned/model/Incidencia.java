@@ -52,15 +52,6 @@ public class Incidencia {
         this.vehiculo = vehiculo;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-
-    public Date getFechaReporte() {
-        return fechaReporte;
-    }
-
 
     public Trabajador getEncargado() {
         return encargado;

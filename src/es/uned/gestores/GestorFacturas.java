@@ -34,7 +34,7 @@ public class GestorFacturas {
     public void crearFacturaBase(Mecanico mecanico, Base base, Scanner scanner) {
         Factura factura = solicitarDatosFactura(scanner, mecanico);
         factura.setBase(base);
-
+        mecanico.añadirFactura(factura);
         registrarFactura(factura);
     }
 
@@ -47,7 +47,7 @@ public class GestorFacturas {
     public void crearFacturaVehiculo(Mecanico mecanico, Vehiculo vehiculo, Scanner scanner) {
         Factura factura = solicitarDatosFactura(scanner, mecanico);
         factura.setVehiculo(vehiculo);
-
+        mecanico.añadirFactura(factura);
         registrarFactura(factura);
     }
 
@@ -97,9 +97,7 @@ public class GestorFacturas {
      * @param mecanico mecánico del que se quieren consultar las facturas.
      */
     public void consultarFacturasPorMecanico(Mecanico mecanico) {
-        List<Factura> facturasDelMecanico = facturas.stream()
-                .filter(f -> f.getMecanico().equals(mecanico))
-                .toList();
+        List<Factura> facturasDelMecanico = mecanico.getFacturasEmitidas();
 
         if (facturasDelMecanico.isEmpty()) {
             System.out.println("No hay facturas registradas para el mecánico " + mecanico.getNombre() + ".");

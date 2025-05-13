@@ -127,19 +127,31 @@ public class GestorAlquileres {
             baseFin.añadirVehiculo(vehiculo);
             alquiler.setBaseFin(baseFin);
         }
+        if (coordenadasFin != null) {
+            vehiculo.setCoordenadas(coordenadasFin);
+            alquiler.setCoordenadasFin(coordenadasFin);
+        }
 
         // calculamos el tiempo de duración del alquiler en minutos
-        int tiempoDuracion = (int) ((alquiler.getFechaFin().getTime() - alquiler.getFechaInicio().getTime()) / 60000);
+        int tiempoDuracion = (int) ((new Date().getTime() - alquiler.getFechaInicio().getTime()) / 60000);
         alquiler.setTiempoDuracion(tiempoDuracion);
 
-        // calculamos el importe total del alquiler más las penalizaciones
-        double importeTotal = vehiculo.calcularImporte(alquiler.getTiempoDuracion());
-        importeTotal += aplicarPenalizaciones(vehiculo, alquiler);
+        double importeTotal;
 
-        // aplicamos el descuento premium si el usuario es premium
-        if (usuario.getEsPremium()) {
-            importeTotal -= importeTotal * descuentoPremium;
-            System.out.println("El usuario es premium, se aplicará un descuento del " + descuentoPremium * 100 + "%");
+        // si el vehículo está averiado, el alquiler es gratuito
+        if (vehiculo.getEstado() == EstadoVehiculo.AVERIADO) {
+            importeTotal = 0.0;
+            System.out.println("El vehículo está averiado. El alquiler será gratuito.");
+        } else {
+            // calculamos el importe total del alquiler más las penalizaciones
+            importeTotal = vehiculo.calcularImporte(alquiler.getTiempoDuracion());
+            importeTotal += aplicarPenalizaciones(vehiculo, alquiler);
+
+            // aplicamos el descuento premium si el usuario es premium
+            if (usuario.getEsPremium()) {
+                importeTotal -= importeTotal * descuentoPremium;
+                System.out.println("El usuario es premium, se aplicará un descuento del " + descuentoPremium * 100 + "%");
+            }
         }
 
         modificarEstadosAlquiler(usuario, alquiler, coordenadasFin, importeTotal, vehiculo);
@@ -156,7 +168,6 @@ public class GestorAlquileres {
      * @param vehiculo vehículo alquilado
      */
     private static void modificarEstadosAlquiler(Usuario usuario, Alquiler alquiler, Coordenadas coordenadasFin, double importeTotal, Vehiculo vehiculo) {
-        alquiler.setCoordenadasFin(coordenadasFin);
         alquiler.setEstado(EstadoAlquiler.FINALIZADO);
         alquiler.setFechaFin(new Date());
         alquiler.setImporteFinal(importeTotal);
@@ -365,4 +376,5 @@ public class GestorAlquileres {
             System.out.println("Usuario: " + entry.getKey().getNombre() + " - Gastos de alquiler: " + entry.getValue() + "€");
         }
     }
+
 }

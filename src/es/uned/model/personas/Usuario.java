@@ -64,13 +64,11 @@ public class Usuario extends Persona {
     }
 
     /**
-     * Método para añadir un alquiler al historial de viajes del usuario.
+     * Añade un nuevo alquiler al historial de viajes del usuario.
      * @param alquiler Alquiler a añadir.
      */
     public void añadirAlquiler(Alquiler alquiler) {
-        if (alquiler != null) {
             historialViajes.add(alquiler);
-        }
     }
 
     public Boolean getEsPremium() {

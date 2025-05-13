@@ -29,7 +29,7 @@ public class Persona {
     }
 
     /**
-     * Método para validar el dni de la persona.
+     * Valida el DNI de la persona.
      * @param dni dni a validar.
      * @throws DniInvalidoException Excepción lanzada si el dni es inválido.
      */
@@ -52,7 +52,7 @@ public class Persona {
     }
 
     /**
-     * Método para validar el email de la persona.
+     * valida el email de la persona
      * @param email Email a validar.
      * @throws IllegalArgumentException Excepción lanzada si el email es inválido.
      */
@@ -63,7 +63,7 @@ public class Persona {
     }
 
     /**
-     * Método para validar el número de teléfono de una persona
+     * valida el teléfono de la persona
      * @param telefono Número de teléfono a validar.
      * @throws IllegalArgumentException Excepción lanzada si el teléfono es inválido.
      */
@@ -134,9 +134,6 @@ public class Persona {
         System.out.println("Email: " + getEmail());
         System.out.println("Teléfono: " + getTelefono());
     }
-
-
-
 
     @Override
     public String toString() {

@@ -2,6 +2,7 @@ package es.uned.model.personas;
 
 import es.uned.model.Factura;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class Mecanico extends Trabajador{
 
-    private List<Factura> facturasEmitidas;
+    private final List<Factura> facturasEmitidas = new ArrayList<>();
 
     public Mecanico(String DNI, String nombre, String apellidos, String email, int telefono, Date fechaContratacion) {
         super(DNI, nombre, apellidos, email, telefono, fechaContratacion);
@@ -22,16 +23,12 @@ public class Mecanico extends Trabajador{
      * @param factura Factura a añadir.
      */
     public void añadirFactura(Factura factura) {
-        if (facturasEmitidas != null) {
-            facturasEmitidas.add(factura);
-        } else {
-            System.out.println("ERROR: No se puede añadir la factura, la lista de facturas emitidas es nula.");
-        }
+        facturasEmitidas.add(factura);
     }
 
     /**
      * Devuelve una copia de la lista de facturas emitidas por el mecánico.
-     * @return
+     * @return Lista de facturas emitidas.
      */
     public List<Factura> getFacturasEmitidas() {
         return Collections.unmodifiableList(facturasEmitidas);
@@ -47,7 +44,7 @@ public class Mecanico extends Trabajador{
 
         sb.append(INDENT).append("Facturas emitidas:\n");
 
-        if (facturasEmitidas != null && !facturasEmitidas.isEmpty()) {
+        if (!facturasEmitidas.isEmpty()) {
             for (Factura factura : facturasEmitidas) {
                 sb.append(INDENT).append(INDENT).append("- ").append(factura).append("\n");
             }

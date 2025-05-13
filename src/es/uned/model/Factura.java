@@ -39,10 +39,6 @@ public class Factura {
         return id;
     }
 
-    public Mecanico getMecanico() {
-        return mecanico;
-    }
-
 
     public String getDescripcion() {
         return descripcion;

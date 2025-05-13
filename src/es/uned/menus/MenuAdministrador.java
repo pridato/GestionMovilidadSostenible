@@ -299,6 +299,4 @@ public class MenuAdministrador {
             }
         } while(opcion != 0);
     }
-
-
 }
